@@ -43,7 +43,7 @@ export default function ProfessionalCleaning() {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 320;
+      const scrollAmount = 260;
       scrollContainerRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -118,21 +118,21 @@ export default function ProfessionalCleaning() {
             {SERVICE_CARDS.map((card) => (
               <div
                 key={card.title}
-                className="w-[200px] xs:w-[220px] sm:w-[250px] lg:w-[270px] h-[240px] xs:h-[260px] sm:h-[300px] lg:h-[320px] shrink-0 snap-start relative rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer"
+                className="w-[195px] xs:w-[215px] sm:w-[243px] h-[200px] xs:h-[220px] sm:h-[245px] shrink-0 snap-start relative rounded-[16px] overflow-hidden shadow-xs hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer"
               >
                 <Image
                   src={card.image}
                   alt={card.title}
                   fill
-                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 250px, 270px"
+                  sizes="(max-width: 640px) 215px, 243px"
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 {/* Gradient overlay for clear label contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-4">
-                  <h3 className="text-white text-base sm:text-lg font-bold font-montserrat tracking-tight leading-tight">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4">
+                  <h3 className="text-white text-sm sm:text-[15px] font-bold font-montserrat tracking-tight leading-tight">
                     {card.title}
                   </h3>
-                  <p className="text-white/80 text-[11px] sm:text-xs font-open-sans mt-0.5">
+                  <p className="text-white/80 text-[10.5px] sm:text-[11px] font-open-sans mt-0.5 line-clamp-1">
                     {card.subtitle}
                   </p>
                 </div>
