@@ -10,6 +10,7 @@ import EngineeredPerformance from "@/components/EngineeredPerformance";
 import WashWithoutLimits from "@/components/WashWithoutLimits";
 import FourSteps from "@/components/FourSteps";
 import UseCase from "@/components/UseCase";
+import DoorstepProfessionals from "@/components/DoorstepProfessionals";
 import ComparisonTable from "@/components/ComparisonTable";
 import CompactModules from "@/components/CompactModules";
 import Testimonials from "@/components/Testimonials";
@@ -39,6 +40,7 @@ export default function Home() {
       <WashWithoutLimits />
       <FourSteps />
       <UseCase />
+      <DoorstepProfessionals />
       <ComparisonTable />
       <CompactModules />
       <Testimonials />
