@@ -75,36 +75,36 @@ export default function ProfessionalCleaning() {
             </p>
           </ScrollReveal>
         </div>
-
-        {/* Bottom Infinite Slider Image Cards Layout */}
-        <ScrollReveal direction="up" delay={0.15} className="mt-8 sm:mt-12 w-full">
-          <InfiniteSlider duration={35} durationOnHover={85} gap={16} className="w-full py-2">
-            {SERVICE_CARDS.map((card, idx) => (
-              <div
-                key={`${card.title}-${idx}`}
-                className="w-[195px] xs:w-[215px] sm:w-[243px] h-[200px] xs:h-[220px] sm:h-[245px] shrink-0 relative rounded-[16px] overflow-hidden shadow-xs hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer select-none"
-              >
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  sizes="(max-width: 640px) 215px, 243px"
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                />
-                {/* Gradient overlay for clear label contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4 pointer-events-none">
-                  <h3 className="text-white text-sm sm:text-[15px] font-bold font-montserrat tracking-tight leading-tight">
-                    {card.title}
-                  </h3>
-                  <p className="text-white/80 text-[10.5px] sm:text-[11px] font-open-sans mt-0.5 line-clamp-1">
-                    {card.subtitle}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </InfiniteSlider>
-        </ScrollReveal>
       </div>
+
+      {/* Full-Width Edge-to-Edge Infinite Slider (No margins or space at the ends) */}
+      <ScrollReveal direction="up" delay={0.15} className="mt-8 sm:mt-12 w-full">
+        <InfiniteSlider duration={35} durationOnHover={85} gap={16} className="w-full py-2">
+          {SERVICE_CARDS.map((card, idx) => (
+            <div
+              key={`${card.title}-${idx}`}
+              className="w-[195px] xs:w-[215px] sm:w-[243px] h-[200px] xs:h-[220px] sm:h-[245px] shrink-0 relative rounded-[16px] overflow-hidden shadow-xs hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer select-none"
+            >
+              <Image
+                src={card.image}
+                alt={card.title}
+                fill
+                sizes="(max-width: 640px) 215px, 243px"
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              />
+              {/* Gradient overlay for clear label contrast */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4 pointer-events-none">
+                <h3 className="text-white text-sm sm:text-[15px] font-bold font-montserrat tracking-tight leading-tight">
+                  {card.title}
+                </h3>
+                <p className="text-white/80 text-[10.5px] sm:text-[11px] font-open-sans mt-0.5 line-clamp-1">
+                  {card.subtitle}
+                </p>
+              </div>
+            </div>
+          ))}
+        </InfiniteSlider>
+      </ScrollReveal>
     </section>
   );
 }
