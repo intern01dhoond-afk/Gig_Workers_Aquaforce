@@ -88,7 +88,7 @@ export async function POST(req: Request) {
     }
 
     const now = new Date();
-    const formattedAmount = Number(amount || 37999).toLocaleString("en-IN");
+    const formattedAmount = Number(amount || 44991).toLocaleString("en-IN");
     const formattedOrderId = orderId || `ORD_TEST_${Date.now().toString().slice(-5)}`;
 
     const dateOnlyStr = now.toLocaleDateString("en-IN", {
@@ -112,15 +112,15 @@ export async function POST(req: Request) {
     });
 
     const isCod = paymentMethod === "10_PERCENT_COD" || Number(codBalance) > 0;
-    const resolvedAdvance = isCod ? Number(advanceAmount || Math.round(Number(amount || 37999) * 0.1)).toLocaleString("en-IN") : formattedAmount;
-    const resolvedBalance = isCod ? Number(codBalance || Math.round(Number(amount || 37999) * 0.9)).toLocaleString("en-IN") : "0";
+    const resolvedAdvance = isCod ? Number(advanceAmount || Math.round(Number(amount || 44991) * 0.1)).toLocaleString("en-IN") : formattedAmount;
+    const resolvedBalance = isCod ? Number(codBalance || Math.round(Number(amount || 44991) * 0.9)).toLocaleString("en-IN") : "0";
     const paymentStatusBadge = isCod ? "10% Advance Paid ✓" : paymentMethod === "SNAPMINT_EMI" ? "Snapmint EMI ✓" : "Paid ✓";
 
     const mapsQuery = encodeURIComponent(
       `${deliveryAddress || ""}, ${city || ""}, ${state || ""} - ${pincode || ""}`.trim()
     );
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
-    const invoiceUrl = `https://promectools.in/thank-you?order_id=${encodeURIComponent(formattedOrderId)}&name=${encodeURIComponent(fullName)}&amount=${encodeURIComponent(amount || 37999)}${paymentId ? `&payment_id=${encodeURIComponent(paymentId)}` : ""}${isCod ? `&advance=${encodeURIComponent(advanceAmount || "")}&cod_balance=${encodeURIComponent(codBalance || "")}&method=COD` : ""}`;
+    const invoiceUrl = `https://promectools.in/thank-you?order_id=${encodeURIComponent(formattedOrderId)}&name=${encodeURIComponent(fullName)}&amount=${encodeURIComponent(amount || 44991)}${paymentId ? `&payment_id=${encodeURIComponent(paymentId)}` : ""}${isCod ? `&advance=${encodeURIComponent(advanceAmount || "")}&cod_balance=${encodeURIComponent(codBalance || "")}&method=COD` : ""}`;
 
     const mailOptions = {
       from: `"Promec India" <${smtpUser}>`,

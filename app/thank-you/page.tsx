@@ -12,7 +12,7 @@ function ThankYouContent() {
   const searchParams = useSearchParams();
   const paymentId = searchParams.get("payment_id") || searchParams.get("paymentId") || "";
   const orderId = searchParams.get("order_id") || searchParams.get("orderId") || "";
-  const amount = searchParams.get("amount") || "37999";
+  const amount = searchParams.get("amount") || "44991";
   const totalAmountParam = searchParams.get("total_amount") || amount;
   const codBalance = searchParams.get("cod_balance") || "0";
   const method = searchParams.get("method") || "PREPAID";
@@ -27,7 +27,7 @@ function ThankYouContent() {
     // Trigger Meta Pixel Purchase Conversion Event
     if (typeof window !== "undefined" && (window as any).fbq) {
       (window as any).fbq("track", "Purchase", {
-        value: Number(amount) || 37999,
+        value: Number(amount) || 44991,
         currency: "INR",
         content_name: "AQUAFORCE 1400 PSI TECH Cordless Washer",
         content_type: "product",

@@ -13,7 +13,7 @@ interface EmiCalculatorModalProps {
 export default function EmiCalculatorModal({
   isOpen,
   onClose,
-  price = 37999,
+  price = 44991,
   onSelectEmiOption,
 }: EmiCalculatorModalProps) {
   const [activeTab, setActiveTab] = useState<"snapmint" | "credit" | "bajaj" | "debit">("snapmint");

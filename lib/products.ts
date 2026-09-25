@@ -38,14 +38,14 @@ export const CATALOG: Record<string, Product> = {
       "with-vacuum": {
         id: "with-vacuum",
         name: "With Vacuum",
-        offerPriceInINR: 37999,
-        mrpInINR: 51350,
+        offerPriceInINR: 44991,
+        mrpInINR: 60799,
       },
       "without-vacuum": {
         id: "without-vacuum",
         name: "Without Vacuum",
-        offerPriceInINR: 35999,
-        mrpInINR: 47999,
+        offerPriceInINR: 42991,
+        mrpInINR: 57999,
       },
     },
     colors: [

@@ -16,14 +16,23 @@ export default function Footer() {
     <>
       <footer className="bg-[#0b0c0e] text-white py-10 xs:py-14 sm:py-20 border-t border-white/5 w-full">
         <ScrollReveal direction="up" className="max-w-[1440px] mx-auto px-4 sm:px-12 lg:px-[80px] flex flex-col items-center text-center">
-          {/* PROMEC Brand Logo */}
-          <div className="flex flex-col items-center group mb-6 sm:mb-8 select-none">
-            <div className="relative w-[150px] h-[32px] sm:w-[170px] sm:h-[36px]">
+          {/* AMEC TECHNOLOGY Brand Logo */}
+          <div className="flex items-center gap-2 group mb-6 sm:mb-8 select-none">
+            <div className="relative w-7 h-7 sm:w-8 sm:h-8">
               <Image
-                src="/aquaforceforautocare/images/promec-logo.svg"
-                alt="PROMEC"
+                src="/aquaforceforautocare/logo_shield.webp"
+                alt="AMEC Shield"
                 fill
-                sizes="(max-width: 640px) 150px, 170px"
+                sizes="32px"
+                className="object-contain"
+              />
+            </div>
+            <div className="relative w-32 sm:w-36 h-4 sm:h-5">
+              <Image
+                src="/aquaforceforautocare/logo_amec_new.webp"
+                alt="AMEC TECHNOLOGY"
+                fill
+                sizes="144px"
                 className="object-contain object-left"
               />
             </div>
@@ -52,7 +61,7 @@ export default function Footer() {
               onClick={openModal}
               className="hover:text-white transition-colors cursor-pointer font-medium focus:outline-none py-1 px-1"
             >
-              Buy Now
+              Shop Now
             </button>
           </nav>
 

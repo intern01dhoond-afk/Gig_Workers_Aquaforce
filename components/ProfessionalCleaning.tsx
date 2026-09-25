@@ -8,7 +8,7 @@ export default function ProfessionalCleaning() {
         {/* Top Eyebrow Badge */}
         <ScrollReveal direction="up" className="flex justify-center lg:justify-start mb-3 sm:mb-5">
           <div className="inline-flex items-center px-3.5 py-1 rounded-full border border-sky-600/50 font-open-sans text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-900 bg-transparent">
-            WHY AQUAFORCE® 1400?
+            WHY AQUAFORCE 1400?
           </div>
         </ScrollReveal>
 
@@ -30,15 +30,10 @@ export default function ProfessionalCleaning() {
 
           <ScrollReveal direction="left" delay={0.1} className="lg:col-span-6 max-w-[649px] font-open-sans text-[#333340] text-sm xs:text-[15px] sm:text-lg lg:text-[20px] font-normal leading-relaxed space-y-3 sm:space-y-5 pt-1 mx-auto lg:mx-0">
             <p>
-              Traditional pressure washers require a continuous power
-              connection, making it difficult to clean vehicles in open areas,
-              parking lots or locations without convenient electrical access.
+              Traditional cleaning jobs depend on power access, making it difficult for gig workers to clean vehicles in open areas, parking lots or societies.
             </p>
             <p>
-              Aquaforce® 1400 changes that. Its integrated lithium-ion battery
-              system powers the pressure pump, allowing you to carry the
-              machine wherever you need it and start cleaning without
-              connecting it to a power socket.
+              AquaForce 1400 changes that. Its integrated lithium-ion battery powers the pressure pump, allowing you to carry the machine wherever the job takes you and start cleaning without depending on a power socket.
             </p>
           </ScrollReveal>
         </div>

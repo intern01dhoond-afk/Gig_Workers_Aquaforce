@@ -107,23 +107,23 @@ export default function Hero() {
 
               {/* Headline */}
               <h1 className="font-montserrat text-[1.65rem] xs:text-[1.95rem] leading-[0.96] tracking-tight uppercase drop-shadow-[0_3px_12px_rgba(0,0,0,1)]">
-                <span className="block font-black text-white">NO POWER.</span>
-                <span className="block font-bold text-white/95">NO SOCKET.</span>
+                <span className="block font-black text-white">CLEAN MORE.</span>
+                <span className="block font-bold text-white/95">EARN MORE.</span>
               </h1>
 
               {/* Description */}
               <p className="font-open-sans text-white font-medium text-[11.5px] xs:text-[12px] leading-snug mt-1.5 drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
-                Wash your car anywhere with high-pressure cordless power.
+                One complete portable cleaning system for Car, Bike, Home, Office &amp; Society cleaning services.
               </p>
 
               {/* Pricing & Discount */}
               <div className="mt-2 flex items-center gap-2">
                 <div className="flex items-baseline gap-1.5 font-open-sans">
                   <span className="text-white text-xl xs:text-2xl font-black tracking-tight drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
-                    ₹37,999
+                    ₹44,991
                   </span>
                   <span className="text-white/75 line-through text-xs font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
-                    ₹51,350
+                    ₹60,799
                   </span>
                 </div>
                 <span className="inline-block bg-[#18c49e] font-open-sans text-slate-950 text-[9.5px] font-black px-2 py-0.5 rounded-xs uppercase tracking-wider shadow-md">
@@ -143,15 +143,14 @@ export default function Hero() {
                 onClick={openModal}
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-[#0066cc] active:bg-[#0052b3] text-white font-montserrat text-[11.5px] font-black tracking-wider uppercase py-2.5 rounded-[6px] shadow-lg shadow-blue-600/40 transition-all active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
-                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                <span>SHOP NOW +</span>
               </button>
-              <button
-                onClick={openBulkModal}
+              <a
+                href="#features"
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/40 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-2.5 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                ENQUIRE BULK
-              </button>
+                EXPLORE FEATURES
+              </a>
             </div>
           </div>
         </div>
@@ -166,24 +165,22 @@ export default function Hero() {
 
             {/* Headline */}
             <h1 className="font-montserrat text-5xl sm:text-6xl md:text-7xl lg:text-[84px] xl:text-[96px] leading-[0.95] tracking-tight uppercase drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
-              <span className="block font-black text-white">NO POWER.</span>
-              <span className="block font-bold text-white/90">NO SOCKET.</span>
+              <span className="block font-black text-white">CLEAN MORE.</span>
+              <span className="block font-bold text-white/90">EARN MORE.</span>
             </h1>
 
             {/* Description Paragraph */}
             <p className="font-open-sans text-white mt-4 sm:mt-5 max-w-[480px] text-[14px] sm:text-[15.5px] leading-relaxed font-normal drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-              Wash your car anywhere with the Aquaforce® 1400 - a powerful,
-              battery-powered portable pressure washer. No cables, no power
-              sockets, no fixed setup needed.
+              One complete portable cleaning system for Car, Bike, Home, Office &amp; Society cleaning services.
             </p>
 
             {/* Pricing & Discount Badge */}
             <div className="flex items-center gap-3 sm:gap-4 mt-5 sm:mt-7 font-open-sans">
               <span className="text-white/70 line-through text-sm sm:text-base font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                ₹51,350
+                ₹60,799
               </span>
               <span className="text-white text-2xl sm:text-3xl font-black tracking-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                ₹37,999
+                ₹44,991
               </span>
               <span className="bg-[#18c49e] text-slate-950 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
                 26% OFF
@@ -201,15 +198,14 @@ export default function Hero() {
                 onClick={openModal}
                 className="inline-flex items-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] text-white font-montserrat text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3.5 rounded-[4px] shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
-                <ArrowRight className="w-4 h-4 shrink-0" />
+                <span>SHOP NOW +</span>
               </button>
-              <button
-                onClick={openBulkModal}
+              <a
+                href="#features"
                 className="inline-flex items-center border border-white/60 hover:border-white text-white hover:bg-white/15 bg-black/20 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3.5 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
               >
-                Enquire Bulk Quantity
-              </button>
+                EXPLORE FEATURES
+              </a>
             </div>
           </div>
         </div>
@@ -276,10 +272,10 @@ export default function Hero() {
             {/* Pricing Row */}
             <div className="text-white font-inter text-xs font-bold flex items-center gap-2 mt-1 drop-shadow">
               <span className="text-white/70 font-normal">
-                MRP: <span className="line-through">₹51,350</span>
+                MRP: <span className="line-through">₹60,799</span>
               </span>
               <span className="text-white font-extrabold ml-1">
-                Offer Price: ₹37,999
+                Offer Price: ₹44,991
               </span>
             </div>
 
@@ -294,15 +290,14 @@ export default function Hero() {
                 onClick={openModal}
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-[#0066cc] active:bg-[#0052b3] text-white font-montserrat text-[11.5px] font-black tracking-wider uppercase py-3 rounded-[6px] shadow-xl shadow-blue-600/30 transition-all active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
-                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                <span>SHOP NOW +</span>
               </button>
-              <button
-                onClick={openBulkModal}
+              <a
+                href="#features"
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                ENQUIRE BULK
-              </button>
+                EXPLORE FEATURES
+              </a>
             </div>
 
             {/* Micro Footer Note */}
@@ -333,10 +328,10 @@ export default function Hero() {
             {/* Pricing Row */}
             <div className="text-white font-inter text-base sm:text-lg font-bold flex items-center gap-2 mt-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
               <span className="text-white/80 font-normal">
-                MRP: <span className="line-through">₹51,350</span>
+                MRP: <span className="line-through">₹60,799</span>
               </span>
               <span className="text-white font-extrabold ml-1 text-lg sm:text-xl">
-                Offer Price: ₹37,999
+                Offer Price: ₹44,991
               </span>
             </div>
 
@@ -351,15 +346,14 @@ export default function Hero() {
                 onClick={openModal}
                 className="inline-flex items-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] text-white font-montserrat text-xs sm:text-sm font-black tracking-wider uppercase px-7 py-3.5 rounded-[4px] shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
-                <ArrowRight className="w-4 h-4 shrink-0" />
+                <span>SHOP NOW +</span>
               </button>
-              <button
-                onClick={openBulkModal}
+              <a
+                href="#features"
                 className="inline-flex items-center border border-white/60 hover:border-white text-white hover:bg-white/15 bg-black/20 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3.5 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
               >
-                Enquire Bulk Quantity
-              </button>
+                EXPLORE FEATURES
+              </a>
             </div>
 
             {/* Micro Footer Note */}
@@ -420,10 +414,10 @@ export default function Hero() {
             <div className="mt-2.5 flex items-center gap-2.5">
               <div className="flex items-baseline gap-2 font-open-sans">
                 <span className="text-white text-2xl xs:text-[26px] font-black tracking-tight drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
-                  ₹37,999
+                  ₹44,991
                 </span>
                 <span className="text-white/70 line-through text-xs xs:text-[13px] font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
-                  ₹51,350
+                  ₹60,799
                 </span>
               </div>
               <span className="inline-block bg-[#18c49e] font-open-sans text-slate-950 text-[10.5px] font-black px-2.5 py-0.5 rounded-xs uppercase tracking-wider shadow-md">
@@ -442,15 +436,14 @@ export default function Hero() {
                 onClick={openModal}
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-[#0066cc] active:bg-[#0052b3] text-white font-montserrat text-[11.5px] font-black tracking-wider uppercase py-3 rounded-[6px] shadow-xl shadow-blue-600/40 transition-all active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
-                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                <span>SHOP NOW +</span>
               </button>
-              <button
-                onClick={openBulkModal}
+              <a
+                href="#features"
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                ENQUIRE BULK
-              </button>
+                EXPLORE FEATURES
+              </a>
             </div>
           </div>
         </div>
@@ -472,10 +465,10 @@ export default function Hero() {
               {/* Pricing Line */}
               <div className="flex items-center gap-3 font-open-sans">
                 <span className="text-white/70 line-through text-sm sm:text-base font-semibold drop-shadow">
-                  ₹51,350
+                  ₹60,799
                 </span>
                 <span className="text-white text-2xl sm:text-3xl font-black tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                  ₹37,999
+                  ₹44,991
                 </span>
                 <span className="bg-[#18c49e] text-slate-950 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
                   26% OFF
@@ -493,15 +486,14 @@ export default function Hero() {
                   onClick={openModal}
                   className="inline-flex items-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] text-white font-montserrat text-xs sm:text-sm font-black tracking-wider uppercase px-5 sm:px-6 py-2.5 rounded-[4px] shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 >
-                  <span>BUY NOW</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
+                  <span>SHOP NOW +</span>
                 </button>
-                <button
-                  onClick={openBulkModal}
+                <a
+                  href="#features"
                   className="inline-flex items-center border border-white/80 hover:border-white text-white hover:bg-white/15 bg-black/20 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-5 sm:px-6 py-2.5 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
                 >
-                  Enquire Bulk Quantity
-                </button>
+                  EXPLORE FEATURES
+                </a>
               </div>
             </div>
           </div>
@@ -558,10 +550,10 @@ export default function Hero() {
             <div className="mt-2.5 flex items-center gap-2.5">
               <div className="flex items-baseline gap-2 font-open-sans">
                 <span className="text-white text-2xl xs:text-[26px] font-black tracking-tight drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
-                  ₹37,999
+                  ₹44,991
                 </span>
                 <span className="text-white/70 line-through text-xs xs:text-[13px] font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
-                  ₹51,350
+                  ₹60,799
                 </span>
               </div>
               <span className="inline-block bg-[#18c49e] font-open-sans text-slate-950 text-[10.5px] font-black px-2.5 py-0.5 rounded-xs uppercase tracking-wider shadow-md">
@@ -580,15 +572,14 @@ export default function Hero() {
                 onClick={openModal}
                 className="w-full inline-flex items-center justify-center gap-1.5 bg-[#0066cc] active:bg-[#0052b3] text-white font-montserrat text-[11.5px] font-black tracking-wider uppercase py-3 rounded-[6px] shadow-xl shadow-blue-600/40 transition-all active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
-                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                <span>SHOP NOW +</span>
               </button>
-              <button
-                onClick={openBulkModal}
+              <a
+                href="#features"
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                ENQUIRE BULK
-              </button>
+                EXPLORE FEATURES
+              </a>
             </div>
           </div>
         </div>
@@ -610,10 +601,10 @@ export default function Hero() {
               {/* Pricing Line */}
               <div className="flex items-center gap-3 font-open-sans">
                 <span className="text-white/70 line-through text-sm sm:text-base font-semibold drop-shadow">
-                  ₹51,350
+                  ₹60,799
                 </span>
                 <span className="text-white text-2xl sm:text-3xl font-black tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                  ₹37,999
+                  ₹44,991
                 </span>
                 <span className="bg-[#18c49e] text-slate-950 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
                   26% OFF
@@ -631,15 +622,14 @@ export default function Hero() {
                   onClick={openModal}
                   className="inline-flex items-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] text-white font-montserrat text-xs sm:text-sm font-black tracking-wider uppercase px-5 sm:px-6 py-2.5 rounded-[4px] shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 >
-                  <span>BUY NOW</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
+                  <span>SHOP NOW +</span>
                 </button>
-                <button
-                  onClick={openBulkModal}
+                <a
+                  href="#features"
                   className="inline-flex items-center border border-white/80 hover:border-white text-white hover:bg-white/15 bg-black/20 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-5 sm:px-6 py-2.5 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
                 >
-                  Enquire Bulk Quantity
-                </button>
+                  EXPLORE FEATURES
+                </a>
               </div>
             </div>
           </div>

@@ -140,7 +140,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const priceParam = searchParams.get("price");
-    const totalPrice = priceParam ? Math.max(1, parseInt(priceParam, 10)) : 37999;
+    const totalPrice = priceParam ? Math.max(1, parseInt(priceParam, 10)) : 44991;
 
     const key_id = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     if (!key_id) {

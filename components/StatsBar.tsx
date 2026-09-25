@@ -68,7 +68,7 @@ export default function StatsBar() {
               POWER
             </span>
             <span className="font-montserrat text-xl sm:text-3xl lg:text-[32px] font-black text-[#111827] my-0.5 tracking-tight leading-tight">
-              NO
+              0
             </span>
             <span className="font-open-sans text-[9px] sm:text-[10px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF] leading-tight">
               SOCKETS NEEDED

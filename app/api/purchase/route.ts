@@ -82,7 +82,7 @@ export async function POST(req: Request) {
           pincode,
           product: product || "Cordless AquaForce 1400 High-pressure Washer System",
           quantity: quantity || 1,
-          amount: amount || 37999,
+          amount: amount || 44991,
           paymentMode: isCodOrder ? "COD" : "Pre-paid",
           codAmount: isCodOrder ? (Number(codBalance) || (Number(amount) - Math.floor(Number(amount) * 0.1) + 149)) : 0,
         });
@@ -126,7 +126,7 @@ export async function POST(req: Request) {
       gstNumber: gstNumber || "N/A",
       product: product || "Aquaforce 1400",
       quantity: Number(quantity) || 1,
-      amount: Number(amount) || 37999,
+      amount: Number(amount) || 44991,
       status: resolvedStatus,
     };
 

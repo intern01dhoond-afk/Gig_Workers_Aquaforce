@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const route = process.env.YOURBULKSMS_ROUTE || "2";
     const templateId = process.env.YOURBULKSMS_TEMPLATE_ID || "";
 
-    const formattedAmount = Number(amount || 37999).toLocaleString("en-IN");
+    const formattedAmount = Number(amount || 44991).toLocaleString("en-IN");
     const message = `Dear ${fullName || "Customer"}, your order #${orderId || ""} for ${product || "Aquaforce 1400"} (Rs.${formattedAmount}) has been confirmed! Thank you for choosing Promec India.`;
 
     if (!authKey) {

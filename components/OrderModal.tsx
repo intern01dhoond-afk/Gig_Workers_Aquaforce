@@ -728,8 +728,8 @@ const PRODUCT_DATA = {
     "The Aquaforce® 1400 is a powerful, battery-powered portable pressure washer. No cables, no power sockets, no fixed setup needed.",
   rating: 4.8,
   reviewsCount: 2097,
-  offerPrice: 37999,
-  mrp: 49999,
+  offerPrice: 44991,
+  mrp: 60799,
   colors: [
     {
       name: "Yellow",
@@ -832,8 +832,8 @@ export default function OrderModal({
   const [isLoadingLiveMethods, setIsLoadingLiveMethods] = useState<boolean>(false);
 
   // Dynamic Pricing Calculations
-  const currentOfferPrice = selectedVacuumOption === "without" ? 35999 : 37999;
-  const currentMRP = selectedVacuumOption === "without" ? 47999 : 51350;
+  const currentOfferPrice = selectedVacuumOption === "without" ? 42991 : 44991;
+  const currentMRP = selectedVacuumOption === "without" ? 57999 : 60799;
   const unitSavings = currentMRP - currentOfferPrice;
   const totalPrice = currentOfferPrice * quantity;
   const totalMRP = currentMRP * quantity;
@@ -3491,10 +3491,10 @@ interface CheckoutSubmitOptions {
                             </span>
                           </div>
                           <div className="mt-1 flex items-baseline gap-1.5 font-open-sans">
-                            <span className="text-sm font-bold text-slate-900">₹35,999</span>
-                            <span className="text-[11px] text-slate-400 line-through">₹47,999</span>
+                            <span className="text-sm font-bold text-slate-900">₹42,991</span>
+                            <span className="text-[11px] text-slate-400 line-through">₹57,999</span>
                           </div>
-                          <span className="text-[10.5px] font-bold text-emerald-600 mt-0.5 font-open-sans">Save ₹12,000 | 25% OFF</span>
+                          <span className="text-[10.5px] font-bold text-emerald-600 mt-0.5 font-open-sans">Save ₹15,008 | 26% OFF</span>
                         </button>
 
                         {/* Option 2: With Vacuum */}
@@ -3522,10 +3522,10 @@ interface CheckoutSubmitOptions {
                             </span>
                           </div>
                           <div className="mt-1 flex items-baseline gap-1.5 font-open-sans">
-                            <span className="text-sm font-bold text-slate-900">₹37,999</span>
-                            <span className="text-[11px] text-slate-400 line-through">₹51,350</span>
+                            <span className="text-sm font-bold text-slate-900">₹44,991</span>
+                            <span className="text-[11px] text-slate-400 line-through">₹60,799</span>
                           </div>
-                          <span className="text-[10.5px] font-bold text-emerald-600 mt-0.5 font-open-sans">Save ₹13,351 | 26% OFF</span>
+                          <span className="text-[10.5px] font-bold text-emerald-600 mt-0.5 font-open-sans">Save ₹15,808 | 26% OFF</span>
                         </button>
                       </div>
 
@@ -3533,7 +3533,7 @@ interface CheckoutSubmitOptions {
                       {selectedVacuumOption === "with" && (
                         <div className="mt-3 p-2.5 sm:p-3 bg-[#eafaf1] border border-[#bbf2d7] rounded-2xl flex items-center justify-between gap-2.5 text-[11px] xs:text-xs sm:text-[12.5px] font-open-sans shadow-2xs animate-in fade-in duration-150">
                           <div className="text-[#0e5235] font-bold leading-tight">
-                            With Vacuum you are saving <span className="font-extrabold text-[#057a4a]">₹1,351/-</span> more!
+                            With Vacuum you are saving <span className="font-extrabold text-[#057a4a]">₹800/-</span> more!
                           </div>
                           <div className="bg-[#00965e] text-white px-2.5 py-1 rounded-xl font-extrabold text-[9.5px] sm:text-[10px] tracking-wider uppercase whitespace-nowrap shrink-0 font-montserrat shadow-xs">
                             BEST VALUE

@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
     const cleanPhone = String(phone).replace(/\D/g, "").slice(-10);
     const resolvedOrderId = orderId || `SNM_${Date.now()}`;
-    const orderValue = Math.round(Number(amount) || 37999);
+    const orderValue = Math.round(Number(amount) || 44991);
 
     const merchantId = process.env.SNAPMINT_MERCHANT_ID;
     const merchantKey = process.env.SNAPMINT_MERCHANT_KEY;

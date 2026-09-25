@@ -52,25 +52,29 @@ export default function Header() {
             : "max-w-[1440px] w-full h-[64px] sm:h-[76px] lg:h-[82px] bg-transparent border-b border-transparent shadow-none"
         }`}
       >
-        {/* PROMEC Brand Logo */}
-        <div className="flex items-center group shrink-0 select-none">
-          <div
-            className={`relative transition-all duration-300 shrink-0 ${
-              scrolled
-                ? "w-[125px] h-[26px] sm:w-[155px] sm:h-[32px] lg:w-[185px] lg:h-[36px]"
-                : "w-[135px] h-[28px] sm:w-[170px] sm:h-[34px] lg:w-[200px] lg:h-[40px]"
-            }`}
-          >
+        {/* AMEC TECHNOLOGY Brand Logo */}
+        <a href="#home" className="flex items-center gap-2 group shrink-0 select-none cursor-pointer">
+          <div className="relative w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8">
             <Image
-              src="/aquaforceforautocare/images/promec-logo.svg"
-              alt="PROMEC"
+              src="/aquaforceforautocare/logo_shield.webp"
+              alt="AMEC Shield"
               fill
               priority
-              sizes="(max-width: 640px) 135px, (max-width: 1024px) 170px, 200px"
+              sizes="32px"
+              className="object-contain"
+            />
+          </div>
+          <div className="relative w-28 sm:w-32 md:w-36 h-4 sm:h-4.5 md:h-5">
+            <Image
+              src="/aquaforceforautocare/logo_amec_new.webp"
+              alt="AMEC TECHNOLOGY"
+              fill
+              priority
+              sizes="144px"
               className="object-contain object-left"
             />
           </div>
-        </div>
+        </a>
 
         {/* Center Navigation Links */}
         <nav className="hidden md:flex items-center gap-7 lg:gap-11">
@@ -85,13 +89,13 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Buy Now Action Button */}
+        {/* Shop Now Action Button */}
         <div className="hidden md:flex items-center">
           <button
             onClick={openModal}
             className="bg-white hover:bg-slate-100 text-[#0f172a] text-xs font-bold tracking-wider uppercase px-5 lg:px-6 py-2 sm:py-2.5 rounded-[6px] shadow-sm transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer font-montserrat"
           >
-            BUY NOW
+            SHOP NOW
           </button>
         </div>
 
@@ -135,7 +139,7 @@ export default function Header() {
                 }}
                 className="mt-2 w-full inline-flex items-center justify-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] active:bg-[#004799] text-white text-xs font-bold tracking-wider uppercase px-5 py-3.5 rounded-[8px] shadow-lg shadow-blue-600/30 cursor-pointer active:scale-98 transition-all font-montserrat"
               >
-                <span>BUY NOW</span>
+                <span>SHOP NOW</span>
                 <ArrowRight className="w-4 h-4 text-white shrink-0" />
               </button>
             </nav>

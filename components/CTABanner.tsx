@@ -52,7 +52,7 @@ export default function CTABanner() {
                 onClick={openModal}
                 className="mt-4 w-full bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0062ff] font-montserrat text-xs xs:text-[13px] font-extrabold uppercase tracking-wider py-3.5 rounded-[10px] shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
               >
-                <span>BUY NOW</span>
+                <span>SHOP NOW</span>
                 <ArrowRight className="w-4 h-4 text-[#0062ff] stroke-[2.5]" />
               </button>
             </div>
@@ -90,7 +90,7 @@ export default function CTABanner() {
                 onClick={openModal}
                 className="mt-5 lg:mt-7 inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0062ff] font-montserrat text-xs sm:text-sm font-bold tracking-wider uppercase px-7 py-3.5 rounded-[8px] shadow-md transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer group"
               >
-                <span>BUY NOW</span>
+                <span>SHOP NOW</span>
                 <ArrowRight className="w-4 h-4 text-[#0062ff] transition-transform duration-200 group-hover:translate-x-1" />
               </button>
             </div>

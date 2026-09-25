@@ -44,10 +44,10 @@ export default function PromoBanner() {
           {/* Pricing Row */}
           <div className="text-white font-open-sans text-sm sm:text-base font-bold flex items-center gap-2 mt-3">
             <span className="text-white/65 font-normal">
-              MRP: <span className="line-through">₹51,350</span>
+              MRP: <span className="line-through">₹60,799</span>
             </span>
             <span className="text-white font-extrabold ml-1">
-              Offer Price: ₹37,999
+              Offer Price: ₹44,991
             </span>
           </div>
 
@@ -57,7 +57,7 @@ export default function PromoBanner() {
               onClick={openModal}
               className="inline-flex items-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] text-white font-montserrat text-xs sm:text-sm font-black tracking-wider uppercase px-7 py-3.5 rounded-[4px] shadow-xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
-              <span>BUY NOW</span>
+              <span>SHOP NOW</span>
               <ArrowRight className="w-4 h-4 shrink-0" />
             </button>
           </div>
