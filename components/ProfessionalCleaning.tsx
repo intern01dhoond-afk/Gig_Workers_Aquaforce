@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
+import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 const SERVICE_CARDS = [
   {
@@ -39,18 +38,6 @@ const SERVICE_CARDS = [
 ];
 
 export default function ProfessionalCleaning() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 260;
-      scrollContainerRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
     <section id="why-section" className="py-10 sm:py-16 lg:py-[72px] bg-white w-full overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[80px]">
@@ -89,36 +76,13 @@ export default function ProfessionalCleaning() {
           </ScrollReveal>
         </div>
 
-        {/* Carousel Header Controls (Desktop Nav Arrows) */}
-        <div className="flex items-center justify-end gap-2 mt-8 sm:mt-10 mb-3">
-          <button
-            type="button"
-            onClick={() => scroll("left")}
-            aria-label="Scroll left"
-            className="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer active:scale-95"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={() => scroll("right")}
-            aria-label="Scroll right"
-            className="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer active:scale-95"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
-
-        {/* Bottom Horizontal Image Cards Layout */}
-        <ScrollReveal direction="up" delay={0.15}>
-          <div
-            ref={scrollContainerRef}
-            className="flex gap-3.5 sm:gap-4 overflow-x-auto scroll-smooth no-scrollbar snap-x snap-mandatory pb-4 pt-1"
-          >
-            {SERVICE_CARDS.map((card) => (
+        {/* Bottom Infinite Slider Image Cards Layout */}
+        <ScrollReveal direction="up" delay={0.15} className="mt-8 sm:mt-12 w-full">
+          <InfiniteSlider duration={35} durationOnHover={85} gap={16} className="w-full py-2">
+            {SERVICE_CARDS.map((card, idx) => (
               <div
-                key={card.title}
-                className="w-[195px] xs:w-[215px] sm:w-[243px] h-[200px] xs:h-[220px] sm:h-[245px] shrink-0 snap-start relative rounded-[16px] overflow-hidden shadow-xs hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer"
+                key={`${card.title}-${idx}`}
+                className="w-[195px] xs:w-[215px] sm:w-[243px] h-[200px] xs:h-[220px] sm:h-[245px] shrink-0 relative rounded-[16px] overflow-hidden shadow-xs hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer select-none"
               >
                 <Image
                   src={card.image}
@@ -128,7 +92,7 @@ export default function ProfessionalCleaning() {
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 {/* Gradient overlay for clear label contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4 pointer-events-none">
                   <h3 className="text-white text-sm sm:text-[15px] font-bold font-montserrat tracking-tight leading-tight">
                     {card.title}
                   </h3>
@@ -138,7 +102,7 @@ export default function ProfessionalCleaning() {
                 </div>
               </div>
             ))}
-          </div>
+          </InfiniteSlider>
         </ScrollReveal>
       </div>
     </section>
