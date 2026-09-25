@@ -1,93 +1,145 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
+const SERVICE_CARDS = [
+  {
+    title: "Car Cleaning",
+    subtitle: "Exterior washing & detailing",
+    image: "/aquaforceforautocare/images/use-cases/1.webp",
+  },
+  {
+    title: "Bike Cleaning",
+    subtitle: "Two-wheeler wash & degreasing",
+    image: "/aquaforceforautocare/images/use-cases/2.webp",
+  },
+  {
+    title: "Home Cleaning",
+    subtitle: "Balcony, tiles & patio wash",
+    image: "/aquaforceforautocare/images/use-cases/3.1.webp",
+  },
+  {
+    title: "Office Cleaning",
+    subtitle: "Glass panels & commercial entryways",
+    image: "/aquaforceforautocare/images/use-cases/4.1.webp",
+  },
+  {
+    title: "Society Cleaning",
+    subtitle: "Paved driveways & shared spaces",
+    image: "/aquaforceforautocare/images/use-cases/5.webp",
+  },
+  {
+    title: "Doorstep Detailing",
+    subtitle: "Portable on-site equipment setup",
+    image: "/aquaforceforautocare/images/Remainig%20images/12.webp",
+  },
+];
+
 export default function ProfessionalCleaning() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 320;
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
-    <section id="why-section" className="py-10 sm:py-16 lg:py-[80px] bg-white w-full">
+    <section id="why-section" className="py-10 sm:py-16 lg:py-[72px] bg-white w-full overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[80px]">
         {/* Top Eyebrow Badge */}
-        <ScrollReveal direction="up" className="flex justify-center lg:justify-start mb-3 sm:mb-5">
-          <div className="inline-flex items-center px-3.5 py-1 rounded-full border border-sky-600/50 font-open-sans text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-900 bg-transparent">
+        <ScrollReveal direction="up" className="flex justify-start mb-3 sm:mb-4">
+          <div className="inline-flex items-center px-3.5 py-1 rounded-full border border-sky-600/50 font-open-sans text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-800 bg-white shadow-2xs select-none">
             WHY AQUAFORCE 1400?
           </div>
         </ScrollReveal>
 
         {/* Section Heading & Copy Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-12 items-start text-center lg:text-left">
-          <ScrollReveal direction="right" delay={0.05} className="lg:col-span-6 max-w-[611px] mx-auto lg:mx-0">
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[48px] font-medium font-montserrat text-[#0F1729] leading-[1.18] lg:leading-[1.1] tracking-tight">
-              <span className="sm:hidden">Professional Cleaning.<br />No Power Socket Needed.</span>
-              <span className="hidden sm:inline lg:hidden">Professional Cleaning. No Power Socket Needed.</span>
-              <span className="hidden lg:inline">
-                Professional Cleaning.
-                <br />
-                No Power Socket
-                <br />
-                Needed.
-              </span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start text-left">
+          {/* Left Column: Heading */}
+          <ScrollReveal direction="right" delay={0.05} className="lg:col-span-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-medium font-montserrat text-[#0F1729] leading-[1.14] tracking-tight">
+              Your Equipment.
+              <br />
+              Your Services. Your
+              <br />
+              Business.
             </h2>
           </ScrollReveal>
 
-          <ScrollReveal direction="left" delay={0.1} className="lg:col-span-6 max-w-[649px] font-open-sans text-[#333340] text-sm xs:text-[15px] sm:text-lg lg:text-[20px] font-normal leading-relaxed space-y-3 sm:space-y-5 pt-1 mx-auto lg:mx-0">
+          {/* Right Column: Paragraphs */}
+          <ScrollReveal
+            direction="left"
+            delay={0.1}
+            className="lg:col-span-6 font-open-sans text-[#333340] text-sm xs:text-[15px] sm:text-[16px] lg:text-[17px] font-normal leading-relaxed space-y-4 pt-1"
+          >
             <p>
-              Traditional cleaning jobs depend on power access, making it difficult for gig workers to clean vehicles in open areas, parking lots or societies.
+              Why AquaForce for Your Business? Lower initial equipment investment, multiple cleaning services, less equipment to carry, faster setup at customer locations, portable doorstep operation, and the opportunity to serve more customer categories.
             </p>
             <p>
-              AquaForce 1400 changes that. Its integrated lithium-ion battery powers the pressure pump, allowing you to carry the machine wherever the job takes you and start cleaning without depending on a power socket.
+              Your Equipment. Your Services. Your Business. One AquaForce setup helps you serve car, bike, home, office, and society cleaning customers from one versatile system.
             </p>
           </ScrollReveal>
         </div>
 
-        {/* Bottom Image Cards */}
-        <div className="flex flex-col lg:flex-row gap-3.5 sm:gap-4 mt-8 sm:mt-12 w-full">
-          {/* Left Wide Card (1st image) */}
-          <ScrollReveal direction="zoom" delay={0.05} className="w-full lg:w-[940px] h-[210px] xs:h-[250px] sm:h-[300px] lg:h-[364px] relative rounded-xl sm:rounded-2xl overflow-hidden shadow-md shrink-0">
-            {/* Mobile View */}
-            <Image
-              src="/aquaforceforautocare/images/Remainig%20images/12%20Mobile.webp"
-              alt="Car detailing with high pressure water spray outdoors"
-              fill
-              priority
-              quality={100}
-              sizes="(max-width: 1024px) 100vw, 940px"
-              className="object-cover lg:hidden"
-            />
-            {/* Desktop View */}
-            <Image
-              src="/aquaforceforautocare/images/Remainig%20images/12.webp"
-              alt="Car detailing with high pressure water spray outdoors"
-              fill
-              priority
-              quality={100}
-              sizes="(max-width: 1024px) 100vw, 940px"
-              className="object-cover hidden lg:block"
-            />
-          </ScrollReveal>
-
-          {/* Right Card (2nd image) */}
-          <ScrollReveal direction="zoom" delay={0.15} className="w-full lg:w-[324px] h-[210px] xs:h-[250px] sm:h-[300px] lg:h-[364px] relative rounded-xl sm:rounded-2xl overflow-hidden shadow-md shrink-0">
-            {/* Mobile View */}
-            <Image
-              src="/aquaforceforautocare/images/Remainig%20images/Moto%20mobile.webp"
-              alt="Aquaforce motorcycle washing cordless power"
-              fill
-              priority
-              quality={100}
-              sizes="(max-width: 1024px) 100vw, 324px"
-              className="object-cover object-center lg:hidden"
-            />
-            {/* Desktop View */}
-            <Image
-              src="/aquaforceforautocare/images/use-cases/2.webp"
-              alt="Aquaforce motorcycle washing cordless power"
-              fill
-              priority
-              quality={100}
-              sizes="(max-width: 1024px) 100vw, 324px"
-              className="object-cover object-center hidden lg:block"
-            />
-          </ScrollReveal>
+        {/* Carousel Header Controls (Desktop Nav Arrows) */}
+        <div className="flex items-center justify-end gap-2 mt-8 sm:mt-10 mb-3">
+          <button
+            type="button"
+            onClick={() => scroll("left")}
+            aria-label="Scroll left"
+            className="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer active:scale-95"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => scroll("right")}
+            aria-label="Scroll right"
+            className="w-8 h-8 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer active:scale-95"
+          >
+            <ChevronRight size={16} />
+          </button>
         </div>
+
+        {/* Bottom Horizontal Image Cards Layout */}
+        <ScrollReveal direction="up" delay={0.15}>
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-3.5 sm:gap-4 overflow-x-auto scroll-smooth no-scrollbar snap-x snap-mandatory pb-4 pt-1"
+          >
+            {SERVICE_CARDS.map((card) => (
+              <div
+                key={card.title}
+                className="w-[200px] xs:w-[220px] sm:w-[250px] lg:w-[270px] h-[240px] xs:h-[260px] sm:h-[300px] lg:h-[320px] shrink-0 snap-start relative rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-slate-200/80 group transition-all cursor-pointer"
+              >
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 250px, 270px"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                />
+                {/* Gradient overlay for clear label contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-4">
+                  <h3 className="text-white text-base sm:text-lg font-bold font-montserrat tracking-tight leading-tight">
+                    {card.title}
+                  </h3>
+                  <p className="text-white/80 text-[11px] sm:text-xs font-open-sans mt-0.5">
+                    {card.subtitle}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

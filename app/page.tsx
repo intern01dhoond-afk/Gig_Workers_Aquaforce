@@ -35,8 +35,8 @@ export default function Home() {
       <Hero />
       <SaleTicker />
       <StatsBar />
-      <EngineeredPerformance />
       <ProfessionalCleaning />
+      <EngineeredPerformance />
       <WashWithoutLimits />
       <FourSteps />
       <UseCase />
