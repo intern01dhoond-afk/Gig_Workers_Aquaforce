@@ -16,27 +16,18 @@ export default function Footer() {
     <>
       <footer className="bg-[#0b0c0e] text-white py-10 xs:py-14 sm:py-20 border-t border-white/5 w-full">
         <ScrollReveal direction="up" className="max-w-[1440px] mx-auto px-4 sm:px-12 lg:px-[80px] flex flex-col items-center text-center">
-          {/* AMEC TECHNOLOGY Brand Logo */}
-          <div className="flex items-center gap-2 group mb-6 sm:mb-8 select-none">
-            <div className="relative w-7 h-7 sm:w-8 sm:h-8">
+          {/* PROMEC Brand Logo */}
+          <Link href="/#home" className="flex items-center justify-center group mb-6 sm:mb-8 select-none cursor-pointer">
+            <div className="relative w-[135px] h-[28px] sm:w-[170px] sm:h-[34px] lg:w-[190px] lg:h-[38px]">
               <Image
-                src="/aquaforceforautocare/logo_shield.webp"
-                alt="AMEC Shield"
+                src="/aquaforceforautocare/images/promec-logo.svg"
+                alt="PROMEC"
                 fill
-                sizes="32px"
-                className="object-contain"
+                sizes="(max-width: 640px) 135px, (max-width: 1024px) 170px, 190px"
+                className="object-contain object-center"
               />
             </div>
-            <div className="relative w-32 sm:w-36 h-4 sm:h-5">
-              <Image
-                src="/aquaforceforautocare/logo_amec_new.webp"
-                alt="AMEC TECHNOLOGY"
-                fill
-                sizes="144px"
-                className="object-contain object-left"
-              />
-            </div>
-          </div>
+          </Link>
 
           {/* Center Navigation Links */}
           <nav className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 md:gap-12 text-xs xs:text-sm font-medium text-white/80">
@@ -128,21 +119,21 @@ export default function Footer() {
 
           {/* Right: Policy Links separated by pipes */}
           <div className="flex flex-wrap items-center justify-center lg:justify-end gap-x-2 text-xs text-white/50">
-            <a href="/privacy-policy" className="hover:text-white transition-colors">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">
               Privacy Policy
-            </a>
+            </Link>
             <span className="text-white/20 select-none">|</span>
-            <a href="/terms-of-service" className="hover:text-white transition-colors">
+            <Link href="/terms-of-service" className="hover:text-white transition-colors">
               Terms of Use
-            </a>
+            </Link>
             <span className="text-white/20 select-none">|</span>
-            <a href="/cancellation-policy" className="hover:text-white transition-colors">
+            <Link href="/cancellation-policy" className="hover:text-white transition-colors">
               Cancelation Policy
-            </a>
+            </Link>
             <span className="text-white/20 select-none">|</span>
-            <a href="/refund-policy" className="hover:text-white transition-colors">
+            <Link href="/refund-policy" className="hover:text-white transition-colors">
               Refund Policy
-            </a>
+            </Link>
           </div>
         </div>
       </ScrollReveal>
