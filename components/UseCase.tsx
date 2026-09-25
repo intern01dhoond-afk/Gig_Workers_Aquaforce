@@ -12,40 +12,34 @@ interface UseCaseItem {
 
 const USE_CASES: UseCaseItem[] = [
   {
-    id: "car-washing",
-    label: "Car Washing",
-    desc: "Clean cars conveniently at home, parking lots, or detailing bays without needing long extension cords or fixed plumbing.",
+    id: "car-cleaning",
+    label: "Car Cleaning",
+    desc: "Exterior washing + interior vacuuming",
     image: "/aquaforceforautocare/images/use-cases/1.webp",
   },
   {
-    id: "bike-washing",
-    label: "Bike Washing",
-    desc: "Remove mud, road grit, and chain grease from motorcycles and bicycles with targeted pressure that protects delicate seals.",
+    id: "bike-cleaning",
+    label: "Bike Cleaning",
+    desc: "Complete bike wash + deep chain degreasing",
     image: "/aquaforceforautocare/images/use-cases/2.webp",
   },
   {
-    id: "home-users",
-    label: "Home Users",
-    desc: "Power-wash patio tiles, stone steps, driveways, garden paths, and outdoor patio furniture with zero setup hassle.",
+    id: "home-cleaning",
+    label: "Home Cleaning",
+    desc: "Balcony, floor tiles, windows & outdoor furniture deep cleaning",
     image: "/aquaforceforautocare/images/use-cases/3.1.webp",
   },
   {
-    id: "workshops-garages",
-    label: "Workshops & Garages",
-    desc: "A heavy-duty, portable washing companion for auto workshops, service bays, and professional vehicle detailing centers.",
+    id: "office-cleaning",
+    label: "Office Cleaning",
+    desc: "Commercial entryways, glass panels, carpets & floor washing",
     image: "/aquaforceforautocare/images/use-cases/4.1.webp",
   },
   {
-    id: "mobile-car-wash",
-    label: "Mobile Car Wash",
-    desc: "The perfect all-in-one washing setup for mobile detailers - compact, battery-powered, and siphons water from any onboard tank or container.",
+    id: "society-cleaning",
+    label: "Society Cleaning",
+    desc: "Parking bays, paved driveways, clubhouses & shared amenities",
     image: "/aquaforceforautocare/images/use-cases/5.webp",
-  },
-  {
-    id: "remote-open-areas",
-    label: "Remote & Open Areas",
-    desc: "Wash off-road vehicles, trucks, and equipment anywhere off the grid - beside lakes, trailheads, campsites, or open farm fields.",
-    image: "/aquaforceforautocare/images/use-cases/6.webp",
   },
 ];
 
@@ -167,13 +161,13 @@ export default function UseCase() {
             </div>
 
             {/* Section Title */}
-            <h2 className="text-[#0F1729] font-montserrat text-2xl xs:text-3xl sm:text-4xl lg:text-[42px] font-medium tracking-tight leading-[1.15] max-w-[567px] mx-auto">
-              Discover Your Use Case
+            <h2 className="text-[#0F1729] font-montserrat text-2xl xs:text-3xl sm:text-4xl lg:text-[42px] font-medium tracking-tight leading-[1.15] max-w-[680px] mx-auto">
+              One Setup. Multiple Services
             </h2>
 
             {/* Subtitle */}
             <p className="text-[#333340] font-open-sans text-xs xs:text-sm sm:text-base lg:text-[17px] font-normal leading-relaxed mt-1.5 sm:mt-2 max-w-[800px] mx-auto">
-              Whether detailing high-end vehicles or prepping off-road gear, Aquaforce® fits every scenario.
+              Whether detailing high-end supercars or prepping mountain bikes, the Aquaforce fits the mold.
             </p>
           </div>
 
@@ -315,9 +309,6 @@ export default function UseCase() {
                         : "opacity-0 translate-y-3 pointer-events-none"
                     }`}
                   >
-                    <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#0066cc] mb-2">
-                      {item.label}
-                    </span>
                     <p className="text-[#4D4D59] text-base sm:text-lg lg:text-[18px] font-normal leading-[1.65]">
                       {item.desc}
                     </p>
