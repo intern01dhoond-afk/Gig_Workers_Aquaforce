@@ -832,8 +832,8 @@ export default function OrderModal({
   const [isLoadingLiveMethods, setIsLoadingLiveMethods] = useState<boolean>(false);
 
   // Dynamic Pricing Calculations
-  const currentOfferPrice = selectedVacuumOption === "without" ? 42991 : 44991;
-  const currentMRP = selectedVacuumOption === "without" ? 57999 : 60799;
+  const currentOfferPrice = 44991;
+  const currentMRP = 60799;
   const unitSavings = currentMRP - currentOfferPrice;
   const totalPrice = currentOfferPrice * quantity;
   const totalMRP = currentMRP * quantity;
@@ -1505,7 +1505,7 @@ interface CheckoutSubmitOptions {
             pincode: formData.pincode,
             gstNumber: formData.gstNumber || "N/A",
           },
-          variantId: selectedVacuumOption === "without" ? "without-vacuum" : "with-vacuum",
+          variantId: "with-vacuum",
           colorName: currentColor.name,
           quantity: quantity,
           paymentMethod: isCodOrder ? "COD_ADVANCE" : isEmiMode ? "EMI" : "FULL_ONLINE",
@@ -3168,9 +3168,6 @@ interface CheckoutSubmitOptions {
                     <span className="text-xs sm:text-[13px] font-bold text-slate-900 font-montserrat uppercase tracking-wide">
                       PRICE BREAKDOWN
                     </span>
-                    <span className="bg-[#eff6ff] text-[#2563eb] border border-blue-200/70 text-[11px] font-semibold px-2.5 py-0.5 rounded-full font-open-sans">
-                      {selectedVacuumOption === "without" ? "Without Vacuum" : "With Vacuum"}
-                    </span>
                   </div>
 
                   <div className="space-y-1.5 text-xs sm:text-[13px] font-open-sans">
@@ -3460,86 +3457,6 @@ interface CheckoutSubmitOptions {
                           FREE Delivery
                         </span>
                       </div>
-                    </div>
-
-                    <div className="w-full h-px bg-slate-100 my-2" />
-
-                    {/* Vacuum Package Option Selector (Without Vacuum vs With Vacuum) */}
-                    <div>
-                      <p className="text-xs sm:text-sm font-semibold text-[#0F1729] mb-2 font-open-sans">
-                        Select Variant / Package:
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-3">
-                        {/* Option 1: Without Vacuum */}
-                        <button
-                          type="button"
-                          onClick={() => setSelectedVacuumOption("without")}
-                          className={`pt-3.5 pb-3 px-3 sm:px-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                            selectedVacuumOption === "without"
-                              ? "border-[#0066cc] bg-blue-50/60 ring-1 ring-[#0066cc]"
-                              : "border-slate-200 hover:border-slate-300 bg-white"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between gap-1.5 sm:gap-2">
-                            <span className="font-bold text-xs sm:text-[13px] text-slate-900 font-montserrat whitespace-nowrap">
-                              Without Vacuum
-                            </span>
-                            <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ml-1 ${
-                              selectedVacuumOption === "without" ? "border-[#0066cc] bg-[#0066cc]" : "border-slate-300"
-                            }`}>
-                              {selectedVacuumOption === "without" && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                            </span>
-                          </div>
-                          <div className="mt-1 flex items-baseline gap-1.5 font-open-sans">
-                            <span className="text-sm font-bold text-slate-900">₹42,991</span>
-                            <span className="text-[11px] text-slate-400 line-through">₹57,999</span>
-                          </div>
-                          <span className="text-[10.5px] font-bold text-emerald-600 mt-0.5 font-open-sans">Save ₹15,008 | 26% OFF</span>
-                        </button>
-
-                        {/* Option 2: With Vacuum */}
-                        <button
-                          type="button"
-                          onClick={() => setSelectedVacuumOption("with")}
-                          className={`pt-3.5 pb-3 px-3 sm:px-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative ${
-                            selectedVacuumOption === "with"
-                              ? "border-[#0066cc] bg-blue-50/60 ring-1 ring-[#0066cc]"
-                              : "border-slate-200 hover:border-slate-300 bg-white"
-                          }`}
-                        >
-                          <span className="absolute -top-2.5 right-2.5 sm:right-3 z-10 bg-[#0066cc] text-white text-[9.5px] font-extrabold uppercase tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1 font-montserrat select-none whitespace-nowrap">
-                            <Star size={10} fill="#f59e0b" strokeWidth={0} className="text-[#f59e0b] shrink-0" />
-                            <span>RECOMMENDED</span>
-                          </span>
-                          <div className="flex items-center justify-between gap-1.5 sm:gap-2">
-                            <span className="font-bold text-xs sm:text-[13px] text-slate-900 font-montserrat whitespace-nowrap">
-                              With Vacuum
-                            </span>
-                            <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ml-1 ${
-                              selectedVacuumOption === "with" ? "border-[#0066cc] bg-[#0066cc]" : "border-slate-300"
-                            }`}>
-                              {selectedVacuumOption === "with" && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                            </span>
-                          </div>
-                          <div className="mt-1 flex items-baseline gap-1.5 font-open-sans">
-                            <span className="text-sm font-bold text-slate-900">₹44,991</span>
-                            <span className="text-[11px] text-slate-400 line-through">₹60,799</span>
-                          </div>
-                          <span className="text-[10.5px] font-bold text-emerald-600 mt-0.5 font-open-sans">Save ₹15,808 | 26% OFF</span>
-                        </button>
-                      </div>
-
-                      {/* Savings Upsell Highlight Pill - Shown ONLY when With Vacuum option is selected */}
-                      {selectedVacuumOption === "with" && (
-                        <div className="mt-3 p-2.5 sm:p-3 bg-[#eafaf1] border border-[#bbf2d7] rounded-2xl flex items-center justify-between gap-2.5 text-[11px] xs:text-xs sm:text-[12.5px] font-open-sans shadow-2xs animate-in fade-in duration-150">
-                          <div className="text-[#0e5235] font-bold leading-tight">
-                            With Vacuum you are saving <span className="font-extrabold text-[#057a4a]">₹800/-</span> more!
-                          </div>
-                          <div className="bg-[#00965e] text-white px-2.5 py-1 rounded-xl font-extrabold text-[9.5px] sm:text-[10px] tracking-wider uppercase whitespace-nowrap shrink-0 font-montserrat shadow-xs">
-                            BEST VALUE
-                          </div>
-                        </div>
-                      )}
                     </div>
 
                     <div className="w-full h-px bg-slate-100 my-2" />

@@ -52,25 +52,21 @@ export default function Header() {
             : "max-w-[1440px] w-full h-[64px] sm:h-[76px] lg:h-[82px] bg-transparent border-b border-transparent shadow-none"
         }`}
       >
-        {/* AMEC TECHNOLOGY Brand Logo */}
-        <a href="#home" className="flex items-center gap-2 group shrink-0 select-none cursor-pointer">
-          <div className="relative w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8">
+        {/* PROMEC Brand Logo */}
+        <a href="#home" className="flex items-center group shrink-0 select-none cursor-pointer">
+          <div
+            className={`relative transition-all duration-300 shrink-0 ${
+              scrolled
+                ? "w-[125px] h-[26px] sm:w-[155px] sm:h-[32px] lg:w-[185px] lg:h-[36px]"
+                : "w-[135px] h-[28px] sm:w-[170px] sm:h-[34px] lg:w-[200px] lg:h-[40px]"
+            }`}
+          >
             <Image
-              src="/aquaforceforautocare/logo_shield.webp"
-              alt="AMEC Shield"
+              src="/aquaforceforautocare/images/promec-logo.svg"
+              alt="PROMEC"
               fill
               priority
-              sizes="32px"
-              className="object-contain"
-            />
-          </div>
-          <div className="relative w-28 sm:w-32 md:w-36 h-4 sm:h-4.5 md:h-5">
-            <Image
-              src="/aquaforceforautocare/logo_amec_new.webp"
-              alt="AMEC TECHNOLOGY"
-              fill
-              priority
-              sizes="144px"
+              sizes="(max-width: 640px) 135px, (max-width: 1024px) 170px, 200px"
               className="object-contain object-left"
             />
           </div>
