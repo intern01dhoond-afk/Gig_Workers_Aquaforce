@@ -6,8 +6,8 @@ import Hero from "@/components/Hero";
 import SaleTicker from "@/components/SaleTicker";
 import StatsBar from "@/components/StatsBar";
 import ProfessionalCleaning from "@/components/ProfessionalCleaning";
+import ProblemsSolution from "@/components/ProblemsSolution";
 import EngineeredPerformance from "@/components/EngineeredPerformance";
-import WashWithoutLimits from "@/components/WashWithoutLimits";
 import FourSteps from "@/components/FourSteps";
 import UseCase from "@/components/UseCase";
 import DoorstepProfessionals from "@/components/DoorstepProfessionals";
@@ -36,8 +36,8 @@ export default function Home() {
       <SaleTicker />
       <StatsBar />
       <ProfessionalCleaning />
+      <ProblemsSolution />
       <EngineeredPerformance />
-      <WashWithoutLimits />
       <FourSteps />
       <UseCase />
       <DoorstepProfessionals />

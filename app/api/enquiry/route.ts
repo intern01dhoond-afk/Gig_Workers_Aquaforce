@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     const webhookUrl =
       process.env.GOOGLE_SHEET_ENQUIRY_URL ||
-      "https://script.google.com/macros/s/AKfycbyVAJccNewtDHw_EPlY90UIIjXVdB3FeTXZCg_6OPJJq-h3p3XgIZ_AYLupETD0YRXd/exec";
+      "https://script.google.com/macros/s/AKfycbwqSxRQx9i_hjH3FK1I7fsfTkP-3KDV6ER-qVTrOJWfOi5O8woxard3Cw5A6yh4Qt4a/exec";
 
     if (webhookUrl) {
       try {

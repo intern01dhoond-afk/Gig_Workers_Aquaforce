@@ -1,6 +1,11 @@
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
+import Component from "@/components/ui/testimonial-v2";
 
-function InfiniteSliderHoverSpeed() {
+export function DemoOne() {
+  return <Component />;
+}
+
+export function InfiniteSliderHoverSpeed() {
   return (
     <InfiniteSlider durationOnHover={75} gap={24}>
       <img
@@ -37,8 +42,4 @@ function InfiniteSliderHoverSpeed() {
   );
 }
 
-const demos = {
-  InfiniteSliderHoverSpeed,
-};
-
-export default demos;
+export default DemoOne;

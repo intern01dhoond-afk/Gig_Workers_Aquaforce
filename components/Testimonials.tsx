@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { TestimonialsColumn, Testimonial } from "@/components/ui/testimonials-columns-1";
-import { motion } from "motion/react";
+import { TestimonialsSection, type Testimonial } from "@/components/ui/testimonial-v2";
 
 const testimonials: Testimonial[] = [
   {
@@ -61,56 +60,19 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const firstColumn = testimonials.slice(0, 3);
-const secondColumn = testimonials.slice(3, 6);
-const thirdColumn = testimonials.slice(6, 9);
-
 export default function Testimonials() {
   return (
-    <section className="bg-white pt-8 sm:pt-10 lg:pt-12 pb-14 sm:pb-20 lg:pb-24 relative overflow-hidden w-full">
-      <div className="w-full relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center justify-center max-w-[620px] mx-auto text-center px-4"
-        >
-          {/* Eyebrow Badge */}
-          <div className="inline-flex items-center px-3.5 py-1 rounded-full border border-sky-600/50 font-open-sans text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-900 bg-transparent mb-3 sm:mb-4">
-            CUSTOMER STORIES
-          </div>
-
-          {/* Main Title */}
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-medium font-montserrat text-[#0F1729] tracking-tight">
-            What Our Users Say
-          </h2>
-
-          {/* Subtitle */}
-          <p className="text-slate-600 font-open-sans max-w-xl mx-auto mt-2 sm:mt-3 text-xs xs:text-sm sm:text-base leading-relaxed">
-            Real feedback from car enthusiasts, bike owners, and professionals across India who trust Aquaforce® 1400.
-          </p>
-        </motion.div>
-
-        {/* Animated Marquee Columns */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
-          {/* Mobile View: Shows ALL 9 Testimonials in single smooth marquee column */}
-          <div className="block md:hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[640px] overflow-hidden w-full p-2">
-            <TestimonialsColumn testimonials={testimonials} duration={28} className="w-full" />
-          </div>
-
-          {/* Desktop & Tablet View: 2 or 3 Parallel Columns */}
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[720px] overflow-hidden w-full p-2">
-            <TestimonialsColumn testimonials={firstColumn} duration={16} className="w-full" />
-            <TestimonialsColumn testimonials={secondColumn} duration={20} className="w-full" />
-            <TestimonialsColumn
-              testimonials={thirdColumn}
-              className="hidden lg:block w-full"
-              duration={18}
-            />
-          </div>
-        </div>
-      </div>
-    </section>
+    <TestimonialsSection
+      testimonials={testimonials}
+      badge="CUSTOMER STORIES"
+      title="What Our Users Say"
+      subtitle={
+        <>
+          Real feedback from car enthusiasts, bike owners, and professionals across{" "}
+          <br className="hidden sm:inline" />
+          India who trust Aquaforce® 1400.
+        </>
+      }
+    />
   );
 }

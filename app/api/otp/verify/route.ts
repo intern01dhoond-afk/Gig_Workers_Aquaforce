@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     // Record verified signup lead into the Signups Google Sheet
     const signupsSheetUrl =
       process.env.GOOGLE_SHEET_SIGNUPS_URL ||
-      "https://script.google.com/macros/s/AKfycbzZX776z13tAYJY9KjTxNqcGt5WajxAfOg9uI86LDagVlTPnILyYjC7fIOlwzc1jrajaQ/exec";
+      "https://script.google.com/macros/s/AKfycbwqSxRQx9i_hjH3FK1I7fsfTkP-3KDV6ER-qVTrOJWfOi5O8woxard3Cw5A6yh4Qt4a/exec";
 
     if (signupsSheetUrl) {
       try {

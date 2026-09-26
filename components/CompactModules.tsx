@@ -27,7 +27,7 @@ const MODULES = [
 
 export default function CompactModules() {
   return (
-    <section className="pt-6 sm:pt-12 lg:pt-16 pb-6 sm:pb-10 lg:pb-12 bg-white">
+    <section className="pt-6 sm:pt-12 lg:pt-16 pb-2 sm:pb-4 lg:pb-4 bg-white">
       <ScrollReveal direction="up" className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
         {/* Eyebrow Pill Badge */}
         <div className="inline-flex items-center px-3.5 py-1 rounded-full border border-sky-600/50 font-open-sans text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-900 bg-transparent mb-3 sm:mb-4">
