@@ -10,19 +10,33 @@ export default function CTABanner() {
 
   return (
     <section className="relative w-full h-[440px] min-h-[440px] overflow-hidden flex items-center">
-      {/* Background Image - Full width edge-to-edge */}
-      <Image
-        src="/aquaforceforautocare/images/cta-banner-bg.webp"
-        alt="Aquaforce Delivery Rider on Road"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-[62%_center] lg:object-center z-0"
-      />
+      {/* Mobile Background Image */}
+      <div className="sm:hidden absolute inset-0 z-0">
+        <Image
+          src="/aquaforceforautocare/images/cta-banner-bg-mobile.webp"
+          alt="Aquaforce Delivery Rider on Road"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/25" />
+      </div>
 
-      {/* Dark gradient overlay on left for crisp text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 via-45% to-transparent z-0 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-0 pointer-events-none" />
+      {/* Desktop Background Image */}
+      <div className="hidden sm:block absolute inset-0 z-0">
+        <Image
+          src="/aquaforceforautocare/images/cta-banner-bg.webp"
+          alt="Aquaforce Delivery Rider on Road"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[62%_center] lg:object-center"
+        />
+        {/* Dark gradient overlay on left for crisp text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 via-45% to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+      </div>
 
       {/* Content Container aligned within standard page max-width */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 py-12 sm:py-16 md:py-20 flex flex-col justify-center items-start">

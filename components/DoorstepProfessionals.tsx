@@ -42,7 +42,22 @@ export default function DoorstepProfessionals() {
     <section className="relative w-full aspect-[4/5] xs:aspect-[1/1] sm:aspect-[16/10] md:aspect-[16/9] min-h-[540px] flex items-center overflow-hidden bg-black py-8 sm:py-12 lg:py-16">
       {/* Background Rider Image */}
       <div className="absolute inset-0 w-full h-full select-none pointer-events-none overflow-hidden">
-        <div className="relative w-full h-full sm:translate-x-[12%] md:translate-x-[15%] lg:translate-x-[18%] sm:scale-[1.15] md:scale-[1.18] lg:scale-[1.22] origin-bottom">
+        {/* Mobile Background Image */}
+        <div className="sm:hidden absolute inset-0">
+          <Image
+            src="/aquaforceforautocare/images/doorstep-rider-bg-mobile.webp"
+            alt="Cleaning professional riding motorcycle with Aquaforce gear"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          {/* Subtle gradient to ensure legibility on mobile */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 via-50% to-black/30" />
+        </div>
+
+        {/* Desktop Background Image */}
+        <div className="hidden sm:block relative w-full h-full sm:translate-x-[12%] md:translate-x-[15%] lg:translate-x-[18%] sm:scale-[1.15] md:scale-[1.18] lg:scale-[1.22] origin-bottom">
           <Image
             src="/aquaforceforautocare/images/doorstep-rider-bg.webp"
             alt="Cleaning professional riding motorcycle with Aquaforce gear"
@@ -52,8 +67,8 @@ export default function DoorstepProfessionals() {
             className="object-cover object-[60%_center] sm:object-center"
           />
         </div>
-        {/* Soft directional left gradient: dark behind text, completely transparent before the rider */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 via-35% to-transparent to-58% pointer-events-none" />
+        {/* Soft directional left gradient for desktop: dark behind text, completely transparent before the rider */}
+        <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/80 via-35% to-transparent to-58% pointer-events-none" />
       </div>
 
       {/* Content Container */}
