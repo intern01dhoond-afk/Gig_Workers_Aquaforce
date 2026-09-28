@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Youtube, Mail, Phone } from "lucide-react";
 import { useOrderModal } from "@/context/OrderModalContext";
 import ReturnPolicyModal from "./ReturnPolicyModal";
-import ScrollReveal from "./ScrollReveal";
 
 export default function Footer() {
   const { openModal } = useOrderModal();
@@ -14,8 +13,8 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-[#0b0c0e] text-white pt-10 sm:pt-14 pb-8 sm:pb-10 border-t border-white/5 w-full">
-        <ScrollReveal direction="up" className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col items-center">
+      <footer className="bg-[#0b0c0e] text-white pt-12 sm:pt-16 pb-8 sm:pb-10 w-full">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col items-center">
           {/* PROMEC Brand Logo */}
           <Link href="/#home" className="flex items-center justify-center group mb-6 sm:mb-7 select-none cursor-pointer">
             <div className="relative w-[130px] h-[24px] sm:w-[150px] sm:h-[28px]">
@@ -63,7 +62,7 @@ export default function Footer() {
               className="inline-flex items-center gap-2 hover:text-white transition-colors"
             >
               <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/60" />
-              <span>Email: promec.india@gmail.com</span>
+              <span>promec.india@gmail.com</span>
             </a>
 
             <a
@@ -71,7 +70,7 @@ export default function Footer() {
               className="inline-flex items-center gap-2 hover:text-white transition-colors"
             >
               <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/60" />
-              <span>Sales/Service: 7387588963</span>
+              <span>+91 7387588963</span>
             </a>
           </div>
 
@@ -155,7 +154,7 @@ export default function Footer() {
               </Link>
             </div>
           </div>
-        </ScrollReveal>
+        </div>
       </footer>
       <ReturnPolicyModal isOpen={isReturnPolicyOpen} onClose={() => setIsReturnPolicyOpen(false)} />
     </>
