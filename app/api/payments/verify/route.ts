@@ -31,9 +31,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const key_secret = process.env.RAZORPAY_KEY_SECRET;
-    const key_id =
-      process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const key_secret = (process.env.RAZORPAY_KEY_SECRET || "").trim();
+    const key_id = (
+      process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || ""
+    ).trim();
 
     if (!key_secret || !key_id) {
       return NextResponse.json(
@@ -83,11 +84,30 @@ export async function POST(req: Request) {
       }
 
       try {
-        const paymentsResponse: any = await razorpay.orders.fetchPayments(activeRzpOrderId);
-        const paymentsList = paymentsResponse?.items || [];
-        let capturedOrAuthPayment = paymentsList.find(
-          (p: any) => p.status === "captured" || p.status === "authorized"
-        );
+        let capturedOrAuthPayment: any = null;
+
+        if (razorpayPaymentId) {
+          try {
+            const directP: any = await razorpay.payments.fetch(razorpayPaymentId);
+            if (
+              directP &&
+              directP.order_id === activeRzpOrderId &&
+              (directP.status === "captured" || directP.status === "authorized")
+            ) {
+              capturedOrAuthPayment = directP;
+            }
+          } catch (e: any) {
+            console.warn("[Payment Verify] Direct payment fetch warning:", e?.message);
+          }
+        }
+
+        if (!capturedOrAuthPayment) {
+          const paymentsResponse: any = await razorpay.orders.fetchPayments(activeRzpOrderId);
+          const paymentsList = paymentsResponse?.items || [];
+          capturedOrAuthPayment = paymentsList.find(
+            (p: any) => p.status === "captured" || p.status === "authorized"
+          );
+        }
 
         if (!capturedOrAuthPayment && order.payment.qrCodeId) {
           try {
@@ -195,7 +215,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Double-check with Razorpay API (Contract Requirement)
+    // 3. Double-check with Razorpay API
     let paymentDetails: any;
     try {
       paymentDetails = await razorpay.payments.fetch(razorpayPaymentId);

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     if (idempotencyKey) {
       const existingOrder = await orderStore.getByIdempotencyKey(idempotencyKey);
       if (existingOrder && existingOrder.payment.razorpayOrderId) {
-        const keyId = process.env.RAZORPAY_KEY_ID || "";
+        const keyId = (process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "").trim();
         return NextResponse.json({
           orderId: existingOrder.id,
           razorpayOrderId: existingOrder.payment.razorpayOrderId,
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       resolvedMethod = "EMI";
     }
 
-    // Server-side authoritative price calculation (completely ignores any client price overrides)
+    // Server-side authoritative price calculation
     const pricingResult = calculateOrderPricing({
       productId: "aquaforce-1400",
       variantId: variantId || "with-vacuum",
@@ -79,8 +79,8 @@ export async function POST(req: Request) {
     const { data: pricing } = pricingResult;
 
     // Razorpay Credentials
-    const key_id = process.env.RAZORPAY_KEY_ID || "";
-    const key_secret = process.env.RAZORPAY_KEY_SECRET || "";
+    const key_id = (process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "").trim();
+    const key_secret = (process.env.RAZORPAY_KEY_SECRET || "").trim();
 
     if (!key_id || !key_secret) {
       console.error("Razorpay credentials missing: RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET not set.");

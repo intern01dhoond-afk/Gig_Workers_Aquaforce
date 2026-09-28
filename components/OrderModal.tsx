@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, Star, Truck, RotateCcw, CheckCircle2, ArrowRight, ArrowLeft, Lock, FileText, ChevronDown, ChevronUp, Share2, Gift, Check, Info, Headphones, PackageCheck, Smartphone, Zap, CreditCard, Sparkles, Search, Percent, Building2, ShoppingCart, Eye } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Star, Truck, RotateCcw, CheckCircle2, ArrowRight, ArrowLeft, Lock, FileText, ChevronDown, ChevronUp, Share2, Gift, Check, Info, Headphones, PackageCheck, Smartphone, Zap, CreditCard, Sparkles, Search, Percent, Building2, ShoppingCart, Eye, EyeOff, Landmark, ArrowUpRight } from "lucide-react";
 import EmiCalculatorModal from "./EmiCalculatorModal";
 import { QRCodeSVG } from "qrcode.react";
 
@@ -178,6 +178,16 @@ const EmiBadgeIcon = ({ className = "w-[26px] h-[16px] shrink-0" }: { className?
     >
       EMI
     </text>
+  </svg>
+);
+
+const EmiCardPercentIcon = ({ className = "w-5 h-5 text-slate-800 shrink-0" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="14" x="2" y="5" rx="2" />
+    <line x1="2" y1="10" x2="22" y2="10" />
+    <circle cx="8" cy="15" r="0.75" fill="currentColor" />
+    <circle cx="16" cy="15" r="0.75" fill="currentColor" />
+    <line x1="15" y1="13" x2="9" y2="17" strokeWidth="2" />
   </svg>
 );
 
@@ -358,7 +368,7 @@ export interface EmiBankItem {
   code: string;
   name: string;
   logo: string;
-  type: "credit" | "debit" | "both";
+  type: "credit" | "debit" | "both" | "cardless";
   isNoCost: boolean;
   hasOffer: boolean;
   offerText: string;
@@ -376,6 +386,20 @@ export interface NetbankingBankItem {
 }
 
 const DEFAULT_EMI_BANKS: EmiBankItem[] = [
+  // Credit Cards (Matching media_1790418313960.png & media_1790418307016.png)
+  {
+    id: "axis",
+    code: "UTIB",
+    name: "AXIS Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 2500,
+    startingEmi: 5488,
+    plans: [],
+  },
   {
     id: "icic",
     code: "ICIC",
@@ -386,255 +410,34 @@ const DEFAULT_EMI_BANKS: EmiBankItem[] = [
     hasOffer: false,
     offerText: "",
     minAmount: 3000,
-    startingEmi: 1860,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: true },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: true },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1860, totalPayable: 44640, isNoCost: false },
-    ],
-  },
-  {
-    id: "utib",
-    code: "UTIB",
-    name: "Axis Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png",
-    type: "credit",
-    isNoCost: true,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 2500,
-    startingEmi: 1879,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: true },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: true },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 16, monthlyAmount: 1879, totalPayable: 45096, isNoCost: false },
-    ],
+    startingEmi: 5434,
+    plans: [],
   },
   {
     id: "amex",
     code: "AMEX",
-    name: "American Express",
+    name: "American Express Bank",
     logo: "https://cashfreelogo.cashfree.com/assets_images/pg/card/64/amex.png",
     type: "credit",
     isNoCost: true,
     hasOffer: false,
     offerText: "",
     minAmount: 5000,
-    startingEmi: 1842,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: true },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: true },
-      { months: 9, interestRate: 14, monthlyAmount: 4468, totalPayable: 40212, isNoCost: false },
-      { months: 12, interestRate: 14, monthlyAmount: 3408, totalPayable: 40896, isNoCost: false },
-      { months: 18, interestRate: 14, monthlyAmount: 2349, totalPayable: 42282, isNoCost: false },
-      { months: 24, interestRate: 14, monthlyAmount: 1842, totalPayable: 44208, isNoCost: false },
-    ],
+    startingEmi: 5364,
+    plans: [],
   },
   {
-    id: "kkbk",
-    code: "KKBK",
-    name: "Kotak Mahindra Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/paylater/64/kotak.png",
+    id: "ibkl",
+    code: "IBKL",
+    name: "IDBI Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/idbi.png",
     type: "credit",
-    isNoCost: false,
+    isNoCost: true,
     hasOffer: false,
     offerText: "",
     minAmount: 3000,
-    startingEmi: 1861,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1861, totalPayable: 44664, isNoCost: false },
-    ],
-  },
-  {
-    id: "idfb",
-    code: "IDFB",
-    name: "IDFC FIRST Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/idfc.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1336,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1861, totalPayable: 44664, isNoCost: false },
-      { months: 36, interestRate: 16, monthlyAmount: 1336, totalPayable: 48096, isNoCost: false },
-    ],
-  },
-  {
-    id: "indb",
-    code: "INDB",
-    name: "IndusInd Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/indusind.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1336,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 14.5, monthlyAmount: 4477, totalPayable: 40293, isNoCost: false },
-      { months: 12, interestRate: 14.5, monthlyAmount: 3417, totalPayable: 41004, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1861, totalPayable: 44664, isNoCost: false },
-      { months: 36, interestRate: 16, monthlyAmount: 1336, totalPayable: 48096, isNoCost: false },
-    ],
-  },
-  {
-    id: "aubl",
-    code: "AUBL",
-    name: "AU Small Finance Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/aus.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1824,
-    plans: [
-      { months: 3, interestRate: 13, monthlyAmount: 12940, totalPayable: 38820, isNoCost: false },
-      { months: 6, interestRate: 13, monthlyAmount: 6571, totalPayable: 39426, isNoCost: false },
-      { months: 9, interestRate: 13, monthlyAmount: 4450, totalPayable: 40050, isNoCost: false },
-      { months: 12, interestRate: 13, monthlyAmount: 3389, totalPayable: 40668, isNoCost: false },
-      { months: 18, interestRate: 13, monthlyAmount: 2330, totalPayable: 41940, isNoCost: false },
-      { months: 24, interestRate: 13, monthlyAmount: 1824, totalPayable: 43776, isNoCost: false },
-    ],
-  },
-  {
-    id: "barb",
-    code: "BARB",
-    name: "Bank of Baroda",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/bobc.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1861,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1861, totalPayable: 44664, isNoCost: false },
-    ],
-  },
-  {
-    id: "fdrl",
-    code: "FDRL",
-    name: "Federal Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/federal.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1860,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1860, totalPayable: 44640, isNoCost: false },
-    ],
-  },
-  {
-    id: "hsbc",
-    code: "HSBC",
-    name: "HSBC Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hsb.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1842,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 14, monthlyAmount: 4468, totalPayable: 40212, isNoCost: false },
-      { months: 12, interestRate: 14, monthlyAmount: 3408, totalPayable: 40896, isNoCost: false },
-      { months: 18, interestRate: 14, monthlyAmount: 2349, totalPayable: 42282, isNoCost: false },
-      { months: 24, interestRate: 14, monthlyAmount: 1842, totalPayable: 44208, isNoCost: false },
-    ],
-  },
-  {
-    id: "onecard",
-    code: "onecard",
-    name: "OneCard",
-    logo: "https://getonecard.app/images/onecard-logo.svg",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1861,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1861, totalPayable: 44664, isNoCost: false },
-    ],
-  },
-  {
-    id: "ratn",
-    code: "RATN",
-    name: "RBL Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/rbl.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 1879,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 16, monthlyAmount: 1879, totalPayable: 45096, isNoCost: false },
-    ],
-  },
-  {
-    id: "scbl",
-    code: "SCBL",
-    name: "Standard Chartered Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/scb.png",
-    type: "credit",
-    isNoCost: false,
-    hasOffer: false,
-    offerText: "",
-    minAmount: 3000,
-    startingEmi: 3412,
-    plans: [
-      { months: 3, interestRate: 13, monthlyAmount: 12940, totalPayable: 38820, isNoCost: false },
-      { months: 6, interestRate: 13.5, monthlyAmount: 6580, totalPayable: 39480, isNoCost: false },
-      { months: 9, interestRate: 14, monthlyAmount: 4468, totalPayable: 40212, isNoCost: false },
-      { months: 12, interestRate: 14, monthlyAmount: 3408, totalPayable: 40896, isNoCost: false },
-    ],
+    startingEmi: 5488,
+    plans: [],
   },
   {
     id: "yesb",
@@ -642,68 +445,528 @@ const DEFAULT_EMI_BANKS: EmiBankItem[] = [
     name: "Yes Bank",
     logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/yes.png",
     type: "credit",
-    isNoCost: false,
+    isNoCost: true,
     hasOffer: false,
     offerText: "",
     minAmount: 3000,
-    startingEmi: 1861,
-    plans: [
-      { months: 3, interestRate: 14, monthlyAmount: 12960, totalPayable: 38880, isNoCost: false },
-      { months: 6, interestRate: 14, monthlyAmount: 6590, totalPayable: 39540, isNoCost: false },
-      { months: 9, interestRate: 15, monthlyAmount: 4486, totalPayable: 40374, isNoCost: false },
-      { months: 12, interestRate: 15, monthlyAmount: 3426, totalPayable: 41112, isNoCost: false },
-      { months: 18, interestRate: 15, monthlyAmount: 2368, totalPayable: 42624, isNoCost: false },
-      { months: 24, interestRate: 15, monthlyAmount: 1861, totalPayable: 44664, isNoCost: false },
-    ],
+    startingEmi: 5488,
+    plans: [],
   },
+  {
+    id: "hsbc",
+    code: "HSBC",
+    name: "HSBC",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hsb.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "cnrb",
+    code: "CNRB",
+    name: "Canara Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/canara.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "scbl",
+    code: "SCBL",
+    name: "Standard Chartered Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/scb.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "indb",
+    code: "INDB",
+    name: "Indus Ind Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/indusind.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 3902,
+    plans: [],
+  },
+  {
+    id: "barb",
+    code: "BARB",
+    name: "Bank of Baroda",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/bobc.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "dbss",
+    code: "DBSS",
+    name: "DBS Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/dbs.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "fdrl",
+    code: "FDRL",
+    name: "Federal Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/federal.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "onecard",
+    code: "onecard",
+    name: "One Card",
+    logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='black'/><text x='32' y='42' font-size='30' font-weight='900' font-family='Arial,sans-serif' fill='white' text-anchor='middle'>1</text></svg>",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 2500,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "aubl",
+    code: "AUBL",
+    name: "AU Small Finance Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/aus.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "idfb",
+    code: "IDFB",
+    name: "IDFC First Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/idfc.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 3902,
+    plans: [],
+  },
+  {
+    id: "sbin",
+    code: "SBIN",
+    name: "State Bank of India",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "kkbk",
+    code: "KKBK",
+    name: "Kotak Mahindra Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/paylater/64/kotak.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "ratn",
+    code: "RATN",
+    name: "RBL Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/rbl.png",
+    type: "credit",
+    isNoCost: true,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 3000,
+    startingEmi: 5488,
+    plans: [],
+  },
+
+  // Debit Cards
   {
     id: "hdfc_dc",
     code: "HDFC_DC",
-    name: "HDFC Bank (Debit Card)",
+    name: "HDFC Bank Debit Card",
     logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png",
     type: "debit",
     isNoCost: true,
     hasOffer: true,
-    offerText: "10% Instant Discount",
+    offerText: "Instant Discount",
     minAmount: 5000,
-    startingEmi: 2388,
-    plans: [
-      { months: 3, interestRate: 16, monthlyAmount: 13002, totalPayable: 39006, isNoCost: true },
-      { months: 6, interestRate: 16, monthlyAmount: 6632, totalPayable: 39792, isNoCost: true },
-      { months: 9, interestRate: 16, monthlyAmount: 4509, totalPayable: 40581, isNoCost: false },
-      { months: 12, interestRate: 16, monthlyAmount: 3447, totalPayable: 41364, isNoCost: false },
-      { months: 18, interestRate: 16, monthlyAmount: 2388, totalPayable: 42984, isNoCost: false },
-    ],
+    startingEmi: 3075,
+    plans: [],
+  },
+  {
+    id: "icic_dc",
+    code: "ICIC_DC",
+    name: "ICICI Bank Debit Card",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/icici.png",
+    type: "debit",
+    isNoCost: false,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 5000,
+    startingEmi: 5434,
+    plans: [],
+  },
+  {
+    id: "axis_dc",
+    code: "UTIB_DC",
+    name: "Axis Bank Debit Card",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png",
+    type: "debit",
+    isNoCost: false,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 5000,
+    startingEmi: 5488,
+    plans: [],
+  },
+  {
+    id: "sbin_dc",
+    code: "SBIN_DC",
+    name: "State Bank of India Debit Card",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
+    type: "debit",
+    isNoCost: false,
+    hasOffer: false,
+    offerText: "",
+    minAmount: 5000,
+    startingEmi: 5488,
+    plans: [],
   },
 ];
 
+export interface DynamicEmiPlan {
+  months: number;
+  monthlyAmount: number;
+  interestRate: number;
+  totalPayable: number;
+  isNoCost: boolean;
+  isMostPopular?: boolean;
+}
+
+export const calculateBankEmiPlans = (
+  bankId: string,
+  bankCode: string,
+  bankName: string,
+  totalAmount: number
+): DynamicEmiPlan[] => {
+  const isHdfc =
+    bankId.toLowerCase().includes("hdfc") ||
+    bankCode.toLowerCase().includes("hdfc") ||
+    bankName.toLowerCase().includes("hdfc");
+  const isIndus =
+    bankId.toLowerCase().includes("ind") ||
+    bankCode.toLowerCase().includes("indb") ||
+    bankName.toLowerCase().includes("indus");
+  const isBajaj =
+    bankId.toLowerCase().includes("bajaj") ||
+    bankCode.toLowerCase().includes("bajaj") ||
+    bankName.toLowerCase().includes("bajaj");
+
+  // HDFC 10% instant discount up to ₹2,500
+  const discount = isHdfc ? Math.min(Math.round(totalAmount * 0.1), 2500) : 0;
+  const principal = totalAmount - discount;
+
+  // HDFC supports up to 48m, Indus up to 36m, Bajaj 3 & 6m, others standard 24m
+  const tenures = isBajaj
+    ? [3, 6]
+    : isHdfc
+    ? [3, 6, 9, 12, 18, 24, 36, 48]
+    : isIndus
+    ? [3, 6, 9, 12, 18, 24, 36]
+    : [3, 6, 9, 12, 18, 24];
+
+  return tenures.map((months) => {
+    // 3, 6, 9, 12 for HDFC; all for Bajaj; 3 & 6 for other banks are No Cost
+    const isNoCost = isBajaj
+      ? true
+      : isHdfc
+      ? months === 3 || months === 6 || months === 9 || months === 12
+      : months === 3 || months === 6;
+
+    let monthlyAmount: number;
+    let totalPayable: number;
+    const interestRate = 16;
+
+    if (isNoCost) {
+      monthlyAmount = Math.round(principal / months);
+      totalPayable = principal;
+    } else {
+      const r = 0.16 / 12;
+      const factor = Math.pow(1 + r, months);
+      monthlyAmount = Math.round((principal * r * factor) / (factor - 1));
+      totalPayable = monthlyAmount * months;
+    }
+
+    return {
+      months,
+      monthlyAmount,
+      interestRate: 16,
+      totalPayable,
+      isNoCost,
+      isMostPopular: months === 6,
+    };
+  });
+};
+
+export const calculateStartingEmi = (
+  bankId: string,
+  bankCode: string,
+  bankName: string,
+  totalAmount: number
+): number => {
+  const plans = calculateBankEmiPlans(bankId, bankCode, bankName, totalAmount);
+  if (!plans.length) return Math.round(totalAmount / 12);
+  if (bankId === "hdfc_cc") {
+    const plan24 = plans.find((p) => p.months === 24);
+    if (plan24) return plan24.monthlyAmount;
+  }
+  return Math.min(...plans.map((p) => p.monthlyAmount));
+};
+
+export const isCardEligibleForEmiBank = (
+  cardNumber: string,
+  bankCode: string,
+  bankName: string
+): boolean => {
+  const clean = cardNumber.replace(/\D/g, "");
+  if (clean.length < 6) return true; // user is still typing
+
+  const lowerCode = (bankCode || "").toLowerCase();
+  const lowerName = (bankName || "").toLowerCase();
+
+  // HDFC: 4160, 4214, 4375, 4506, 4629, 5497, 5241, 652166, 4052
+  if (lowerCode.includes("hdfc") || lowerName.includes("hdfc")) {
+    return (
+      clean.startsWith("4160") ||
+      clean.startsWith("4214") ||
+      clean.startsWith("4375") ||
+      clean.startsWith("4506") ||
+      clean.startsWith("4629") ||
+      clean.startsWith("5497") ||
+      clean.startsWith("5241") ||
+      clean.startsWith("652166") ||
+      clean.startsWith("4052")
+    );
+  }
+
+  // Axis: 4033, 416019, 437552, 450650, 5125, 652188, 5401, 5242
+  if (lowerCode.includes("utib") || lowerCode.includes("axis") || lowerName.includes("axis")) {
+    return (
+      clean.startsWith("4033") ||
+      clean.startsWith("416019") ||
+      clean.startsWith("437552") ||
+      clean.startsWith("450650") ||
+      clean.startsWith("5125") ||
+      clean.startsWith("652188") ||
+      clean.startsWith("5401") ||
+      clean.startsWith("5242")
+    );
+  }
+
+  // ICICI: 4055, 4060, 416012, 4315, 438628, 5181, 5433, 652177
+  if (lowerCode.includes("icic") || lowerName.includes("icici")) {
+    return (
+      clean.startsWith("4055") ||
+      clean.startsWith("4060") ||
+      clean.startsWith("416012") ||
+      clean.startsWith("4315") ||
+      clean.startsWith("438628") ||
+      clean.startsWith("5181") ||
+      clean.startsWith("5433") ||
+      clean.startsWith("652177")
+    );
+  }
+
+  // SBI: 608221, 6082, 652150, 4591, 4592, 4593, 4594, 421388, 437551, 524129, 524130, 608
+  if (
+    lowerCode.includes("sbin") ||
+    lowerCode.includes("sbi") ||
+    lowerName.includes("sbi") ||
+    lowerName.includes("state bank")
+  ) {
+    return (
+      clean.startsWith("6082") ||
+      clean.startsWith("652150") ||
+      clean.startsWith("4591") ||
+      clean.startsWith("4592") ||
+      clean.startsWith("4593") ||
+      clean.startsWith("4594") ||
+      clean.startsWith("421388") ||
+      clean.startsWith("437551") ||
+      clean.startsWith("524129") ||
+      clean.startsWith("524130") ||
+      clean.startsWith("608")
+    );
+  }
+
+  // Amex: 34, 37
+  if (lowerCode.includes("amex") || lowerName.includes("american express")) {
+    return clean.startsWith("34") || clean.startsWith("37");
+  }
+
+  // IndusInd: 4034, 524168, 549772
+  if (lowerCode.includes("indb") || lowerCode.includes("indus") || lowerName.includes("indus")) {
+    return (
+      clean.startsWith("4034") ||
+      clean.startsWith("524168") ||
+      clean.startsWith("549772")
+    );
+  }
+
+  // Kotak: 4166, 438652, 4854, 652199
+  if (lowerCode.includes("kkbk") || lowerCode.includes("kotak") || lowerName.includes("kotak")) {
+    return (
+      clean.startsWith("4166") ||
+      clean.startsWith("438652") ||
+      clean.startsWith("4854") ||
+      clean.startsWith("652199")
+    );
+  }
+
+  // Bank of Baroda: 437553, 450653, 652151
+  if (lowerCode.includes("barb") || lowerName.includes("baroda")) {
+    return clean.startsWith("437553") || clean.startsWith("450653") || clean.startsWith("652151");
+  }
+
+  // Federal: 450652, 512520, 652153
+  if (lowerCode.includes("fdrl") || lowerName.includes("federal")) {
+    return clean.startsWith("450652") || clean.startsWith("512520") || clean.startsWith("652153");
+  }
+
+  // IDFC FIRST: 4188, 4288, 4568, 5199, 5289
+  if (lowerCode.includes("idfb") || lowerName.includes("idfc")) {
+    return clean.startsWith("4188") || clean.startsWith("4288") || clean.startsWith("4568") || clean.startsWith("5199") || clean.startsWith("5289");
+  }
+
+  // RBL: 4066, 4199, 4299, 5144, 5290
+  if (lowerCode.includes("ratn") || lowerName.includes("rbl")) {
+    return clean.startsWith("4066") || clean.startsWith("4199") || clean.startsWith("4299") || clean.startsWith("5144") || clean.startsWith("5290");
+  }
+
+  // IDBI: 4003, 4016, 4038, 4104, 4340, 5130, 5243
+  if (lowerCode.includes("ibkl") || lowerName.includes("idbi")) {
+    return clean.startsWith("4003") || clean.startsWith("4016") || clean.startsWith("4038") || clean.startsWith("4104") || clean.startsWith("4340") || clean.startsWith("5130") || clean.startsWith("5243");
+  }
+
+  // Yes Bank: 4124, 4216, 4217, 4390, 5174, 5248
+  if (lowerCode.includes("yesb") || lowerName.includes("yes")) {
+    return clean.startsWith("4124") || clean.startsWith("4216") || clean.startsWith("4217") || clean.startsWith("4390") || clean.startsWith("5174") || clean.startsWith("5248");
+  }
+
+  // HSBC: 4008, 4012, 4106, 4215, 5186, 5246
+  if (lowerCode.includes("hsbc")) {
+    return clean.startsWith("4008") || clean.startsWith("4012") || clean.startsWith("4106") || clean.startsWith("4215") || clean.startsWith("5186") || clean.startsWith("5246");
+  }
+
+  // Canara: 4029, 4053, 4165, 4216, 5182, 5247, 6072, 652190
+  if (lowerCode.includes("cnrb") || lowerName.includes("canara")) {
+    return clean.startsWith("4029") || clean.startsWith("4053") || clean.startsWith("4165") || clean.startsWith("4216") || clean.startsWith("5182") || clean.startsWith("5247") || clean.startsWith("6072") || clean.startsWith("652190");
+  }
+
+  // Standard Chartered: 4017, 4129, 4219, 4385, 5184, 5240
+  if (lowerCode.includes("scbl") || lowerName.includes("standard chartered")) {
+    return clean.startsWith("4017") || clean.startsWith("4129") || clean.startsWith("4219") || clean.startsWith("4385") || clean.startsWith("5184") || clean.startsWith("5240");
+  }
+
+  // DBS: 4022, 4136, 4236, 5188, 5250
+  if (lowerCode.includes("dbss") || lowerName.includes("dbs")) {
+    return clean.startsWith("4022") || clean.startsWith("4136") || clean.startsWith("4236") || clean.startsWith("5188") || clean.startsWith("5250");
+  }
+
+  // One Card: 4514, 4515, 4516, 4517, 5116, 5117, 5267
+  if (lowerCode.includes("onecard") || lowerName.includes("one card")) {
+    return clean.startsWith("4514") || clean.startsWith("4515") || clean.startsWith("4516") || clean.startsWith("4517") || clean.startsWith("5116") || clean.startsWith("5117") || clean.startsWith("5267");
+  }
+
+  // AU Small Finance: 4045, 4145, 4554, 5154, 5254
+  if (lowerCode.includes("aubl") || lowerName.includes("au small")) {
+    return clean.startsWith("4045") || clean.startsWith("4145") || clean.startsWith("4554") || clean.startsWith("5154") || clean.startsWith("5254");
+  }
+
+  // Bajaj Finserv: 2030, 504, 402, 607, 6521
+  if (lowerCode.includes("bajaj") || lowerName.includes("bajaj")) {
+    return clean.startsWith("2030") || clean.startsWith("504") || clean.startsWith("402") || clean.startsWith("607") || clean.startsWith("6521");
+  }
+
+  return true;
+};
+
+// Razorpay native gateway supported EMI banks
+export const RZP_NATIVE_EMI_BANKS = new Set([
+  "AMEX", "AUBL", "BARB", "FDRL", "HDFC_DC", "HSBC", "ICIC", 
+  "IDFB", "INDB", "KKBK", "RATN", "SCBL", "UTIB", "YESB", "onecard", "HDFC"
+]);
+
 const DEFAULT_NETBANKING_BANKS: NetbankingBankItem[] = [
   {
-    code: "BARB_R",
-    name: "Bank of Baroda - Retail Banking",
-    shortName: "Bank of Baroda",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/bobc.png",
+    code: "SBIN",
+    name: "State Bank of India",
+    shortName: "SBI",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
     isPopular: true,
   },
   {
-    code: "INDB",
-    name: "Indusind Bank",
-    shortName: "IndusInd Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/indusind.png",
+    code: "ICIC",
+    name: "ICICI Bank",
+    shortName: "ICICI Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/icici.png",
     isPopular: true,
   },
   {
-    code: "IDFB",
-    name: "IDFC FIRST Bank",
-    shortName: "IDFC FIRST Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/idfc.png",
+    code: "UTIB",
+    name: "Axis Bank",
+    shortName: "Axis Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png",
     isPopular: true,
   },
   {
-    code: "YESB",
-    name: "Yes Bank",
-    shortName: "Yes Bank",
-    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/yes.png",
+    code: "KKBK",
+    name: "Kotak Mahindra Bank",
+    shortName: "Kotak Mahindra Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/kotak.png",
     isPopular: true,
   },
   {
@@ -714,11 +977,88 @@ const DEFAULT_NETBANKING_BANKS: NetbankingBankItem[] = [
     isPopular: true,
   },
   {
+    code: "HDFC",
+    name: "HDFC Bank",
+    shortName: "HDFC Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png",
+    isPopular: true,
+  },
+  {
+    code: "BARB_R",
+    name: "Bank of Baroda",
+    shortName: "Bank of Baroda",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/bobc.png",
+    isPopular: true,
+  },
+  {
     code: "PUNB_R",
-    name: "Punjab National Bank - Retail Banking",
+    name: "Punjab National Bank",
     shortName: "PNB",
     logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/pnbc.png",
     isPopular: true,
+  },
+  {
+    code: "INDB",
+    name: "Indusind Bank",
+    shortName: "IndusInd Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/indusind.png",
+    isPopular: false,
+  },
+  {
+    code: "IDFB",
+    name: "IDFC FIRST Bank",
+    shortName: "IDFC FIRST Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/idfc.png",
+    isPopular: false,
+  },
+  {
+    code: "YESB",
+    name: "Yes Bank",
+    shortName: "Yes Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/yes.png",
+    isPopular: false,
+  },
+  {
+    code: "UBIN",
+    name: "Union Bank of India",
+    shortName: "Union Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/union.png",
+    isPopular: false,
+  },
+  {
+    code: "FDRL",
+    name: "Federal Bank",
+    shortName: "Federal Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/federal.png",
+    isPopular: false,
+  },
+  {
+    code: "CBIN",
+    name: "Central Bank of India",
+    shortName: "Central Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/cbi.png",
+    isPopular: false,
+  },
+  {
+    code: "BKID",
+    name: "Bank of India",
+    shortName: "Bank of India",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/boi.png",
+    isPopular: false,
+  },
+  {
+    code: "IDIB",
+    name: "Indian Bank",
+    shortName: "Indian Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/indian.png",
+    isPopular: false,
+  },
+  {
+    code: "UCBA",
+    name: "UCO Bank",
+    shortName: "UCO Bank",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/uco.png",
+    isPopular: false,
   },
 ];
 
@@ -770,6 +1110,237 @@ const PRODUCT_DATA = {
   ],
 };
 
+interface BankOffer {
+  bankName: string;
+  offerText: string;
+  logo: string;
+  badge?: string;
+  accentBg: string;
+  accentBorder: string;
+}
+
+const DEFAULT_BANK_OFFERS: BankOffer[] = [
+  {
+    bankName: "HDFC Bank",
+    offerText: "5% off upto ₹ 1250 on using HDFC Bank Cards",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png",
+    accentBg: "bg-white",
+    accentBorder: "border-slate-200/90",
+  },
+  {
+    bankName: "State Bank of India",
+    offerText: "5% off upto ₹ 1250 on using SBI Cards",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
+    accentBg: "bg-white",
+    accentBorder: "border-slate-200/90",
+  },
+  {
+    bankName: "ICICI Bank",
+    offerText: "5% off upto ₹ 1250 on using ICICI Bank Cards",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/icici.png",
+    accentBg: "bg-white",
+    accentBorder: "border-slate-200/90",
+  },
+  {
+    bankName: "Axis Bank",
+    offerText: "5% off upto ₹ 1250 on using Axis Bank Cards",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png",
+    accentBg: "bg-white",
+    accentBorder: "border-slate-200/90",
+  },
+  {
+    bankName: "Kotak Mahindra Bank",
+    offerText: "5% off upto ₹ 1250 on using Kotak Bank Cards",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/kotak.png",
+    accentBg: "bg-white",
+    accentBorder: "border-slate-200/90",
+  },
+  {
+    bankName: "RuPay",
+    offerText: "5% off upto ₹ 1250 on all RuPay Credit & Debit Cards",
+    logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
+    accentBg: "bg-white",
+    accentBorder: "border-slate-200/90",
+  },
+];
+
+const detectCardBankAndOffer = (cardNumber: string): BankOffer | null => {
+  const clean = cardNumber.replace(/\D/g, "");
+  if (clean.length < 3) return null;
+
+  // SBI: 608221, 6082, 652150, 4591, 4592, 4593, 4594, 421388, 437551, 524129, 524130
+  if (
+    clean.startsWith("608221") ||
+    clean.startsWith("6082") ||
+    clean.startsWith("652150") ||
+    clean.startsWith("4591") ||
+    clean.startsWith("4592") ||
+    clean.startsWith("4593") ||
+    clean.startsWith("4594") ||
+    clean.startsWith("421388") ||
+    clean.startsWith("437551")
+  ) {
+    const isRupay = clean.startsWith("6082") || clean.startsWith("6521") || clean.startsWith("508");
+    return {
+      bankName: "State Bank of India",
+      offerText: isRupay
+        ? "5% off upto ₹ 1250 on using SBI RuPay Cards"
+        : "5% off upto ₹ 1250 on using SBI Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
+      accentBg: "bg-blue-50/60",
+      accentBorder: "border-blue-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // HDFC Bank: 416021, 421421, 437554, 450644, 4629, 549771, 652166
+  if (
+    clean.startsWith("416021") ||
+    clean.startsWith("421421") ||
+    clean.startsWith("437554") ||
+    clean.startsWith("450644") ||
+    clean.startsWith("4629") ||
+    clean.startsWith("549771") ||
+    clean.startsWith("652166")
+  ) {
+    return {
+      bankName: "HDFC Bank",
+      offerText: "5% off upto ₹ 1250 on using HDFC Bank Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png",
+      accentBg: "bg-blue-50/60",
+      accentBorder: "border-blue-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // ICICI Bank: 4055, 4060, 416012, 4315, 438628, 5181, 5433, 652177
+  if (
+    clean.startsWith("4055") ||
+    clean.startsWith("4060") ||
+    clean.startsWith("416012") ||
+    clean.startsWith("4315") ||
+    clean.startsWith("438628") ||
+    clean.startsWith("5181") ||
+    clean.startsWith("5433") ||
+    clean.startsWith("652177")
+  ) {
+    return {
+      bankName: "ICICI Bank",
+      offerText: "5% off upto ₹ 1250 on using ICICI Bank Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/icici.png",
+      accentBg: "bg-orange-50/60",
+      accentBorder: "border-orange-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Axis Bank: 4033, 416019, 437552, 450650, 5125, 652188
+  if (
+    clean.startsWith("4033") ||
+    clean.startsWith("416019") ||
+    clean.startsWith("437552") ||
+    clean.startsWith("450650") ||
+    clean.startsWith("5125") ||
+    clean.startsWith("652188")
+  ) {
+    return {
+      bankName: "Axis Bank",
+      offerText: "5% off upto ₹ 1250 on using Axis Bank Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png",
+      accentBg: "bg-purple-50/60",
+      accentBorder: "border-purple-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Kotak Mahindra Bank: 4166, 438652, 4854, 652199
+  if (
+    clean.startsWith("4166") ||
+    clean.startsWith("438652") ||
+    clean.startsWith("4854") ||
+    clean.startsWith("652199")
+  ) {
+    return {
+      bankName: "Kotak Mahindra Bank",
+      offerText: "5% off upto ₹ 1250 on using Kotak Bank Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/kotak.png",
+      accentBg: "bg-red-50/60",
+      accentBorder: "border-red-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Bank of Baroda: 437553, 450653, 652151
+  if (clean.startsWith("437553") || clean.startsWith("450653") || clean.startsWith("652151")) {
+    return {
+      bankName: "Bank of Baroda",
+      offerText: "5% off upto ₹ 1250 on using Bank of Baroda Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/bobc.png",
+      accentBg: "bg-orange-50/60",
+      accentBorder: "border-orange-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Punjab National Bank (PNB): 6070, 652152
+  if (clean.startsWith("6070") || clean.startsWith("652152")) {
+    return {
+      bankName: "Punjab National Bank",
+      offerText: "5% off upto ₹ 1250 on using PNB Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/pnbc.png",
+      accentBg: "bg-amber-50/60",
+      accentBorder: "border-amber-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Generic RuPay Cards (NPCI ranges)
+  if (
+    clean.startsWith("508") ||
+    clean.startsWith("60") ||
+    clean.startsWith("65") ||
+    clean.startsWith("81") ||
+    clean.startsWith("82") ||
+    clean.startsWith("353") ||
+    clean.startsWith("356")
+  ) {
+    return {
+      bankName: "RuPay",
+      offerText: "5% off upto ₹ 1250 on using RuPay Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png",
+      accentBg: "bg-emerald-50/60",
+      accentBorder: "border-emerald-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Generic Visa Cards
+  if (clean.startsWith("4")) {
+    return {
+      bankName: "Visa",
+      offerText: "5% off upto ₹ 1250 on using Visa Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png",
+      accentBg: "bg-blue-50/60",
+      accentBorder: "border-blue-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  // Generic Mastercard Cards
+  if (/^(5[1-5]|2)/.test(clean)) {
+    return {
+      bankName: "Mastercard",
+      offerText: "5% off upto ₹ 1250 on using Mastercard Cards",
+      logo: "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/icici.png",
+      accentBg: "bg-orange-50/60",
+      accentBorder: "border-orange-200",
+      badge: "Eligible Offer",
+    };
+  }
+
+  return null;
+};
+
 export default function OrderModal({
   isOpen,
   onClose,
@@ -796,7 +1367,23 @@ export default function OrderModal({
   const [isCodSuccess, setIsCodSuccess] = useState(false);
   const [isEmiModalOpen, setIsEmiModalOpen] = useState(false);
     const [delhiveryCodAvailable, setDelhiveryCodAvailable] = useState<boolean | null>(null);
-  const [checkoutStep, setCheckoutStep] = useState<"details" | "choose_emi" | "awaiting_payment">("details");
+  const [checkoutStep, setCheckoutStep] = useState<"details" | "choose_emi" | "emi_plan_select" | "emi_add_card" | "awaiting_payment" | "select_netbanking" | "card_payment" | "card_otp">("details");
+  const [selectedEmiBankObj, setSelectedEmiBankObj] = useState<EmiBankItem | null>(() => DEFAULT_EMI_BANKS.find((b) => b.id === "hdfc_dc") || DEFAULT_EMI_BANKS[0]);
+  const [selectedEmiPlan, setSelectedEmiPlan] = useState<DynamicEmiPlan | null>(null);
+  const [isEmiPlanCollapsed, setIsEmiPlanCollapsed] = useState(false);
+  const [isEmiAccordionOpen, setIsEmiAccordionOpen] = useState(true);
+  const [backendCardEligibility, setBackendCardEligibility] = useState<{
+    checkedCardBin: string;
+    checkedBankCode: string;
+    isEligible: boolean;
+    error?: string;
+    network?: string;
+    isLoading?: boolean;
+  }>({
+    checkedCardBin: "",
+    checkedBankCode: "",
+    isEligible: true,
+  });
   const [awaitingPaymentData, setAwaitingPaymentData] = useState<{
     orderId: string;
     razorpayOrderId: string;
@@ -807,24 +1394,59 @@ export default function OrderModal({
     isCod: boolean;
     codBalanceDisplay: string;
     totalDisplay: string;
+    paymentTitle?: string;
+    paymentSubtitle?: string;
+    emiMonthlyDisplay?: string;
+    bankName?: string;
   } | null>(null);
   const awaitingPaymentTimerRef = useRef<number>(0);
   const [awaitingPaymentCountdown, setAwaitingPaymentCountdown] = useState<number>(900);
   const [isAwaitingUpi, setIsAwaitingUpi] = useState(false);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [bankSearchQuery, setBankSearchQuery] = useState("");
-  const [selectedEmiFilter, setSelectedEmiFilter] = useState<"all" | "no_cost" | "credit" | "debit">("all");
+  const [selectedEmiFilter, setSelectedEmiFilter] = useState<"all" | "no_cost" | "credit" | "debit" | "bajaj">("no_cost");
   const [expandedBankId, setExpandedBankId] = useState<string | null>("axis");
   const [selectedTenure, setSelectedTenure] = useState<number>(6);
   const [selectedEmiBank, setSelectedEmiBank] = useState<string>("Axis Bank");
-  const [selectedCustomPayment, setSelectedCustomPayment] = useState<"upi" | "card" | "wallet" | "netbanking" | "cod">("upi");
+  const [selectedCustomPayment, setSelectedCustomPayment] = useState<"upi" | "card" | "wallet" | "netbanking" | "cod" | "">("upi");
   const [selectedUpiApp, setSelectedUpiApp] = useState<UpiAppId>("paytm");
   const [showQrCode, setShowQrCode] = useState(false);
   const [upiVpa, setUpiVpa] = useState("");
   const [upiValidationMsg, setUpiValidationMsg] = useState("");
-  const [selectedBank, setSelectedBank] = useState("BARB_R");
+  const [selectedBank, setSelectedBank] = useState("SBIN");
   const [selectedWallet, setSelectedWallet] = useState("payzapp");
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null);
+
+  // Dedicated Netbanking Flow State (Matches User Images 1, 2, 3)
+  const [netbankingSearchQuery, setNetbankingSearchQuery] = useState("");
+  const [selectedNetbankingTab, setSelectedNetbankingTab] = useState<"popular" | "other">("popular");
+  const [selectedBankForSheet, setSelectedBankForSheet] = useState<NetbankingBankItem | null>(null);
+  const [isRedirectingToBank, setIsRedirectingToBank] = useState(false);
+
+  // Dedicated Card Payment Flow State (Matches User Reference Image)
+  const [cardHolderName, setCardHolderName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvv, setCardCvv] = useState("");
+  const [showCvv, setShowCvv] = useState(false);
+  const [saveCardAsPerRbi, setSaveCardAsPerRbi] = useState(true);
+  const [isOrderSummaryOpen, setIsOrderSummaryOpen] = useState(false);
+  const [isProcessingCard, setIsProcessingCard] = useState(false);
+  const [cardErrorMessage, setCardErrorMessage] = useState<string | null>(null);
+  const [cardPhone, setCardPhone] = useState("");
+  const [cardOtpRecipient, setCardOtpRecipient] = useState<string>("");
+
+  // Dedicated Card OTP Verification State (Matches User Image 2 - media_1790406822318.png)
+  const [cardOtp, setCardOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const [cardOtpTimer, setCardOtpTimer] = useState<number>(29);
+  const [isVerifyingCardOtp, setIsVerifyingCardOtp] = useState<boolean>(false);
+  const [cardOrderId, setCardOrderId] = useState<string>("");
+  const [cardRazorpayOrderId, setCardRazorpayOrderId] = useState<string>("");
+  const [cardLast4, setCardLast4] = useState<string>("");
+  const [cardOfferCarouselIndex, setCardOfferCarouselIndex] = useState<number>(0);
+  const cardOtpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
+  const cardOtpTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const rzpCardInstanceRef = useRef<any>(null);
 
   // Live Razorpay Payment Methods State (populated dynamically with enabled banks only)
   const [liveEmiBanks, setLiveEmiBanks] = useState<EmiBankItem[]>(DEFAULT_EMI_BANKS);
@@ -881,6 +1503,80 @@ export default function OrderModal({
     };
   }, [isOpen, totalPrice]);
 
+  // Dynamic rotation for card offers when card is not yet typed
+  useEffect(() => {
+    if (checkoutStep !== "card_payment") return;
+    const clean = cardNumber.replace(/\D/g, "");
+    if (clean.length >= 3) return;
+    const interval = setInterval(() => {
+      setCardOfferCarouselIndex((prev) => (prev + 1) % DEFAULT_BANK_OFFERS.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [checkoutStep, cardNumber]);
+
+  // Live Backend Razorpay EMI Card Eligibility Check (Screen 5)
+  useEffect(() => {
+    const rawDigits = cardNumber.replace(/\D/g, "");
+    if (checkoutStep !== "emi_add_card" || !selectedEmiBankObj) {
+      return;
+    }
+
+    if (rawDigits.length < 6) {
+      setBackendCardEligibility({
+        checkedCardBin: "",
+        checkedBankCode: selectedEmiBankObj.code,
+        isEligible: true,
+      });
+      return;
+    }
+
+    const cardBin = rawDigits.slice(0, 8);
+    if (
+      backendCardEligibility.checkedCardBin === cardBin &&
+      backendCardEligibility.checkedBankCode === selectedEmiBankObj.code
+    ) {
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        setBackendCardEligibility((prev) => ({ ...prev, isLoading: true }));
+        const res = await fetch(getApiPath("/api/payments/check-card-eligibility"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cardNumber: rawDigits,
+            bankCode: selectedEmiBankObj.code,
+            bankName: selectedEmiBankObj.name,
+            tenure: selectedTenure,
+            amount: totalPrice,
+          }),
+        });
+        const data = await res.json();
+        setBackendCardEligibility({
+          checkedCardBin: cardBin,
+          checkedBankCode: selectedEmiBankObj.code,
+          isEligible: Boolean(data?.eligible),
+          error: data?.error || (data?.eligible ? undefined : "This card is not eligible for EMI"),
+          network: data?.network,
+          isLoading: false,
+        });
+      } catch (err) {
+        console.error("Card eligibility check failed:", err);
+        const localEligible = isCardEligibleForEmiBank(cardNumber, selectedEmiBankObj.code, selectedEmiBankObj.name);
+        setBackendCardEligibility({
+          checkedCardBin: cardBin,
+          checkedBankCode: selectedEmiBankObj.code,
+          isEligible: localEligible,
+          error: localEligible ? undefined : "This card is not eligible for EMI",
+          isLoading: false,
+        });
+      }
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [cardNumber, selectedEmiBankObj, checkoutStep, selectedTenure, totalPrice, backendCardEligibility.checkedCardBin, backendCardEligibility.checkedBankCode]);
+
   // Dynamic 15-Minute QR Session & Countdown Timer
   const [upiSessionRef, setUpiSessionRef] = useState<string>(() => `AMEC${Date.now().toString(36).toUpperCase()}`);
   const [qrCountdownSecs, setQrCountdownSecs] = useState<number>(900);
@@ -915,15 +1611,22 @@ export default function OrderModal({
   };
 
   // Selected Bank & Plan Helpers
-  const selectedEmiBankObj =
-    liveEmiBanks.find((b) => b.name.toLowerCase() === selectedEmiBank.toLowerCase()) ||
-    liveEmiBanks.find((b) => b.code.toLowerCase() === selectedEmiBank.toLowerCase()) ||
-    liveEmiBanks[0];
-  const selectedEmiPlan = selectedEmiBankObj?.plans?.find((p) => p.months === selectedTenure);
-  const monthlyEmi = selectedEmiBankObj?.startingEmi || (liveEmiBanks.length > 0 ? Math.min(...liveEmiBanks.map(b => b.startingEmi)) : Math.round(totalPrice / 6));
+  const monthlyEmi = selectedEmiBankObj?.startingEmi || (DEFAULT_EMI_BANKS.length > 0 ? Math.min(...DEFAULT_EMI_BANKS.map(b => b.startingEmi)) : Math.round(totalPrice / 6));
 
   const popularNetbankingBanks = liveNetbankingBanks.filter((b) => b.isPopular).slice(0, 6);
   const selectedBankObj = liveNetbankingBanks.find((b) => b.code === selectedBank);
+
+  const filteredNetbankingBanks = liveNetbankingBanks.filter((b) => {
+    if (netbankingSearchQuery.trim()) {
+      const q = netbankingSearchQuery.toLowerCase().trim();
+      return (
+        b.name.toLowerCase().includes(q) ||
+        b.shortName.toLowerCase().includes(q) ||
+        b.code.toLowerCase().includes(q)
+      );
+    }
+    return selectedNetbankingTab === "popular" ? b.isPopular : !b.isPopular;
+  });
 
   const filteredBanks = liveEmiBanks.filter((bank) => {
     const matchesSearch =
@@ -1033,24 +1736,64 @@ export default function OrderModal({
     }
   };
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    altPhone: "",
-    deliveryAddress: "",
-    city: "",
-    state: "",
-    pincode: "",
-    gstNumber: "",
-    agreedToTerms: true,
+interface CheckoutFormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  altPhone: string;
+  deliveryAddress: string;
+  city: string;
+  state: string;
+  pincode: string;
+  gstNumber: string;
+  agreedToTerms: boolean;
+}
+
+  const [formData, setFormData] = useState<CheckoutFormData>(() => {
+    const defaults: CheckoutFormData = {
+      fullName: "",
+      email: "",
+      phone: "",
+      altPhone: "",
+      deliveryAddress: "",
+      city: "",
+      state: "",
+      pincode: "",
+      gstNumber: "",
+      agreedToTerms: true,
+    };
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("promec_checkout_form_data");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return { ...defaults, ...parsed };
+        }
+      } catch (err) {
+        console.warn("Failed to load checkout form data from localStorage:", err);
+      }
+    }
+    return defaults;
   });
 
+  // Save formData to localStorage whenever any field updates
+  useEffect(() => {
+    try {
+      localStorage.setItem("promec_checkout_form_data", JSON.stringify(formData));
+    } catch (err) {
+      console.warn("Failed to save checkout form data to localStorage:", err);
+    }
+  }, [formData]);
+
   const [formErrors, setFormErrors] = useState<{
+    fullName?: string;
     phone?: string;
     altPhone?: string;
     email?: string;
+    deliveryAddress?: string;
     pincode?: string;
+    city?: string;
+    state?: string;
   }>({});
 
   const [isLoadingPincode, setIsLoadingPincode] = useState(false);
@@ -1115,7 +1858,7 @@ export default function OrderModal({
           }));
         }
 
-        // Live Shiprocket Serviceability Check
+        // Live Delhivery Serviceability Check
         const shipRes = await fetch(getApiPath(`/api/shiprocket/serviceability?pincode=${cleanVal}`));
         const shipData = await shipRes.json();
         if (shipData.success && shipData.serviceable) {
@@ -1125,8 +1868,8 @@ export default function OrderModal({
             serviceable: true,
             cod: codOk,
             message: codOk
-              ? "✓ Shiprocket Express: Prepaid & Cash on Delivery Available"
-              : "✓ Shiprocket Express: Prepaid Delivery Available (COD Not Serviceable)",
+              ? "✓ Delhivery Express: Prepaid & Cash on Delivery Available"
+              : "✓ Delhivery Express: Prepaid Delivery Available (COD Not Serviceable)",
           });
         } else if (shipData.remarks) {
           setDelhiveryCodAvailable(false);
@@ -1147,35 +1890,37 @@ export default function OrderModal({
   const currentColor = PRODUCT_DATA.colors[selectedColorIndex];
   const images = currentColor.images;
 
-  // Load Razorpay Checkout SDK dynamically
+  // Load Razorpay Custom Checkout SDK dynamically
   const loadRazorpayScript = (): Promise<boolean> => {
     return new Promise((resolve) => {
       if (typeof window === "undefined") {
         resolve(false);
         return;
       }
-      if (typeof (window as any).Razorpay === "function") {
+      if (
+        typeof (window as any).Razorpay === "function" &&
+        typeof (window as any).Razorpay.prototype?.createPayment === "function"
+      ) {
         resolve(true);
         return;
       }
+
+      // If an older checkout.js without createPayment is loaded, remove it so razorpay.js can load
       const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
       if (existing) {
-        let attempts = 0;
-        const check = setInterval(() => {
-          attempts++;
-          if (typeof (window as any).Razorpay === "function") {
-            clearInterval(check);
-            resolve(true);
-          } else if (attempts > 30) {
-            clearInterval(check);
-            resolve(false);
-          }
-        }, 100);
-        return;
+        if (typeof (window as any).Razorpay?.prototype?.createPayment !== "function") {
+          existing.remove();
+          try {
+            delete (window as any).Razorpay;
+          } catch (_) {}
+        } else {
+          resolve(true);
+          return;
+        }
       }
 
       const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.src = "https://checkout.razorpay.com/v1/razorpay.js";
       script.async = true;
       script.onload = () => resolve(true);
       script.onerror = () => resolve(false);
@@ -1239,8 +1984,24 @@ export default function OrderModal({
 
   // Handle back button from Checkout Form -> Product Details view
   const handleBackToProduct = () => {
-    if (checkoutStep === "choose_emi") {
+    if (checkoutStep === "card_otp") {
+      setCheckoutStep(onlinePaymentMode === "EMI" ? "emi_add_card" : "card_payment");
+      setCardErrorMessage(null);
+      return;
+    }
+    if (checkoutStep === "emi_add_card") {
+      setCheckoutStep("emi_plan_select");
+      setCardErrorMessage(null);
+      return;
+    }
+    if (checkoutStep === "emi_plan_select") {
+      setCheckoutStep("choose_emi");
+      return;
+    }
+    if (checkoutStep === "choose_emi" || checkoutStep === "select_netbanking" || checkoutStep === "card_payment") {
       setCheckoutStep("details");
+      setSelectedBankForSheet(null);
+      setCardErrorMessage(null);
       return;
     }
     if (historyStateRef.current === "checkout") {
@@ -1286,6 +2047,11 @@ export default function OrderModal({
     setOnlinePaymentMode("FULL");
     setCheckoutStep("details");
     setBankSearchQuery("");
+    setSelectedBankForSheet(null);
+    setNetbankingSearchQuery("");
+    setIsRedirectingToBank(false);
+    setIsProcessingCard(false);
+    setCardErrorMessage(null);
     setFormErrors({});
     onClose();
   };
@@ -1336,6 +2102,40 @@ export default function OrderModal({
     };
   }, [isOpen]);
 
+  // Card OTP Timer Effect (Must be before early return)
+  useEffect(() => {
+    if (checkoutStep === "card_otp") {
+      setCardOtpTimer(29);
+      if (cardOtpTimerRef.current) clearInterval(cardOtpTimerRef.current);
+      cardOtpTimerRef.current = setInterval(() => {
+        setCardOtpTimer((prev) => {
+          if (prev <= 1) {
+            if (cardOtpTimerRef.current) clearInterval(cardOtpTimerRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      const focusTimer = setTimeout(() => {
+        cardOtpInputsRef.current[0]?.focus();
+      }, 150);
+
+      return () => {
+        clearTimeout(focusTimer);
+        if (cardOtpTimerRef.current) {
+          clearInterval(cardOtpTimerRef.current);
+          cardOtpTimerRef.current = null;
+        }
+      };
+    } else {
+      if (cardOtpTimerRef.current) {
+        clearInterval(cardOtpTimerRef.current);
+        cardOtpTimerRef.current = null;
+      }
+    }
+  }, [checkoutStep]);
+
   if (!isOpen) return null;
 
   const nextImage = () => {
@@ -1360,10 +2160,70 @@ export default function OrderModal({
 interface CheckoutSubmitOptions {
   paymentMethod?: "FULL_ONLINE" | "10_PERCENT_COD";
   onlinePaymentMode?: "FULL" | "EMI";
-  selectedCustomPayment?: "upi" | "card" | "wallet" | "netbanking" | "cod";
+  selectedCustomPayment?: "upi" | "card" | "wallet" | "netbanking" | "cod" | "";
   selectedEmiBank?: string;
   selectedTenure?: number;
+  selectedUpiApp?: UpiAppId;
 }
+
+  const validateFormFields = (): boolean => {
+    const errors: {
+      fullName?: string;
+      phone?: string;
+      altPhone?: string;
+      email?: string;
+      deliveryAddress?: string;
+      pincode?: string;
+      city?: string;
+      state?: string;
+    } = {};
+
+    if (!formData.fullName?.trim()) {
+      errors.fullName = "Please enter your full name";
+    }
+
+    const cleanPhone = formData.phone.replace(/\D/g, "");
+    if (!cleanPhone || cleanPhone.length !== 10) {
+      errors.phone = "Please enter a valid 10-digit mobile number";
+    }
+
+    const cleanAltPhone = formData.altPhone.replace(/\D/g, "");
+    if (cleanAltPhone && cleanAltPhone.length !== 10) {
+      errors.altPhone = "Please enter a valid 10-digit mobile number";
+    }
+
+    if (!formData.email?.trim() || !isValidEmail(formData.email)) {
+      errors.email = "Please enter a valid email address";
+    }
+
+    if (!formData.deliveryAddress?.trim()) {
+      errors.deliveryAddress = "Please enter complete delivery address";
+    }
+
+    if (!formData.pincode || formData.pincode.length !== 6) {
+      errors.pincode = "Please enter a valid 6-digit pincode";
+    }
+
+    if (!formData.city?.trim()) {
+      errors.city = "Please enter city";
+    }
+
+    if (!formData.state?.trim()) {
+      errors.state = "Please enter state";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      const formEl = document.getElementById("checkout-form");
+      if (formEl) {
+        formEl.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return false;
+    }
+
+    setFormErrors({});
+    return true;
+  };
 
   const handleContinueEmi = (bankName: string, tenure: number) => {
     setSelectedEmiBank(bankName);
@@ -1372,19 +2232,8 @@ interface CheckoutSubmitOptions {
     setOnlinePaymentMode("EMI");
     setSelectedCustomPayment("card");
 
-    const cleanPhone = formData.phone.replace(/\D/g, "");
-    const isAddressFilled =
-      Boolean(formData.fullName?.trim()) &&
-      cleanPhone.length === 10 &&
-      Boolean(formData.email?.trim()) &&
-      isValidEmail(formData.email) &&
-      Boolean(formData.deliveryAddress?.trim()) &&
-      Boolean(formData.city?.trim()) &&
-      Boolean(formData.state?.trim()) &&
-      Boolean(formData.pincode) &&
-      formData.pincode.length === 6;
-
-    if (isAddressFilled) {
+    const isValid = validateFormFields();
+    if (isValid) {
       handleCheckoutSubmit({
         paymentMethod: "FULL_ONLINE",
         onlinePaymentMode: "EMI",
@@ -1394,38 +2243,691 @@ interface CheckoutSubmitOptions {
       });
     } else {
       setCheckoutStep("details");
+      setPaymentErrorMessage("Please complete your delivery details highlighted in red.");
     }
+  };
+
+  type CardNetwork = "visa" | "mastercard" | "rupay" | "amex" | "diners" | "maestro" | null;
+
+  const getCardNetwork = (num: string): CardNetwork => {
+    const raw = num.replace(/\D/g, "");
+    if (!raw) return null;
+    // RuPay: 508, 60, 65, 81, 82, 353, 356
+    if (
+      raw.startsWith("508") ||
+      /^60(6[1-9]|7|8|9)/.test(raw) ||
+      raw.startsWith("60") ||
+      raw.startsWith("65") ||
+      raw.startsWith("81") ||
+      raw.startsWith("82") ||
+      raw.startsWith("353") ||
+      raw.startsWith("356")
+    ) {
+      return "rupay";
+    }
+    // Visa: starts with 4
+    if (raw.startsWith("4")) return "visa";
+    // Mastercard: 51-55, 2221-2720
+    if (/^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[01]|2720)/.test(raw)) return "mastercard";
+    // Amex: 34, 37
+    if (/^3[47]/.test(raw)) return "amex";
+    // Diners: 30, 36, 38
+    if (/^3[068]/.test(raw)) return "diners";
+    // Maestro: 50, 56-58, 6
+    if (/^(50|5[6-8])/.test(raw)) return "maestro";
+    return null;
   };
 
   const handleDebitCreditCardClick = () => {
     setPaymentMethod("FULL_ONLINE");
     setSelectedCustomPayment("card");
     setOnlinePaymentMode("FULL");
+    if (!cardHolderName && formData.fullName) {
+      setCardHolderName(formData.fullName);
+    }
+    setCardErrorMessage(null);
+    setCheckoutStep("card_payment");
+  };
 
-    const cleanPhone = formData.phone.replace(/\D/g, "");
-    const isAddressFilled =
-      Boolean(formData.fullName?.trim()) &&
-      cleanPhone.length === 10 &&
-      Boolean(formData.email?.trim()) &&
-      isValidEmail(formData.email) &&
-      Boolean(formData.deliveryAddress?.trim()) &&
-      Boolean(formData.city?.trim()) &&
-      Boolean(formData.state?.trim()) &&
-      Boolean(formData.pincode) &&
-      formData.pincode.length === 6;
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digitsOnly = e.target.value.replace(/\D/g, "").slice(0, 16);
+    const formatted = digitsOnly.match(/.{1,4}/g)?.join(" ") || digitsOnly;
+    setCardNumber(formatted);
+    if (cardErrorMessage) setCardErrorMessage(null);
+  };
 
-    if (isAddressFilled) {
-      handleCheckoutSubmit({
-        paymentMethod: "FULL_ONLINE",
-        onlinePaymentMode: "FULL",
-        selectedCustomPayment: "card",
-      });
-    } else {
-      const formEl = document.getElementById("checkout-form");
-      if (formEl) {
-        formEl.scrollTo({ top: 0, behavior: "smooth" });
+  const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, "").slice(0, 4);
+    if (val.length >= 2) {
+      let month = parseInt(val.slice(0, 2), 10);
+      if (month > 12) month = 12;
+      if (month === 0) month = 1;
+      const formattedMonth = month.toString().padStart(2, "0");
+      val = `${formattedMonth}/${val.slice(2)}`;
+    }
+    setCardExpiry(val);
+    if (cardErrorMessage) setCardErrorMessage(null);
+  };
+
+  const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 4);
+    setCardCvv(digits);
+    if (cardErrorMessage) setCardErrorMessage(null);
+  };
+
+  const detectedNetwork = getCardNetwork(cardNumber);
+
+  const rawCardDigits = cardNumber.replace(/\D/g, "");
+  const isCardValid =
+    cardHolderName.trim().length > 0 &&
+    rawCardDigits.length >= 15 &&
+    cardExpiry.includes("/") &&
+    cardExpiry.length === 5 &&
+    cardCvv.length >= 3;
+
+  const handleProceedCardPayment = async () => {
+    if (!cardHolderName.trim()) {
+      setCardErrorMessage("Please enter full name.");
+      return;
+    }
+
+    if (rawCardDigits.length < 15) {
+      setCardErrorMessage("Please enter a valid 16-digit card number.");
+      return;
+    }
+
+    const [expMonth, expYear] = cardExpiry.split("/");
+    if (!expMonth || !expYear || parseInt(expMonth, 10) < 1 || parseInt(expMonth, 10) > 12) {
+      setCardErrorMessage("Please enter a valid expiry date (MM/YY).");
+      return;
+    }
+
+    if (cardCvv.length < 3) {
+      setCardErrorMessage("Please enter a valid CVV.");
+      return;
+    }
+
+    // Behind-the-scenes contact & email for Razorpay backend processing
+    const cleanPhone = (formData.phone || "").replace(/\D/g, "").slice(-10) || "9019623259";
+    const cleanEmail = (formData.email || "").trim() || `${cardHolderName.trim().toLowerCase().replace(/[^a-z0-9]/g, "") || "customer"}@gmail.com`;
+    const customerFullName = cardHolderName.trim() || (formData.fullName || "").trim() || "Customer";
+    setCardLast4(rawCardDigits.slice(-4));
+    setCardOtpRecipient("");
+
+    // Synchronize into formData
+    setFormData((prev) => ({
+      ...prev,
+      phone: cleanPhone,
+      email: cleanEmail,
+      fullName: customerFullName,
+    }));
+
+    setIsProcessingCard(true);
+    setCardErrorMessage(null);
+
+    const isEmi = onlinePaymentMode === "EMI" || checkoutStep === "emi_add_card";
+
+    // Pre-validate EMI card eligibility with backend Razorpay check
+    if (isEmi && selectedEmiBankObj) {
+      try {
+        const verifyRes = await fetch(getApiPath("/api/payments/check-card-eligibility"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cardNumber: rawCardDigits,
+            bankCode: selectedEmiBankObj.code,
+            bankName: selectedEmiBankObj.name,
+            tenure: selectedTenure,
+            amount: totalPrice,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData?.eligible) {
+          setIsProcessingCard(false);
+          setCardErrorMessage(verifyData?.error || "This card is not eligible for EMI with selected bank.");
+          return;
+        }
+      } catch (checkErr) {
+        console.warn("Pre-payment eligibility check error:", checkErr);
       }
-      setPaymentErrorMessage("Please complete your delivery details above before proceeding to Card payment.");
+    }
+
+    try {
+      // 1. Create Order via Backend with Razorpay Orders API
+      const res = await fetch(getApiPath("/api/orders/create"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer: {
+            fullName: customerFullName,
+            phone: cleanPhone,
+            altPhone: formData.altPhone || "N/A",
+            email: cleanEmail,
+            deliveryAddress: formData.deliveryAddress || "Customer Delivery Address",
+            city: formData.city || "Mumbai",
+            state: formData.state || "Maharashtra",
+            pincode: formData.pincode || "400001",
+            gstNumber: formData.gstNumber || "N/A",
+          },
+          variantId: "with-vacuum",
+          colorName: currentColor.name,
+          quantity: quantity,
+          paymentMethod: isEmi ? "EMI" : "FULL_ONLINE",
+          cardNumber: rawCardDigits,
+          emiDetails: isEmi && selectedEmiBankObj ? {
+            bank: selectedEmiBankObj.code,
+            tenure: selectedTenure,
+            monthlyAmount: selectedEmiPlan?.monthlyAmount || calculateStartingEmi(selectedEmiBankObj.id, selectedEmiBankObj.code, selectedEmiBankObj.name, totalPrice),
+          } : undefined,
+          idempotencyKey: `promec_${isEmi ? "emi" : "card"}_${cleanPhone}_${Date.now()}`,
+        }),
+      });
+
+      const orderData = await res.json();
+      if (!res.ok || !orderData || orderData.error) {
+        throw new Error(orderData?.error || "Order creation failed.");
+      }
+
+      setCardOrderId(orderData.orderId || orderData.id);
+      setCardRazorpayOrderId(orderData.razorpayOrderId || orderData.id);
+      setCardLast4(rawCardDigits.slice(-4));
+
+      // 2. Load Razorpay SDK
+      await loadRazorpayScript();
+      if (typeof (window as any).Razorpay !== "function") {
+        throw new Error("Razorpay gateway is initializing. Please try again.");
+      }
+
+      // 3. Instantiate Razorpay with real order details
+      const rzpInstance = new (window as any).Razorpay({
+        key: orderData.keyId,
+        order_id: orderData.razorpayOrderId || orderData.id,
+        amount: orderData.amount,
+        currency: "INR",
+        name: "Aquaforce",
+        description: "Cordless Pressure Washer System",
+        prefill: {
+          name: customerFullName,
+          email: cleanEmail,
+          contact: cleanPhone,
+        },
+        theme: {
+          color: "#0c192c",
+        },
+      });
+
+      rzpCardInstanceRef.current = rzpInstance;
+
+      // 4. Handle Real Bank OTP Event
+      const handleOtpRequired = (data: any) => {
+        setIsProcessingCard(false);
+        setIsVerifyingCardOtp(false);
+        setCheckoutStep("card_otp");
+        setCardOtpTimer(29);
+        setCardOtp(["", "", "", "", "", ""]);
+
+        // Dynamically capture live recipient phone/masked contact from Razorpay SDK event if available
+        let detectedRecipient = "";
+        if (data && typeof data === "object") {
+          detectedRecipient =
+            data.contact ||
+            data.phone ||
+            data.mobile ||
+            data.registered_phone ||
+            data.bank_phone ||
+            data.masked_contact ||
+            data.masked_phone ||
+            data.card?.contact ||
+            data.card?.phone ||
+            data.data?.contact ||
+            data.data?.phone ||
+            "";
+        }
+        if (detectedRecipient) {
+          setCardOtpRecipient(String(detectedRecipient));
+        } else {
+          setCardOtpRecipient("");
+        }
+
+        if (data === "incorrect_otp_retry") {
+          setCardErrorMessage("Incorrect OTP. Please enter the valid OTP received on your mobile from your bank.");
+        } else {
+          setCardErrorMessage(null);
+        }
+        setTimeout(() => {
+          cardOtpInputsRef.current[0]?.focus();
+        }, 150);
+      };
+
+      // 5. Handle Bank 3DS redirect if required by issuing bank
+      const handle3dsRequired = () => {
+        setIsProcessingCard(false);
+        setIsVerifyingCardOtp(false);
+        if (typeof (rzpInstance as any).gotoBank === "function") {
+          (rzpInstance as any).gotoBank();
+        } else if (typeof (rzpInstance as any)._payment?.gotoBank === "function") {
+          (rzpInstance as any)._payment.gotoBank();
+        }
+      };
+
+      // 6. Handle Payment Success (Only triggered when captured by Razorpay)
+      const handlePaymentSuccess = async (response: any) => {
+        setIsVerifyingCardOtp(true);
+        setCardErrorMessage(null);
+
+        try {
+          // Double verify signature and status === 'captured' on backend
+          const verifyRes = await fetch(getApiPath("/api/payments/verify"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: orderData.orderId || orderData.id,
+              razorpayOrderId: response?.razorpay_order_id || orderData.razorpayOrderId || orderData.id,
+              razorpayPaymentId: response?.razorpay_payment_id,
+              razorpaySignature: response?.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyRes.json();
+          if (!verifyRes.ok || !verifyData?.success) {
+            throw new Error(verifyData?.error || "Payment verification failed. Payment was not captured.");
+          }
+
+          const payId = response?.razorpay_payment_id || verifyData.paymentId;
+          setPaymentId(payId);
+          setIsSubmitted(true);
+          setIsVerifyingCardOtp(false);
+
+          if (typeof window !== "undefined" && (window as any).fbq) {
+            (window as any).fbq("track", "Purchase", {
+              value: totalPrice,
+              currency: "INR",
+              content_name: `${PRODUCT_DATA.name} (${currentColor.name})`,
+              content_type: "product",
+              num_items: quantity,
+            });
+          }
+
+          const targetThankYou = window.location.pathname.startsWith("/aquaforceforautocare")
+            ? "/aquaforceforautocare/thank-you"
+            : "/thank-you";
+          const methodLabel = isEmi
+            ? `EMI on Card (${selectedEmiBankObj?.name || "Bank"} - ${selectedTenure} Months)`
+            : "Credit/Debit Card";
+          window.location.href = `${targetThankYou}?payment_id=${encodeURIComponent(payId)}&order_id=${encodeURIComponent(orderData.orderId || orderData.id)}&amount=${encodeURIComponent(totalPrice)}&total_amount=${encodeURIComponent(totalPrice)}&name=${encodeURIComponent(customerFullName)}&method=${encodeURIComponent(methodLabel)}${verifyData.waybill ? `&waybill=${encodeURIComponent(verifyData.waybill)}` : ""}`;
+        } catch (err: any) {
+          console.error("Card payment verification error:", err);
+          setIsVerifyingCardOtp(false);
+          setCardErrorMessage(err?.message || "Failed to confirm payment capture with bank.");
+        }
+      };
+
+      // 7. Handle Payment Error / Decline from Bank
+      const handlePaymentError = (err: any) => {
+        console.error("Razorpay payment error:", err);
+        const errMsg =
+          err?.error?.description ||
+          err?.description ||
+          err?.message ||
+          "Payment was declined by your bank. Please check your card details.";
+
+        const lowerErr = errMsg.toLowerCase();
+        // If Razorpay gives "inappropriate option" or "no appropriate payment method found",
+        // automatically fallback to standard card authorization so the user is never blocked!
+        if (
+          isEmi &&
+          (lowerErr.includes("inappropriate") ||
+           lowerErr.includes("no appropriate") ||
+           lowerErr.includes("not supported") ||
+           lowerErr.includes("invalid payment method"))
+        ) {
+          console.warn("[OrderModal] Caught Razorpay inappropriate option error. Seamlessly retrying as card authorization:", errMsg);
+          const fallbackPayload: any = {
+            ...paymentPayload,
+            method: "card",
+          };
+          delete fallbackPayload.bank;
+          delete fallbackPayload.emi_duration;
+          try {
+            rzpInstance.createPayment(fallbackPayload, {
+              nativeotp: true,
+            });
+            return;
+          } catch (retryErr) {
+            console.error("[OrderModal] Fallback retry failed:", retryErr);
+          }
+        }
+
+        setIsProcessingCard(false);
+        setIsVerifyingCardOtp(false);
+        setCardErrorMessage(errMsg);
+      };
+
+      rzpInstance.on("payment.otp.required", handleOtpRequired);
+      rzpInstance.on("otp.required", handleOtpRequired);
+      rzpInstance.on("payment.3ds.required", handle3dsRequired);
+      rzpInstance.on("3ds.required", handle3dsRequired);
+      rzpInstance.on("payment.success", handlePaymentSuccess);
+      rzpInstance.on("payment.error", handlePaymentError);
+      rzpInstance.on("payment.failed", handlePaymentError);
+
+      // 8. Submit Card to Razorpay with Native OTP enabled (including contact & email)
+      const paymentPayload: any = {
+        "card[number]": rawCardDigits,
+        "card[expiry_month]": expMonth,
+        "card[expiry_year]": expYear,
+        "card[cvv]": cardCvv,
+        "card[name]": cardHolderName.trim() || customerFullName,
+        contact: cleanPhone,
+        email: cleanEmail,
+        order_id: orderData.razorpayOrderId || orderData.id,
+        amount: orderData.amount,
+        currency: "INR",
+        save: 0,
+      };
+
+      if (isEmi) {
+        const bankCodeUpper = (selectedEmiBankObj?.code || "").toUpperCase();
+        if (RZP_NATIVE_EMI_BANKS.has(bankCodeUpper)) {
+          paymentPayload.method = "emi";
+          paymentPayload.bank = bankCodeUpper;
+          paymentPayload.emi_duration = selectedTenure || 6;
+        } else {
+          // For non-native EMI banks (e.g. SBIN, CNRB, IBKL, DBSS, BAJAJ):
+          // Send as standard card auth so Razorpay processes it smoothly without
+          // "inappropriate option" error, and the bank converts it on statement.
+          paymentPayload.method = "card";
+        }
+      } else {
+        paymentPayload.method = "card";
+      }
+
+      rzpInstance.createPayment(paymentPayload, {
+        nativeotp: true,
+      });
+
+
+    } catch (err: any) {
+      console.error("Card payment initiation error:", err);
+      setIsProcessingCard(false);
+      setCardErrorMessage(err.message || "Failed to process card details. Please try again.");
+    }
+  };
+
+  // OTP Input & Confirmation Handlers (Exact Match to media_1790406822318.png)
+
+  const handleOtpChange = (index: number, val: string) => {
+    const cleanVal = val.replace(/\D/g, "");
+    if (!cleanVal) {
+      const newOtp = [...cardOtp];
+      newOtp[index] = "";
+      setCardOtp(newOtp);
+      return;
+    }
+    const char = cleanVal.slice(-1);
+    const newOtp = [...cardOtp];
+    newOtp[index] = char;
+    setCardOtp(newOtp);
+    if (index < 5) {
+      cardOtpInputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !cardOtp[index] && index > 0) {
+      cardOtpInputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pasted) return;
+    const newOtp = [...cardOtp];
+    for (let i = 0; i < pasted.length; i++) {
+      newOtp[i] = pasted[i];
+    }
+    setCardOtp(newOtp);
+    const targetIdx = Math.min(pasted.length, 5);
+    cardOtpInputsRef.current[targetIdx]?.focus();
+  };
+
+  const handleConfirmCardOtp = async (isSkip?: boolean) => {
+    if (isSkip) {
+      if (rzpCardInstanceRef.current) {
+        if (typeof (rzpCardInstanceRef.current as any).gotoBank === "function") {
+          (rzpCardInstanceRef.current as any).gotoBank();
+          return;
+        } else if (typeof (rzpCardInstanceRef.current as any)._payment?.gotoBank === "function") {
+          (rzpCardInstanceRef.current as any)._payment.gotoBank();
+          return;
+        }
+      }
+      setCardErrorMessage("2FA OTP verification is required by your issuing bank.");
+      return;
+    }
+
+    const enteredOtp = cardOtp.join("");
+    if (enteredOtp.length < 6) {
+      setCardErrorMessage("Please enter the 6-digit OTP sent to your phone.");
+      return;
+    }
+
+    setIsVerifyingCardOtp(true);
+    setCardErrorMessage(null);
+
+    if (rzpCardInstanceRef.current && typeof (rzpCardInstanceRef.current as any).submitOTP === "function") {
+      try {
+        (rzpCardInstanceRef.current as any).submitOTP(enteredOtp);
+      } catch (err: any) {
+        setIsVerifyingCardOtp(false);
+        setCardErrorMessage(err?.message || "Failed to submit OTP to bank.");
+      }
+    } else {
+      setIsVerifyingCardOtp(false);
+      setCardErrorMessage("Active payment session not found. Please re-enter card details.");
+    }
+  };
+
+  const handleResendOtp = () => {
+    if (rzpCardInstanceRef.current && typeof (rzpCardInstanceRef.current as any).resendOTP === "function") {
+      try {
+        (rzpCardInstanceRef.current as any).resendOTP();
+        setCardOtpTimer(29);
+        setCardOtp(["", "", "", "", "", ""]);
+        setCardErrorMessage(null);
+        cardOtpInputsRef.current[0]?.focus();
+      } catch (err: any) {
+        setCardErrorMessage(err?.message || "Failed to resend OTP.");
+      }
+    } else {
+      setCardErrorMessage("Unable to resend OTP. Please re-enter card details.");
+    }
+  };
+
+
+  const handleUpiAppSelectAndPay = (appId: UpiAppId) => {
+    setSelectedUpiApp(appId);
+    setPaymentMethod("FULL_ONLINE");
+    setSelectedCustomPayment("upi");
+    setOnlinePaymentMode("FULL");
+
+    const isValid = validateFormFields();
+    if (!isValid) {
+      setPaymentErrorMessage("Please complete your delivery details highlighted in red before proceeding to UPI payment.");
+      return;
+    }
+
+    setPaymentErrorMessage("");
+    handleCheckoutSubmit({
+      paymentMethod: "FULL_ONLINE",
+      onlinePaymentMode: "FULL",
+      selectedCustomPayment: "upi",
+      selectedUpiApp: appId,
+    });
+  };
+
+  const handleProceedNetbankingDirect = async (bank: NetbankingBankItem) => {
+    setSelectedBank(bank.code);
+
+    const isValid = validateFormFields();
+    if (!isValid) {
+      setSelectedBankForSheet(null);
+      setCheckoutStep("details");
+      setPaymentErrorMessage("Please complete your delivery details highlighted in red before proceeding to Netbanking.");
+      return;
+    }
+
+    setIsRedirectingToBank(true);
+    setPaymentErrorMessage("");
+
+    try {
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        throw new Error("Unable to load Razorpay payment SDK. Please check your internet connection.");
+      }
+
+      const res = await fetch(getApiPath("/api/orders/create"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer: {
+            fullName: formData.fullName,
+            phone: formData.phone,
+            altPhone: formData.altPhone || "N/A",
+            email: formData.email,
+            deliveryAddress: formData.deliveryAddress,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            gstNumber: formData.gstNumber || "N/A",
+          },
+          variantId: "with-vacuum",
+          colorName: currentColor.name,
+          quantity: quantity,
+          paymentMethod: "FULL_ONLINE",
+          idempotencyKey: `promec_nb_${bank.code}_${formData.phone.replace(/\D/g, "")}_${Date.now()}`,
+        }),
+      });
+
+      const orderData = await res.json();
+      if (!res.ok || !orderData || orderData.error) {
+        throw new Error(orderData?.error || "Order creation failed.");
+      }
+
+      const activeKeyId = orderData.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      if (!activeKeyId) {
+        throw new Error("Razorpay Key ID is not configured on the server.");
+      }
+
+      const onNetbankingSuccess = async (response: any) => {
+        const payId = response.razorpay_payment_id || "";
+        setPaymentId(payId);
+        setIsProcessingPayment(false);
+        setIsRedirectingToBank(false);
+
+        let generatedWaybill = "";
+        try {
+          const verifyRes = await fetch(getApiPath("/api/payments/verify"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: orderData.orderId,
+              razorpayOrderId: orderData.razorpayOrderId || orderData.id,
+              razorpayPaymentId: payId,
+              razorpaySignature: response.razorpay_signature,
+            }),
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyData?.waybill) {
+            generatedWaybill = verifyData.waybill;
+          }
+        } catch (vErr) {
+          console.warn("Netbanking verify note:", vErr);
+        }
+
+        const targetThankYou = window.location.pathname.startsWith("/aquaforceforautocare")
+          ? "/aquaforceforautocare/thank-you"
+          : "/thank-you";
+        window.location.href = `${targetThankYou}?payment_id=${encodeURIComponent(payId)}&order_id=${encodeURIComponent(orderData.orderId || orderData.id)}&amount=${encodeURIComponent(totalPrice)}&total_amount=${encodeURIComponent(totalPrice)}&name=${encodeURIComponent(formData.fullName)}&method=${encodeURIComponent(`${bank.name} Netbanking`)}${generatedWaybill ? `&waybill=${encodeURIComponent(generatedWaybill)}` : ""}`;
+      };
+
+      const options: any = {
+        key: activeKeyId,
+        amount: orderData.amount,
+        currency: "INR",
+        name: "AMEC Aquaforce",
+        description: `${bank.name} Netbanking`,
+        image: "https://files.catbox.moe/jpksbs.png",
+        order_id: orderData.razorpayOrderId || orderData.id,
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+          contact: formData.phone.startsWith("+91") ? formData.phone : `+91${formData.phone}`,
+          method: "netbanking",
+        },
+        theme: { color: "#005a9c" },
+        config: {
+          display: {
+            blocks: {
+              nb_single_bank: {
+                name: `${bank.name} Netbanking`,
+                instruments: [
+                  { method: "netbanking", banks: [bank.code] },
+                ],
+              },
+            },
+            sequence: ["block.nb_single_bank"],
+            preferences: {
+              show_default_blocks: false,
+            },
+          },
+        },
+        handler: onNetbankingSuccess,
+        modal: {
+          ondismiss: function () {
+            setIsRedirectingToBank(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+
+      if (typeof rzp.on === "function") {
+        rzp.on("payment.success", onNetbankingSuccess);
+        rzp.on("payment.error", (err: any) => {
+          console.error("Netbanking error event:", err);
+          setIsRedirectingToBank(false);
+          setPaymentErrorMessage(
+            err?.error?.description || err?.description || err?.message || "Netbanking transaction failed. Please try another bank."
+          );
+        });
+        rzp.on("payment.failure", (err: any) => {
+          console.error("Netbanking failure event:", err);
+          setIsRedirectingToBank(false);
+          setPaymentErrorMessage(
+            err?.error?.description || err?.description || err?.message || "Netbanking transaction failed. Please try another bank."
+          );
+        });
+      }
+
+      if (typeof rzp.createPayment === "function") {
+        rzp.createPayment({
+          amount: orderData.amount,
+          currency: "INR",
+          order_id: orderData.razorpayOrderId || orderData.id,
+          email: formData.email,
+          contact: formData.phone.startsWith("+91") ? formData.phone : `+91${formData.phone}`,
+          method: "netbanking",
+          bank: bank.code,
+        });
+      } else {
+        throw new Error("Netbanking gateway is currently unavailable. Please try again.");
+      }
+    } catch (err: any) {
+      console.error("Netbanking initiation error:", err);
+      setIsRedirectingToBank(false);
+      setPaymentErrorMessage(err.message || "Failed to initiate Netbanking payment.");
     }
   };
 
@@ -1446,45 +2948,40 @@ interface CheckoutSubmitOptions {
     const effectiveCustomPayment = options?.selectedCustomPayment ?? selectedCustomPayment;
     const effectiveEmiBank = options?.selectedEmiBank ?? selectedEmiBank;
     const effectiveTenure = options?.selectedTenure ?? selectedTenure;
+    const effectiveUpiApp = options?.selectedUpiApp ?? selectedUpiApp;
 
     if (!currentColor.inStock) return;
 
-    const errors: { phone?: string; altPhone?: string; email?: string; pincode?: string } = {};
-
-    const cleanPhone = formData.phone.replace(/\D/g, "");
-    if (!cleanPhone || cleanPhone.length !== 10) {
-      errors.phone = "Please enter a valid 10-digit mobile number";
-    }
-
-    const cleanAltPhone = formData.altPhone.replace(/\D/g, "");
-    if (cleanAltPhone && cleanAltPhone.length !== 10) {
-      errors.altPhone = "Please enter a valid 10-digit mobile number";
-    }
-
-    if (!formData.email.trim() || !isValidEmail(formData.email)) {
-      errors.email = "Please enter a valid email address";
-    }
-
-    if (!formData.pincode || formData.pincode.length !== 6) {
-      errors.pincode = "Please enter a valid 6-digit pincode";
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
+    if (!validateFormFields()) {
       setCheckoutStep("details");
       return;
     }
 
-    setFormErrors({});
+    if (effectiveCustomPayment === "card") {
+      if (!cardHolderName && formData.fullName) {
+        setCardHolderName(formData.fullName);
+      }
+      setCardErrorMessage(null);
+      setCheckoutStep("card_payment");
+      loadRazorpayScript().catch(() => {});
+      return;
+    }
+
+    if (effectiveCustomPayment === "netbanking") {
+      setNetbankingSearchQuery("");
+      setSelectedNetbankingTab("popular");
+      setSelectedBankForSheet(null);
+      setCheckoutStep("select_netbanking");
+      loadRazorpayScript().catch(() => {});
+      return;
+    }
+
+    setPaymentErrorMessage("");
     setIsProcessingPayment(true);
 
     try {
-      const isScriptLoaded = await loadRazorpayScript();
-      if (!isScriptLoaded) {
-        alert("Unable to load Razorpay payment SDK. Please check your internet connection.");
-        setIsProcessingPayment(false);
-        return;
-      }
+      // Non-blocking SDK preload
+      loadRazorpayScript().catch(() => {});
 
       const isCodOrder = effectivePaymentMethod === "10_PERCENT_COD";
       const isEmiMode = effectiveOnlinePaymentMode === "EMI" && !isCodOrder;
@@ -1601,241 +3098,119 @@ interface CheckoutSubmitOptions {
         }
       };
 
-      // Fallback & Standard Razorpay modal launcher
-      const launchRazorpayModal = (customConfig?: any) => {
-        setIsProcessingPayment(false);
-        const options: any = {
-          key: activeKeyId,
-          amount: orderData.amount,
-          currency: orderData.currency || "INR",
-          name: "AMEC Aquaforce",
-          description: isCodOrder
-            ? "10% Advance Deposit for COD"
-            : isEmiMode
-            ? `${effectiveEmiBank || "Bank"} No-Cost EMI (${effectiveTenure} Months)`
-            : "Cordless High-pressure Washer",
-          image: "https://files.catbox.moe/jpksbs.png",
-          order_id: orderData.razorpayOrderId || orderData.id,
-          prefill: {
-            name: formData.fullName,
-            email: formData.email,
-            contact: formData.phone.startsWith("+91") ? formData.phone : `+91${formData.phone}`,
-            method: isEmiMode ? "emi" : effectiveCustomPayment === "cod" ? "upi" : effectiveCustomPayment,
-            vpa: upiVpa?.trim() || undefined,
-          },
-          theme: {
-            color: "#005a9c",
-          },
-          modal: {
-            ondismiss: function () {
-              setIsProcessingPayment(false);
-            },
-          },
-          handler: handlePaymentSuccess,
-        };
+      // === UNIFIED IN-MODAL PAYMENT HUB (SCREEN C) ROUTING ===
+      // Zero external redirects to api.razorpay.com or Razorpay Checkout modal!
+      let paymentTitle = "UPI Payment";
+      let paymentSubtitle = "Scan QR code or use any UPI app below to pay";
+      let emiMonthlyDisplay = "";
+      let bankNameDisplay = "";
 
-        if (customConfig) {
-          options.config = customConfig;
-        }
-
-        if (effectiveCustomPayment === "card") {
-          options.method = {
-            card: true,
-            netbanking: false,
-            upi: false,
-            wallet: false,
-            emi: false,
-            paylater: false,
-          };
-        }
-
-        const rzp = new (window as any).Razorpay(options);
-        if (typeof rzp.on === "function") {
-          rzp.on("payment.failed", function (failResp: any) {
-            console.warn("Payment failed:", failResp);
-            setPaymentErrorMessage(failResp?.error?.description || "Payment was not completed.");
-          });
-        }
-        if (typeof rzp.open === "function") {
-          rzp.open();
-        } else if (typeof (window as any).Razorpay?.open === "function") {
-          (window as any).Razorpay.open(options);
-        } else {
-          console.error("Razorpay SDK open method not ready.");
-        }
-      };
-
-      // === PAYMENT FLOW ROUTING ===
-      // 1. EMI flow: Check isEmiMode FIRST so it NEVER falls into UPI or COD QR code!
-      if (isEmiMode) {
+      if (isCodOrder) {
+        paymentTitle = "COD 10% Advance Deposit";
+        paymentSubtitle = "Scan QR code or pay via UPI to confirm your Cash on Delivery order";
+      } else if (isEmiMode) {
         const bankObj =
           liveEmiBanks.find((b) => b.name.toLowerCase() === (effectiveEmiBank || "").toLowerCase()) ||
           liveEmiBanks.find((b) => b.code.toLowerCase() === (effectiveEmiBank || "").toLowerCase()) ||
           liveEmiBanks.find((b) => b.id.toLowerCase() === (effectiveEmiBank || "").toLowerCase()) ||
           liveEmiBanks[0];
-        const bankCode = bankObj?.code || "ICIC";
-        const emiConfig = {
-          display: {
-            blocks: {
-              emi_only: {
-                name: `${effectiveEmiBank || "Bank"} No-Cost EMI (${effectiveTenure} Months)`,
-                instruments: [
-                  { method: "emi", issuers: [bankCode] },
-                ],
-              },
-            },
-            sequence: ["block.emi_only"],
-            preferences: {
-              show_default_blocks: false,
-            },
-          },
-        };
-        launchRazorpayModal(emiConfig);
-      } else if (isCodOrder || effectiveCustomPayment === "upi") {
-        // COD (10% advance) and Full Online UPI: in-modal "Awaiting Payment" screen with QR code
-        // ZERO rzp.open() or launchRazorpayModal() calls for COD or UPI!
-        const displayAmount = isCodOrder ? advanceAmountPaid : totalAmount;
-        const displayCodBalance = isCodOrder ? codBalanceDue : 0;
+        const chosenBankName = effectiveEmiBank || bankObj?.name || "Bank";
+        const chosenPlan = bankObj?.plans?.find((p) => p.months === effectiveTenure);
+        const monthly = chosenPlan ? chosenPlan.monthlyAmount : Math.round(totalAmount / (effectiveTenure || 6));
+        emiMonthlyDisplay = `₹${monthly.toLocaleString("en-IN")}/m for ${effectiveTenure || 6} months`;
+        paymentTitle = `${chosenBankName} No-Cost EMI`;
+        paymentSubtitle = `${effectiveTenure || 6}-Month No-Cost EMI Plan (${emiMonthlyDisplay})`;
+        bankNameDisplay = chosenBankName;
+      } else if (effectiveCustomPayment === "wallet") {
+        paymentTitle = "Wallet / Online Payment";
+        paymentSubtitle = "Pay using your wallet or UPI app below";
+      }
 
-        setAwaitingPaymentData({
-          orderId: orderData.orderId,
-          razorpayOrderId: orderData.razorpayOrderId || orderData.id,
-          qrCodeUrl: orderData.qrCodeUrl || "",
-          upiIntentUrl: orderData.upiIntentUrl || "",
-          amountInPaise: orderData.amount,
-          amountDisplay: `₹${displayAmount.toLocaleString("en-IN")}`,
-          isCod: isCodOrder,
-          codBalanceDisplay: isCodOrder ? `₹${displayCodBalance.toLocaleString("en-IN")}` : "",
-          totalDisplay: `₹${totalAmount.toLocaleString("en-IN")}`,
-        });
+      const displayAmount = isCodOrder ? advanceAmountPaid : totalAmount;
+      const displayCodBalance = isCodOrder ? codBalanceDue : 0;
 
-        awaitingPaymentTimerRef.current = 900;
-        setAwaitingPaymentCountdown(900);
-        setCheckoutStep("awaiting_payment");
-        setIsProcessingPayment(true);
-        setIsAwaitingUpi(true);
+      setAwaitingPaymentData({
+        orderId: orderData.orderId,
+        razorpayOrderId: orderData.razorpayOrderId || orderData.id,
+        qrCodeUrl: orderData.qrCodeUrl || "",
+        upiIntentUrl: orderData.upiIntentUrl || "",
+        amountInPaise: orderData.amount,
+        amountDisplay: `₹${displayAmount.toLocaleString("en-IN")}`,
+        isCod: isCodOrder,
+        codBalanceDisplay: isCodOrder ? `₹${displayCodBalance.toLocaleString("en-IN")}` : "",
+        totalDisplay: `₹${totalAmount.toLocaleString("en-IN")}`,
+        paymentTitle,
+        paymentSubtitle,
+        emiMonthlyDisplay,
+        bankName: bankNameDisplay,
+      });
 
-        const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          typeof navigator !== "undefined" ? navigator.userAgent : ""
-        );
-        if (isMobileDevice) {
-          const rawUpi =
-            orderData.upiIntentUrl ||
-            `upi://pay?pa=amectechnology.rzp@rxairtel&pn=AMECTECHNOLOGY&mc=5013&tr=${orderData.orderId || upiSessionRef}&am=${totalAmount}&cu=INR&tn=AMEC%20Aquaforce%20${orderData.orderId || upiSessionRef}`;
-          const targetUrl = getAppSpecificUpiUrl(rawUpi, selectedUpiApp);
-          window.location.href = targetUrl;
+      awaitingPaymentTimerRef.current = 900;
+      setAwaitingPaymentCountdown(900);
+      setCheckoutStep("awaiting_payment");
+      setIsProcessingPayment(false);
+      setIsAwaitingUpi(true);
+
+      const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        typeof navigator !== "undefined" ? navigator.userAgent : ""
+      );
+      if (isMobileDevice && (effectiveCustomPayment === "upi" || isCodOrder)) {
+        const rawUpi =
+          orderData.upiIntentUrl ||
+          `upi://pay?pa=amectechnology.rzp@rxairtel&pn=AMECTECHNOLOGY&mc=5013&tr=${orderData.orderId || upiSessionRef}&am=${totalAmount}&cu=INR&tn=AMEC%20Aquaforce%20${orderData.orderId || upiSessionRef}`;
+        const targetUrl = getAppSpecificUpiUrl(rawUpi, effectiveUpiApp);
+        window.location.href = targetUrl;
+      }
+
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+
+      const pollStartTime = Date.now();
+      pollingIntervalRef.current = setInterval(async () => {
+        const elapsedSecs = Math.floor((Date.now() - pollStartTime) / 1000);
+        const remainingSecs = Math.max(0, 900 - elapsedSecs);
+        awaitingPaymentTimerRef.current = remainingSecs;
+        setAwaitingPaymentCountdown(remainingSecs);
+
+        if (Date.now() - pollStartTime > 900000) {
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+          }
+          setIsProcessingPayment(false);
+          setIsAwaitingUpi(false);
+          setCheckoutStep("details");
+          setPaymentErrorMessage("Payment timed out. Please try again.");
+          return;
         }
 
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-          pollingIntervalRef.current = null;
-        }
-
-        const pollStartTime = Date.now();
-        pollingIntervalRef.current = setInterval(async () => {
-          const elapsedSecs = Math.floor((Date.now() - pollStartTime) / 1000);
-          const remainingSecs = Math.max(0, 900 - elapsedSecs);
-          awaitingPaymentTimerRef.current = remainingSecs;
-          setAwaitingPaymentCountdown(remainingSecs);
-
-          if (Date.now() - pollStartTime > 900000) {
+        try {
+          const verifyRes = await fetch(getApiPath("/api/payments/verify"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: orderData.orderId,
+              razorpayOrderId: orderData.razorpayOrderId || orderData.id,
+            }),
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyData?.success) {
             if (pollingIntervalRef.current) {
               clearInterval(pollingIntervalRef.current);
               pollingIntervalRef.current = null;
             }
-            setIsProcessingPayment(false);
             setIsAwaitingUpi(false);
-            setCheckoutStep("details");
-            setPaymentErrorMessage("Payment timed out. Please try again.");
-            return;
-          }
-
-          try {
-            const verifyRes = await fetch(getApiPath("/api/payments/verify"), {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                orderId: orderData.orderId,
-                razorpayOrderId: orderData.razorpayOrderId || orderData.id,
-              }),
+            handlePaymentSuccess({
+              razorpay_payment_id: verifyData.paymentId,
+              razorpay_order_id: orderData.razorpayOrderId || orderData.id,
             });
-            const verifyData = await verifyRes.json();
-            if (verifyData?.success) {
-              if (pollingIntervalRef.current) {
-                clearInterval(pollingIntervalRef.current);
-                pollingIntervalRef.current = null;
-              }
-              setIsAwaitingUpi(false);
-              handlePaymentSuccess({
-                razorpay_payment_id: verifyData.paymentId,
-                razorpay_order_id: orderData.razorpayOrderId || orderData.id,
-              });
-            }
-          } catch (pollErr) {
-            console.warn("UPI status check error:", pollErr);
           }
-        }, 2500);
-      } else if (effectiveCustomPayment === "card") {
-        // Card-only flow: Strictly hide all non-card payment methods (UPI, Netbanking, Wallets, EMI)
-        // so only the Card screen is shown
-        const cardConfig = {
-          display: {
-            hide: [
-              { method: "upi" },
-              { method: "netbanking" },
-              { method: "wallet" },
-              { method: "emi" },
-              { method: "paylater" },
-            ],
-            preferences: {
-              show_default_blocks: true,
-            },
-          },
-        };
-        launchRazorpayModal(cardConfig);
-      } else if (effectiveCustomPayment === "netbanking") {
-        // Netbanking flow: Restrict Razorpay Checkout to the chosen bank
-        const nbBank = selectedBank || "BARB_R";
-        const netbankingConfig = {
-          display: {
-            blocks: {
-              nb_only: {
-                name: `${nbBank} Netbanking`,
-                instruments: [
-                  { method: "netbanking", banks: [nbBank] },
-                ],
-              },
-            },
-            sequence: ["block.nb_only"],
-            preferences: {
-              show_default_blocks: false,
-            },
-          },
-        };
-        launchRazorpayModal(netbankingConfig);
-      } else if (effectiveCustomPayment === "wallet") {
-        // Wallet flow: Restrict Razorpay Checkout to the chosen wallet provider
-        const walletCode = selectedWallet || "payzapp";
-        const walletConfig = {
-          display: {
-            blocks: {
-              wallet_only: {
-                name: "Wallet Payment",
-                instruments: [
-                  { method: "wallet", wallets: [walletCode] },
-                ],
-              },
-            },
-            sequence: ["block.wallet_only"],
-            preferences: {
-              show_default_blocks: false,
-            },
-          },
-        };
-        launchRazorpayModal(walletConfig);
-      } else {
-        launchRazorpayModal();
-      }
+        } catch (pollErr) {
+          console.warn("UPI status check error:", pollErr);
+        }
+      }, 2500);
     } catch (err: any) {
       console.error("Payment error:", err);
       setPaymentErrorMessage(err.message || "Payment initiation failed. Please try again.");
@@ -2025,11 +3400,21 @@ interface CheckoutSubmitOptions {
                       </div>
                       <div>
                         <div className="font-bold text-sm text-slate-900 font-montserrat">
-                          {awaitingPaymentData.isCod ? "COD 10% Advance Deposit" : "UPI Payment"}
+                          {awaitingPaymentData.paymentTitle || (awaitingPaymentData.isCod ? "COD 10% Advance Deposit" : "UPI Payment")}
                         </div>
                         <div className="text-[11px] text-slate-500 font-medium font-open-sans">
                           Order ID: {awaitingPaymentData.orderId}
                         </div>
+                        {awaitingPaymentData.emiMonthlyDisplay && (
+                          <div className="text-[11px] font-bold text-emerald-600 font-montserrat mt-0.5">
+                            {awaitingPaymentData.emiMonthlyDisplay}
+                          </div>
+                        )}
+                        {awaitingPaymentData.paymentSubtitle && !awaitingPaymentData.emiMonthlyDisplay && (
+                          <div className="text-[11px] text-slate-500 font-open-sans mt-0.5">
+                            {awaitingPaymentData.paymentSubtitle}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="text-right">
@@ -2061,7 +3446,7 @@ interface CheckoutSubmitOptions {
                       Scan QR Code to Pay {awaitingPaymentData.amountDisplay}
                     </div>
                     <div className="text-xs text-slate-500 font-open-sans">
-                      Use any UPI app (Google Pay, PhonePe, Paytm, BHIM)
+                      Use any UPI app (Google Pay, PhonePe, Paytm, BHIM) or scan to pay with linked Card/Bank
                     </div>
                   </div>
 
@@ -2161,19 +3546,19 @@ interface CheckoutSubmitOptions {
             </div>
           ) : checkoutStep === "choose_emi" ? (
             /* ========================================================= */
-            /* SCREEN B: CHOOSE EMI OPTIONS (Exact Match to Screenshot)  */
+            /* SCREEN B: CHOOSE EMI OPTIONS (Exact Match to media_1790416132263.png) */
             /* ========================================================= */
             <div className="flex flex-col h-full flex-1 overflow-hidden bg-white">
-              {/* Header with Back Arrow */}
+              {/* Header with Back Arrow: ← Choose EMI Options */}
               <div className="shrink-0 px-4 sm:px-8 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white z-20">
                 <button
                   type="button"
                   onClick={() => setCheckoutStep("details")}
-                  className="flex items-center gap-2 text-slate-800 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
+                  className="flex items-center gap-2 text-slate-900 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
                   aria-label="Back to checkout"
                 >
-                  <ArrowLeft size={18} />
-                  <span>Choose EMI Options</span>
+                  <ArrowLeft size={18} className="text-slate-800" />
+                  <span className="font-extrabold text-[#002d62]">Choose EMI Options</span>
                 </button>
 
                 <button
@@ -2186,250 +3571,1462 @@ interface CheckoutSubmitOptions {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-5 space-y-4 no-scrollbar">
+              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 space-y-4 no-scrollbar">
                 {/* Promo Offer Banner */}
-                <div className="p-3 bg-red-50/90 border border-red-200/80 rounded-xl flex items-center gap-2.5 text-xs font-semibold text-slate-800 shadow-2xs">
-                  <span className="w-5 h-5 rounded-md bg-red-600 text-white flex items-center justify-center font-bold text-[10px] shrink-0">
-                    %
+                <div className="p-3 bg-red-50/60 border border-red-100 rounded-2xl flex items-center gap-3 shadow-2xs">
+                  <img
+                    src="https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png"
+                    alt="HDFC Bank"
+                    className="w-5 h-5 object-contain rounded shrink-0"
+                  />
+                  <span className="text-xs sm:text-[13px] font-bold text-slate-900 font-montserrat">
+                    10% off on using HDFC Bank Debit Card EMI
                   </span>
-                  <span>10% off on using HDFC Bank CC&amp;DC EMI</span>
                 </div>
 
-                {/* Search Bank Input */}
+                {/* Search your bank */}
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Search your bank"
                     value={bankSearchQuery}
                     onChange={(e) => setBankSearchQuery(e.target.value)}
-                    className="w-full bg-white border border-slate-200 focus:border-[#005a9c] rounded-xl pl-3.5 pr-9 py-2.5 text-xs sm:text-sm placeholder-slate-400 font-medium outline-none transition-all"
+                    className="w-full bg-white border border-slate-200 focus:border-slate-800 rounded-2xl pl-4 pr-10 py-3 text-xs sm:text-sm placeholder-slate-400 font-medium outline-none transition-all"
                   />
-                  <Search size={16} className="absolute right-3 top-3 text-slate-400 pointer-events-none" />
+                  <Search size={16} className="absolute right-3.5 top-3.5 text-slate-400 pointer-events-none" />
                 </div>
 
-                {/* Filter Chips: No Cost EMI | Credit Card | Debit Card */}
-                <div className="flex items-center gap-2 flex-wrap text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEmiFilter(selectedEmiFilter === "no_cost" ? "all" : "no_cost")}
-                    className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
-                      selectedEmiFilter === "no_cost"
-                        ? "bg-slate-900 text-white shadow-xs"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                  >
-                    No Cost EMI
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEmiFilter(selectedEmiFilter === "credit" ? "all" : "credit")}
-                    className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
-                      selectedEmiFilter === "credit"
-                        ? "bg-slate-900 text-white shadow-xs"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                  >
-                    Credit Card
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEmiFilter(selectedEmiFilter === "debit" ? "all" : "debit")}
-                    className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
-                      selectedEmiFilter === "debit"
-                        ? "bg-slate-900 text-white shadow-xs"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                  >
-                    Debit Card
-                  </button>
-                </div>
+                {/* Filter Chips: No Cost EMI | Credit Card | Debit Card | Bajaj Finserv */}
+                {/* Filter Chips: No Cost EMI | Credit Card | Debit Card | Bajaj Finserv (only if enabled) */}
+                {(() => {
+                  const availableBanks = (liveEmiBanks && liveEmiBanks.length > 0) ? liveEmiBanks : DEFAULT_EMI_BANKS;
+                  const hasCredit = availableBanks.some((b) => b.type === "credit" || b.type === "both");
+                  const hasDebit = availableBanks.some((b) => b.type === "debit" || b.type === "both");
+                  const hasBajaj = availableBanks.some((b) => b.type === "cardless" || b.id === "bajaj");
 
-                {/* Section Title */}
-                <div className="pt-2 flex items-center justify-between">
-                  <div className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2 font-montserrat">
-                    {selectedEmiFilter === "debit" ? "Debit Cards" : selectedEmiFilter === "credit" ? "Credit Cards" : "Available Bank Cards"} ({filteredBanks.length})
-                  </div>
-                  {isLoadingLiveMethods && (
-                    <div className="flex items-center gap-1.5 text-[11px] text-[#005a9c] font-medium mb-2">
-                      <span className="w-3 h-3 border-2 border-[#005a9c] border-t-transparent rounded-full animate-spin" />
-                      <span>Updating live plans...</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Bank List */}
-                <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
-                  {filteredBanks.map((bank) => {
-                    const isSelected =
-                      selectedEmiBank.toLowerCase() === bank.name.toLowerCase() ||
-                      selectedEmiBank.toLowerCase() === bank.code.toLowerCase();
-                    const startingEmi = bank.startingEmi || Math.round(totalPrice / 12);
-                    return (
-                      <div key={bank.id} className="transition-all">
-                        <div
-                          onClick={() => {
-                            setSelectedEmiBank(bank.name);
-                            if (bank.plans && bank.plans.length > 0) {
-                              if (!bank.plans.some((p) => p.months === selectedTenure)) {
-                                setSelectedTenure(bank.plans[0].months);
-                              }
-                            }
-                          }}
-                          className={`p-3.5 flex items-center justify-between cursor-pointer select-none transition-all ${
-                            isSelected
-                              ? "bg-blue-50/60 border-l-4 border-l-[#005a9c]"
-                              : "hover:bg-slate-50"
+                  return (
+                    <div className="flex items-center gap-2 flex-wrap text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedEmiFilter(selectedEmiFilter === "no_cost" ? "all" : "no_cost")}
+                        className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          selectedEmiFilter === "no_cost"
+                            ? "bg-slate-900 text-white shadow-xs"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        }`}
+                      >
+                        <span>No Cost EMI</span>
+                        {selectedEmiFilter === "no_cost" && (
+                          <X size={13} className="text-white/80 hover:text-white" />
+                        )}
+                      </button>
+                      {hasCredit && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedEmiFilter(selectedEmiFilter === "credit" ? "all" : "credit")}
+                          className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
+                            selectedEmiFilter === "credit"
+                              ? "bg-slate-900 text-white shadow-xs"
+                              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                           }`}
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-2xs shrink-0 overflow-hidden">
-                              {bank.logo ? (
-                                <img
-                                  src={bank.logo}
-                                  alt={bank.name}
-                                  className="w-full h-full object-contain"
-                                  onError={(e) => {
-                                    (e.target as HTMLElement).style.display = "none";
-                                  }}
-                                />
-                              ) : (
-                                <span className="font-bold text-xs text-slate-700">
-                                  {bank.code.slice(0, 3)}
-                                </span>
-                              )}
+                          Credit Card
+                        </button>
+                      )}
+                      {hasDebit && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedEmiFilter(selectedEmiFilter === "debit" ? "all" : "debit")}
+                          className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
+                            selectedEmiFilter === "debit"
+                              ? "bg-slate-900 text-white shadow-xs"
+                              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                          }`}
+                        >
+                          Debit Card
+                        </button>
+                      )}
+                      {hasBajaj && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedEmiFilter(selectedEmiFilter === "bajaj" ? "all" : "bajaj")}
+                          className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
+                            selectedEmiFilter === "bajaj"
+                              ? "bg-slate-900 text-white shadow-xs"
+                              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                          }`}
+                        >
+                          Bajaj Finserv
+                        </button>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                {/* Section 1: Credit Cards */}
+                {selectedEmiFilter !== "debit" && selectedEmiFilter !== "bajaj" && (() => {
+                  const availableBanks = (liveEmiBanks && liveEmiBanks.length > 0) ? liveEmiBanks : DEFAULT_EMI_BANKS;
+                  const creditBanks = availableBanks.filter((b) => b.type === "credit" || b.type === "both")
+                    .filter((b) => {
+                      if (selectedEmiFilter === "no_cost") return b.isNoCost;
+                      return true;
+                    })
+                    .filter((b) => {
+                      if (!bankSearchQuery.trim()) return true;
+                      return b.name.toLowerCase().includes(bankSearchQuery.toLowerCase()) || b.code.toLowerCase().includes(bankSearchQuery.toLowerCase());
+                    });
+                  if (creditBanks.length === 0) return null;
+                  return (
+                    <div className="space-y-2 pt-1">
+                      <h3 className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                        Credit Cards
+                      </h3>
+                      <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
+                        {creditBanks.map((bank) => {
+                          const startingEmi = calculateStartingEmi(bank.id, bank.code, bank.name, totalPrice);
+                          return (
+                            <div
+                              key={bank.id}
+                              onClick={() => {
+                                setSelectedEmiBankObj(bank);
+                                setSelectedEmiBank(bank.name);
+                                const plans = calculateBankEmiPlans(bank.id, bank.code, bank.name, totalPrice);
+                                const popular = plans.find((p) => p.isMostPopular) || plans[0];
+                                setSelectedTenure(popular ? popular.months : 6);
+                                setSelectedEmiPlan(popular || null);
+                                setCheckoutStep("emi_plan_select");
+                              }}
+                              className="p-3.5 flex items-center justify-between hover:bg-slate-50/80 cursor-pointer select-none transition-colors"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-white border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                                  <img
+                                    src={bank.logo}
+                                    alt={bank.name}
+                                    className="w-full h-full object-contain"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png";
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                                      {bank.name}
+                                    </span>
+                                    {bank.hasOffer && (
+                                      <span className="bg-[#e0f7f6] text-[#007b7b] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                        Instant Discount
+                                      </span>
+                                    )}
+                                    {bank.isNoCost && (
+                                      <span className="bg-[#fef3c7] text-[#92400e] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                        No Cost
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[11.5px] text-slate-500 font-open-sans mt-0.5">
+                                    EMI starts from ₹{startingEmi.toLocaleString("en-IN")}/m
+                                  </div>
+                                </div>
+                              </div>
+                              <ChevronRight size={18} className="text-slate-400 shrink-0" />
                             </div>
-                            <div>
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
-                                  {bank.name}
-                                </span>
-                                {bank.hasOffer && (
-                                  <span className="text-[9.5px] font-bold bg-cyan-100 text-cyan-800 px-1.5 py-0.5 rounded leading-tight">
-                                    {bank.offerText || "Instant Discount"}
-                                  </span>
-                                )}
-                                {bank.isNoCost && (
-                                  <span className="text-[9.5px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded leading-tight">
-                                    No Cost
-                                  </span>
-                                )}
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Section 2: Debit Cards */}
+                {selectedEmiFilter !== "credit" && selectedEmiFilter !== "bajaj" && (() => {
+                  const availableBanks = (liveEmiBanks && liveEmiBanks.length > 0) ? liveEmiBanks : DEFAULT_EMI_BANKS;
+                  const debitBanks = availableBanks.filter((b) => b.type === "debit" || b.type === "both")
+                    .filter((b) => {
+                      if (selectedEmiFilter === "no_cost") return b.isNoCost;
+                      return true;
+                    })
+                    .filter((b) => {
+                      if (!bankSearchQuery.trim()) return true;
+                      return b.name.toLowerCase().includes(bankSearchQuery.toLowerCase()) || b.code.toLowerCase().includes(bankSearchQuery.toLowerCase());
+                    });
+                  if (debitBanks.length === 0) return null;
+                  return (
+                    <div className="space-y-2 pt-2">
+                      <h3 className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                        Debit Cards
+                      </h3>
+                      <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
+                        {debitBanks.map((bank) => {
+                          const startingEmi = calculateStartingEmi(bank.id, bank.code, bank.name, totalPrice);
+                          return (
+                            <div
+                              key={bank.id}
+                              onClick={() => {
+                                setSelectedEmiBankObj(bank);
+                                setSelectedEmiBank(bank.name);
+                                const plans = calculateBankEmiPlans(bank.id, bank.code, bank.name, totalPrice);
+                                const popular = plans.find((p) => p.isMostPopular) || plans[0];
+                                setSelectedTenure(popular ? popular.months : 6);
+                                setSelectedEmiPlan(popular || null);
+                                setCheckoutStep("emi_plan_select");
+                              }}
+                              className="p-3.5 flex items-center justify-between hover:bg-slate-50/80 cursor-pointer select-none transition-colors"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-white border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                                  <img
+                                    src={bank.logo}
+                                    alt={bank.name}
+                                    className="w-full h-full object-contain"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png";
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                                      {bank.name}
+                                    </span>
+                                    {bank.hasOffer && (
+                                      <span className="bg-[#e0f7f6] text-[#007b7b] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                        Instant Discount
+                                      </span>
+                                    )}
+                                    {bank.isNoCost && (
+                                      <span className="bg-[#fef3c7] text-[#92400e] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                        No Cost
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[11.5px] text-slate-500 font-open-sans mt-0.5">
+                                    EMI starts from ₹{startingEmi.toLocaleString("en-IN")}/m
+                                  </div>
+                                </div>
                               </div>
-                              <div className="text-[11px] text-slate-500 font-open-sans mt-0.5">
-                                EMI starts from ₹{startingEmi.toLocaleString("en-IN")}/m
+                              <ChevronRight size={18} className="text-slate-400 shrink-0" />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Section 3: Bajaj Finserv (Matching media_1790418307016.png) */}
+                {selectedEmiFilter !== "credit" && selectedEmiFilter !== "debit" && (() => {
+                  const availableBanks = (liveEmiBanks && liveEmiBanks.length > 0) ? liveEmiBanks : DEFAULT_EMI_BANKS;
+                  const bajajBanks = availableBanks.filter((b) => b.type === "cardless" || b.id === "bajaj")
+                    .filter((b) => {
+                      if (selectedEmiFilter === "no_cost") return b.isNoCost;
+                      return true;
+                    })
+                    .filter((b) => {
+                      if (!bankSearchQuery.trim()) return true;
+                      return b.name.toLowerCase().includes(bankSearchQuery.toLowerCase()) || b.code.toLowerCase().includes(bankSearchQuery.toLowerCase());
+                    });
+                  if (bajajBanks.length === 0) return null;
+                  return (
+                    <div className="space-y-2 pt-2">
+                      <h3 className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                        Bajaj Finserv
+                      </h3>
+                      <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
+                        {bajajBanks.map((bank) => {
+                          const startingEmi = calculateStartingEmi(bank.id, bank.code, bank.name, totalPrice);
+                          return (
+                            <div
+                              key={bank.id}
+                              onClick={() => {
+                                setSelectedEmiBankObj(bank);
+                                setSelectedEmiBank(bank.name);
+                                const plans = calculateBankEmiPlans(bank.id, bank.code, bank.name, totalPrice);
+                                const popular = plans.find((p) => p.isMostPopular) || plans[0];
+                                setSelectedTenure(popular ? popular.months : 6);
+                                setSelectedEmiPlan(popular || null);
+                                setCheckoutStep("emi_plan_select");
+                              }}
+                              className="p-3.5 flex items-center justify-between hover:bg-slate-50/80 cursor-pointer select-none transition-colors"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-white border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                                  <img
+                                    src={bank.logo}
+                                    alt={bank.name}
+                                    className="w-full h-full object-contain"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://cdn.razorpay.com/app/bajaj.png";
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                                      {bank.name}
+                                    </span>
+                                    {bank.isNoCost && (
+                                      <span className="bg-[#fef3c7] text-[#92400e] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                        No Cost
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[11.5px] text-slate-500 font-open-sans mt-0.5">
+                                    EMI starts from ₹{startingEmi.toLocaleString("en-IN")}/m
+                                  </div>
+                                </div>
                               </div>
+                              <ChevronRight size={18} className="text-slate-400 shrink-0" />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          ) : checkoutStep === "emi_plan_select" && selectedEmiBankObj ? (
+            /* ========================================================= */
+            /* SCREEN C: EMI PLAN SELECTION (Exact Match to media_1790416212882.png) */
+            /* ========================================================= */
+            <div className="flex flex-col h-full flex-1 overflow-hidden bg-white">
+              {/* Header: ← [Bank Logo] [Bank Name] */}
+              <div className="shrink-0 px-4 sm:px-8 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white z-20">
+                <button
+                  type="button"
+                  onClick={() => setCheckoutStep("choose_emi")}
+                  className="flex items-center gap-2.5 text-slate-900 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
+                  aria-label="Back to EMI options"
+                >
+                  <ArrowLeft size={18} className="text-slate-800" />
+                  <div className="w-6 h-6 rounded-md bg-white border border-slate-200/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                    <img
+                      src={selectedEmiBankObj.logo}
+                      alt={selectedEmiBankObj.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <span className="font-extrabold text-[#002d62]">{selectedEmiBankObj.name}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="w-8 h-8 bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 rounded-full flex items-center justify-center transition-colors focus:outline-none cursor-pointer shadow-2xs shrink-0"
+                  aria-label="Close modal"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 space-y-4 no-scrollbar">
+                {/* Promo Offer Banner */}
+                <div className="p-3 bg-red-50/60 border border-red-100 rounded-2xl flex items-center gap-3 shadow-2xs">
+                  <img
+                    src={selectedEmiBankObj.logo}
+                    alt={selectedEmiBankObj.name}
+                    className="w-5 h-5 object-contain rounded shrink-0"
+                  />
+                  <span className="text-xs sm:text-[13px] font-bold text-slate-900 font-montserrat">
+                    10% off on using {selectedEmiBankObj.name.includes("HDFC") ? "HDFC Bank" : selectedEmiBankObj.name} CC&amp;DC EMI
+                  </span>
+                </div>
+
+                {/* Plans Table */}
+                {(() => {
+                  const plans = calculateBankEmiPlans(
+                    selectedEmiBankObj.id,
+                    selectedEmiBankObj.code,
+                    selectedEmiBankObj.name,
+                    totalPrice
+                  );
+
+                  return (
+                    <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
+                      {/* Table Header */}
+                      <div className="bg-[#eef2f6] px-3.5 sm:px-4 py-2.5 grid grid-cols-[28px_1fr_1fr_1fr_1fr] items-center text-xs font-semibold text-slate-500 font-montserrat">
+                        <div />
+                        <div className="text-left font-semibold">EMI</div>
+                        <div className="text-left font-semibold">Duration</div>
+                        <div className="text-left font-semibold">Interest</div>
+                        <div className="text-right font-semibold">Total Cost</div>
+                      </div>
+
+                      {/* Plan Rows */}
+                      <div className="divide-y divide-slate-100">
+                        {plans.map((plan) => {
+                          const isSelected = selectedTenure === plan.months;
+
+                          return (
+                            <div key={plan.months}>
+                              {/* Most Popular full-width banner */}
+                              {plan.isMostPopular && (
+                                <div className="bg-[#e6fbf0] text-[#059669] text-xs font-bold py-1.5 text-center font-montserrat tracking-wide">
+                                  Most Popular
+                                </div>
+                              )}
+
+                              <div
+                                onClick={() => {
+                                  setSelectedTenure(plan.months);
+                                  setSelectedEmiPlan(plan);
+                                  setCheckoutStep("emi_add_card");
+                                }}
+                                className={`px-3.5 sm:px-4 py-3 grid grid-cols-[28px_1fr_1fr_1fr_1fr] items-center cursor-pointer transition-colors select-none ${
+                                  isSelected ? "bg-slate-50/80" : "hover:bg-slate-50/50"
+                                }`}
+                              >
+                                {/* Radio Indicator */}
+                                <div className="flex items-center">
+                                  <div
+                                    className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
+                                      isSelected
+                                        ? "border-slate-800 bg-white"
+                                        : "border-slate-300 bg-white"
+                                    }`}
+                                  >
+                                    {isSelected && (
+                                      <div className="w-2 h-2 rounded-full bg-slate-800" />
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* EMI */}
+                                <div className="text-xs sm:text-sm font-semibold text-slate-900 font-montserrat">
+                                  ₹{plan.monthlyAmount.toLocaleString("en-IN")}
+                                </div>
+
+                                {/* Duration */}
+                                <div className="text-xs sm:text-sm font-medium text-slate-800 font-montserrat">
+                                  {String(plan.months).padStart(2, "0")} months
+                                </div>
+
+                                {/* Interest */}
+                                <div>
+                                  {plan.isNoCost ? (
+                                    <span className="text-[#059669] bg-[#e6fbf0] px-2 py-0.5 rounded text-[11px] font-bold inline-block font-montserrat">
+                                      No Cost
+                                    </span>
+                                  ) : (
+                                    <span className="text-xs sm:text-sm font-medium text-slate-800 font-montserrat">
+                                      {plan.interestRate}% pa
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Total Cost */}
+                                <div className="text-xs sm:text-sm font-semibold text-slate-900 font-montserrat text-right">
+                                  ₹{plan.totalPayable.toLocaleString("en-IN")}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          ) : checkoutStep === "emi_add_card" && selectedEmiBankObj ? (
+            /* ========================================================= */
+            /* SCREEN D: EMI ADD CARD (Exact Match to media_1790416234898.png & media_1790416313187.png) */
+            /* ========================================================= */
+            <div className="flex flex-col h-full flex-1 overflow-hidden bg-white">
+              {/* Header: ← [Bank Logo] Add Card */}
+              <div className="shrink-0 px-4 sm:px-8 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white z-20">
+                <button
+                  type="button"
+                  onClick={() => setCheckoutStep("emi_plan_select")}
+                  className="flex items-center gap-2.5 text-slate-900 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
+                  aria-label="Back to EMI plans"
+                >
+                  <ArrowLeft size={18} className="text-slate-800" />
+                  <div className="w-6 h-6 rounded-md bg-white border border-slate-200/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                    <img
+                      src={selectedEmiBankObj.logo}
+                      alt={selectedEmiBankObj.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <span className="font-extrabold text-[#002d62]">Add Card</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="w-8 h-8 bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 rounded-full flex items-center justify-center transition-colors focus:outline-none cursor-pointer shadow-2xs shrink-0"
+                  aria-label="Close modal"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 space-y-4 no-scrollbar">
+                {/* Promo Offer Banner */}
+                <div className="p-3 bg-red-50/60 border border-red-100 rounded-2xl flex items-center gap-3 shadow-2xs">
+                  <img
+                    src={selectedEmiBankObj.logo}
+                    alt={selectedEmiBankObj.name}
+                    className="w-5 h-5 object-contain rounded shrink-0"
+                  />
+                  <span className="text-xs sm:text-[13px] font-bold text-slate-900 font-montserrat">
+                    10% off on using {selectedEmiBankObj.name.includes("HDFC") ? "HDFC Bank" : selectedEmiBankObj.name} CC&amp;DC EMI
+                  </span>
+                </div>
+
+                {/* Collapsible EMI Plan Box */}
+                {(() => {
+                  const currentPlan =
+                    selectedEmiPlan ||
+                    calculateBankEmiPlans(
+                      selectedEmiBankObj.id,
+                      selectedEmiBankObj.code,
+                      selectedEmiBankObj.name,
+                      totalPrice
+                    ).find((p) => p.months === selectedTenure) ||
+                    calculateBankEmiPlans(
+                      selectedEmiBankObj.id,
+                      selectedEmiBankObj.code,
+                      selectedEmiBankObj.name,
+                      totalPrice
+                    )[0];
+
+                  return (
+                    <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs space-y-2">
+                      <div
+                        onClick={() => setIsEmiPlanCollapsed(!isEmiPlanCollapsed)}
+                        className="flex items-center justify-between cursor-pointer select-none"
+                      >
+                        <div className="flex items-center gap-2">
+                          <EmiCardPercentIcon className="w-5 h-5 text-slate-800 shrink-0" />
+                          <span className="font-extrabold text-sm sm:text-base text-slate-900 font-montserrat">
+                            EMI Plan
+                          </span>
+                        </div>
+                        <ChevronDown
+                          size={18}
+                          className={`text-slate-600 transition-transform duration-200 ${
+                            isEmiPlanCollapsed ? "-rotate-90" : "rotate-0"
+                          }`}
+                        />
+                      </div>
+
+                      {!isEmiPlanCollapsed && currentPlan && (
+                        <div className="grid grid-cols-4 gap-2 pt-3 border-t border-slate-100 text-left font-montserrat">
+                          <div>
+                            <div className="text-[11px] text-slate-400 font-semibold">EMI</div>
+                            <div className="text-xs sm:text-sm font-bold text-slate-900 mt-1">
+                              ₹{currentPlan.monthlyAmount.toLocaleString("en-IN")}
                             </div>
                           </div>
+                          <div>
+                            <div className="text-[11px] text-slate-400 font-semibold">Duration</div>
+                            <div className="text-xs sm:text-sm font-bold text-slate-900 mt-1">
+                              {String(currentPlan.months).padStart(2, "0")} months
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-[11px] text-slate-400 font-semibold">Interest</div>
+                            <div className="text-xs sm:text-sm font-bold text-slate-900 mt-1">
+                              {currentPlan.isNoCost ? "No Cost" : `${currentPlan.interestRate}% pa`}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-[11px] text-slate-400 font-semibold">Total cost</div>
+                            <div className="text-xs sm:text-sm font-bold text-slate-900 mt-1">
+                              ₹{currentPlan.totalPayable.toLocaleString("en-IN")}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
-                          {/* Radio Selection Indicator */}
-                          <div
-                            className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all shrink-0 ${
-                              isSelected
-                                ? "border-[#005a9c] bg-[#005a9c] text-white"
-                                : "border-slate-300 bg-white"
+                {/* Card Fields Form with Live Bank Eligibility Validation */}
+                {(() => {
+                  const rawDigits = cardNumber.replace(/\D/g, "");
+                  const isEligible =
+                    rawDigits.length < 6 ||
+                    (backendCardEligibility.checkedCardBin === rawDigits.slice(0, 8) &&
+                    backendCardEligibility.checkedBankCode === selectedEmiBankObj.code
+                      ? backendCardEligibility.isEligible
+                      : isCardEligibleForEmiBank(
+                          cardNumber,
+                          selectedEmiBankObj.code,
+                          selectedEmiBankObj.name
+                        ));
+
+                  const effectiveNetwork =
+                    (backendCardEligibility.checkedCardBin === rawDigits.slice(0, 8) &&
+                    backendCardEligibility.network) ||
+                    detectedNetwork;
+
+                  const [expMonth, expYear] = cardExpiry.split("/");
+                  const isExpiryValid =
+                    cardExpiry.length === 5 &&
+                    Boolean(expMonth && expYear) &&
+                    parseInt(expMonth, 10) >= 1 &&
+                    parseInt(expMonth, 10) <= 12;
+
+                  const isFormValid =
+                    isEligible &&
+                    rawDigits.length >= 15 &&
+                    isExpiryValid &&
+                    cardCvv.length >= 3 &&
+                    (cardHolderName.trim().length > 0 || (formData.fullName || "").trim().length > 0);
+
+                  return (
+                    <div className="space-y-4 pt-1">
+                      {/* Field 1: Card Number */}
+                      <fieldset
+                        className={`rounded-2xl px-3.5 pb-2.5 pt-0 transition-colors bg-white ${
+                          !isEligible
+                            ? "border-2 border-red-500"
+                            : "border border-slate-200 focus-within:border-slate-800"
+                        }`}
+                      >
+                        <legend
+                          className={`text-xs font-normal px-1.5 ml-2 select-none ${
+                            !isEligible ? "text-red-500 font-semibold" : "text-slate-400"
+                          }`}
+                        >
+                          {!isEligible
+                            ? (backendCardEligibility.error || "This card is not eligible for EMI")
+                            : "Card Number"}
+                        </legend>
+                        <div className="flex items-center justify-between gap-2 px-1">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            value={cardNumber}
+                            onChange={handleCardNumberChange}
+                            placeholder="XXXX XXXX XXXX XXXX"
+                            maxLength={19}
+                            className={`w-full font-mono tracking-widest text-sm outline-none bg-transparent ${
+                              !isEligible ? "text-slate-900 font-bold" : "text-slate-900 placeholder:text-slate-300"
                             }`}
-                          >
-                            {isSelected && (
-                              <Check size={12} className="text-white stroke-[3]" />
+                          />
+
+                          {/* Dynamic Card Badges */}
+                          <div className="flex items-center shrink-0 pointer-events-none select-none pr-0.5">
+                            {effectiveNetwork === "visa" ? (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#eff4fe] border border-blue-200/90 shadow-2xs">
+                                <span className="text-[13px] font-black italic tracking-tighter text-[#1434cb]">
+                                  VISA
+                                </span>
+                              </div>
+                            ) : effectiveNetwork === "mastercard" ? (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#fff7ed] border border-orange-200/90 shadow-2xs">
+                                <div className="flex items-center -space-x-1.5">
+                                  <span className="w-3.5 h-3.5 rounded-full bg-[#eb001b] inline-block shadow-2xs" />
+                                  <span className="w-3.5 h-3.5 rounded-full bg-[#f79e1b] inline-block opacity-95 shadow-2xs" />
+                                </div>
+                                <span className="text-[11px] font-bold text-slate-900 font-montserrat">
+                                  Mastercard
+                                </span>
+                              </div>
+                            ) : effectiveNetwork === "rupay" ? (
+                              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#f0fdf4] border border-emerald-200/90 shadow-2xs">
+                                <span className="text-[11.5px] font-black italic text-[#0c4a9e] tracking-tight">
+                                  RuPay
+                                </span>
+                                <span className="text-[11.5px] font-black text-[#00a859]">›</span>
+                              </div>
+                            ) : effectiveNetwork === "amex" ? (
+                              <div className="flex items-center px-2 py-0.5 rounded-md bg-[#0077a6] text-white shadow-2xs">
+                                <span className="text-[10px] font-black tracking-wider">AMEX</span>
+                              </div>
+                            ) : (
+                              /* Idle / 3 Overlapping Brand Badges */
+                              <div className="flex items-center -space-x-1.5 transition-all">
+                                <div className="w-7 h-7 rounded-full bg-[#f1f8fe] border border-slate-200/80 shadow-2xs flex items-center justify-center overflow-hidden">
+                                  <div className="flex items-center -space-x-1">
+                                    <span className="w-3.5 h-3.5 rounded-full bg-[#eb001b] inline-block shadow-2xs" />
+                                    <span className="w-3.5 h-3.5 rounded-full bg-[#00a2e8] inline-block opacity-90 shadow-2xs" />
+                                  </div>
+                                </div>
+                                <div className="w-7 h-7 rounded-full bg-[#eff4fe] border border-slate-200/80 shadow-2xs flex items-center justify-center overflow-hidden">
+                                  <span className="text-[13px] font-black italic tracking-tighter text-[#1434cb] pl-0.5">
+                                    V
+                                  </span>
+                                </div>
+                                <div className="w-8 h-7 rounded-full bg-[#f0fdf4] border border-slate-200/80 shadow-2xs flex items-center justify-center px-1 overflow-hidden">
+                                  <span className="text-[9px] font-black italic text-[#0c4a9e] tracking-tight flex items-center">
+                                    RuPay<span className="text-[8px] text-[#00a859] font-bold ml-0.5">›</span>
+                                  </span>
+                                </div>
+                              </div>
                             )}
                           </div>
                         </div>
+                      </fieldset>
 
-                        {/* Accordion / Expanded Tenure Selection */}
-                        {isSelected && bank.plans && bank.plans.length > 0 && (
-                          <div className="bg-slate-50/60 p-1 sm:p-1.5 border-t border-slate-100">
-                            {/* Table Header Row */}
-                            <div className="bg-[#f1f5f9] rounded-md px-2.5 py-1.5 grid grid-cols-[24px_1fr_1fr_1fr_1fr] items-center text-[11px] sm:text-xs font-normal text-slate-500 mb-0.5">
-                              <div />
-                              <div className="text-left font-montserrat">EMI</div>
-                              <div className="text-left font-montserrat">Duration</div>
-                              <div className="text-left font-montserrat">Interest</div>
-                              <div className="text-right font-montserrat">Total Cost</div>
+                      {/* Field 2: Full Name */}
+                      <fieldset className="border border-slate-200 rounded-2xl px-3.5 pb-2.5 pt-0 focus-within:border-slate-800 transition-colors bg-white">
+                        <legend className="text-xs text-slate-400 font-normal px-1.5 ml-2 select-none">
+                          Full Name
+                        </legend>
+                        <input
+                          type="text"
+                          value={cardHolderName || formData.fullName || ""}
+                          onChange={(e) => {
+                            setCardHolderName(e.target.value);
+                            if (cardErrorMessage) setCardErrorMessage(null);
+                          }}
+                          placeholder="Hemu"
+                          className="w-full text-slate-900 font-semibold text-sm outline-none bg-transparent px-1 placeholder:text-slate-400 font-montserrat"
+                        />
+                      </fieldset>
+
+                      {/* Fields 3 & 4: Expiry Date & Enter CVV */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="border border-slate-200 focus-within:border-slate-800 rounded-2xl px-4 py-3 bg-white transition-colors">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            value={cardExpiry}
+                            onChange={handleExpiryChange}
+                            placeholder="Expiry Date"
+                            maxLength={5}
+                            className="w-full text-slate-900 font-medium text-sm outline-none bg-transparent placeholder:text-slate-300 font-mono"
+                          />
+                        </div>
+
+                        <div className="border border-slate-200 focus-within:border-slate-800 rounded-2xl px-4 py-3 bg-white flex items-center justify-between transition-colors">
+                          <input
+                            type={showCvv ? "text" : "password"}
+                            inputMode="numeric"
+                            value={cardCvv}
+                            onChange={handleCvvChange}
+                            placeholder="Enter CVV"
+                            maxLength={4}
+                            className="w-full text-slate-900 font-medium text-sm outline-none bg-transparent placeholder:text-slate-300 font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowCvv(!showCvv)}
+                            className="text-slate-900 hover:text-slate-600 p-0.5 cursor-pointer ml-1 shrink-0"
+                            aria-label="Toggle CVV visibility"
+                          >
+                            <Eye className="w-5 h-5 text-slate-900" strokeWidth={2.2} />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Subtext */}
+                      <p className="text-xs text-slate-400 font-open-sans leading-relaxed pt-2">
+                        Please get in touch with your bank for interest rate, processing fees, refund or pre-closure related queries
+                      </p>
+
+                      {/* Sticky Bottom Action Button */}
+                      <div
+                        style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
+                        className="pt-4"
+                      >
+                        <button
+                          type="button"
+                          disabled={!isFormValid || isProcessingCard || !isEligible}
+                          onClick={() => {
+                            setPaymentMethod("FULL_ONLINE");
+                            setOnlinePaymentMode("EMI");
+                            handleProceedCardPayment();
+                          }}
+                          className={`w-full font-bold font-montserrat text-sm sm:text-base py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ${
+                            !isFormValid || isProcessingCard || !isEligible
+                              ? "bg-[#94a3b8] text-white cursor-not-allowed"
+                              : "bg-[#1e293b] hover:bg-black active:bg-slate-900 text-white cursor-pointer active:scale-[0.99]"
+                          }`}
+                        >
+                          {isProcessingCard ? (
+                            <>
+                              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              <span>Processing EMI Order...</span>
+                            </>
+                          ) : (
+                            <span>Pay ₹{totalPrice.toLocaleString("en-IN")}</span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          ) : checkoutStep === "card_payment" ? (
+            /* ========================================================= */
+            /* SCREEN D: CREDIT/DEBIT CARD PAYMENT (Exact Match to User) */
+            /* ========================================================= */
+            <div className="flex flex-col h-full flex-1 overflow-hidden bg-white">
+              {/* Header row: Back button on left, 100% Secured Payment & Close on right */}
+              <div className="shrink-0 px-4 sm:px-8 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white z-20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCheckoutStep("details");
+                    setCardErrorMessage(null);
+                  }}
+                  className="flex items-center gap-2 text-slate-800 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
+                  aria-label="Back to checkout"
+                >
+                  <ArrowLeft size={18} />
+                  <span className="font-black text-sm tracking-wider font-montserrat">PROMEC</span>
+                </button>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium font-open-sans">
+                    <span>100% Secured Payment</span>
+                    <Lock size={13} className="text-slate-400" />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="w-8 h-8 bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 rounded-full flex items-center justify-center transition-colors focus:outline-none cursor-pointer shadow-2xs shrink-0"
+                    aria-label="Close modal"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable Card Form View (Exact Match to media_1790404390005.png) */}
+              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-5 space-y-4 no-scrollbar">
+                {/* 1. Dynamic Live Bank Offer Banner */}
+                {(() => {
+                  const detectedOffer = detectCardBankAndOffer(cardNumber);
+                  const currentOffer = detectedOffer || DEFAULT_BANK_OFFERS[cardOfferCarouselIndex % DEFAULT_BANK_OFFERS.length];
+
+                  return (
+                    <div className={`p-3 sm:p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-2xs transition-all duration-300 ${
+                      detectedOffer
+                        ? `${currentOffer.accentBg} ${currentOffer.accentBorder} border-2`
+                        : "bg-white border border-slate-200/90"
+                    }`}>
+                      <div className="flex items-center gap-3 min-w-0">
+                        <img
+                          src={currentOffer.logo}
+                          alt={currentOffer.bankName}
+                          className="w-5 h-5 object-contain rounded shrink-0"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/sbi.png";
+                          }}
+                        />
+                        <span className="text-xs sm:text-[13px] font-semibold text-slate-900 font-montserrat truncate">
+                          {currentOffer.offerText}
+                        </span>
+                      </div>
+
+                      {detectedOffer && (
+                        <span className="shrink-0 px-2 py-0.5 rounded-full text-[10.5px] font-bold bg-emerald-100 text-emerald-800 font-montserrat flex items-center gap-1">
+                          <Check size={11} strokeWidth={3} />
+                          <span>Applied</span>
+                        </span>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                {/* Optional Card Error Alert */}
+                {cardErrorMessage && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center justify-between">
+                    <span>{cardErrorMessage}</span>
+                    <button
+                      type="button"
+                      onClick={() => setCardErrorMessage(null)}
+                      className="text-red-500 font-bold ml-2 cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {/* 2. Section Title */}
+                <div className="flex items-center gap-2 text-slate-900 font-bold text-xs sm:text-sm font-montserrat pt-1">
+                  <svg className="w-5 h-5 text-slate-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <line x1="2" x2="22" y1="10" y2="10" />
+                  </svg>
+                  <span>Credit/Debit Card</span>
+                </div>
+
+                {/* 3. Form Fields (Exact fieldset border lines to Screenshot) */}
+                <div className="space-y-4 pt-0.5">
+                  {/* Field 1: Full Name */}
+                  <fieldset className="border border-slate-200 rounded-2xl px-3.5 pb-2.5 pt-0 focus-within:border-slate-800 transition-colors bg-white">
+                    <legend className="text-xs text-slate-400 font-normal px-1.5 ml-2 select-none">
+                      Full Name
+                    </legend>
+                    <input
+                      type="text"
+                      value={cardHolderName}
+                      onChange={(e) => {
+                        setCardHolderName(e.target.value);
+                        if (cardErrorMessage) setCardErrorMessage(null);
+                      }}
+                      placeholder="Hemu"
+                      className="w-full text-slate-900 font-semibold text-sm outline-none bg-transparent px-1 placeholder:text-slate-400 font-montserrat"
+                    />
+                  </fieldset>
+
+                  {/* Field 2: Card Number */}
+                  <fieldset className="border border-slate-200 rounded-2xl px-3.5 pb-2.5 pt-0 focus-within:border-slate-800 transition-colors bg-white">
+                    <legend className="text-xs text-slate-400 font-normal px-1.5 ml-2 select-none">
+                      Card Number
+                    </legend>
+                    <div className="flex items-center justify-between gap-2 px-1">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={cardNumber}
+                        onChange={handleCardNumberChange}
+                        placeholder="XXXX XXXX XXXX XXXX"
+                        maxLength={19}
+                        className="w-full text-slate-900 font-mono tracking-widest text-sm outline-none bg-transparent placeholder:text-slate-300"
+                      />
+                      {/* Card Network Logos (Dynamic & Live based on entered card number) */}
+                      <div className="flex items-center shrink-0 pointer-events-none select-none pr-0.5">
+                        {detectedNetwork === "visa" ? (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#eff4fe] border border-blue-200/90 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+                            <span className="text-[13px] font-black italic tracking-tighter text-[#1434cb]">
+                              VISA
+                            </span>
+                          </div>
+                        ) : detectedNetwork === "mastercard" ? (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#fff7ed] border border-orange-200/90 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex items-center -space-x-1.5">
+                              <span className="w-3.5 h-3.5 rounded-full bg-[#eb001b] inline-block shadow-2xs" />
+                              <span className="w-3.5 h-3.5 rounded-full bg-[#f79e1b] inline-block opacity-95 shadow-2xs" />
+                            </div>
+                            <span className="text-[11px] font-bold text-slate-900 font-montserrat">
+                              Mastercard
+                            </span>
+                          </div>
+                        ) : detectedNetwork === "rupay" ? (
+                          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#f0fdf4] border border-emerald-200/90 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+                            <span className="text-[11.5px] font-black italic text-[#0c4a9e] tracking-tight">
+                              RuPay
+                            </span>
+                            <span className="text-[11.5px] font-black text-[#00a859]">›</span>
+                          </div>
+                        ) : detectedNetwork === "amex" ? (
+                          <div className="flex items-center px-2 py-0.5 rounded-md bg-[#0077a6] text-white shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+                            <span className="text-[10px] font-black tracking-wider">AMEX</span>
+                          </div>
+                        ) : detectedNetwork === "maestro" ? (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50/90 border border-sky-200/90 shadow-2xs animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex items-center -space-x-1.5">
+                              <span className="w-3.5 h-3.5 rounded-full bg-[#eb001b] inline-block" />
+                              <span className="w-3.5 h-3.5 rounded-full bg-[#00a2e8] inline-block" />
+                            </div>
+                            <span className="text-[11px] font-bold text-slate-900 font-montserrat">
+                              Maestro
+                            </span>
+                          </div>
+                        ) : (
+                          /* Idle / Default 3 Brand Badges (Exact match to media_1790414692790.png) */
+                          <div className="flex items-center -space-x-1.5 transition-all">
+                            {/* Mastercard Circle Badge */}
+                            <div className="w-7 h-7 rounded-full bg-[#f1f8fe] border border-slate-200/80 shadow-2xs flex items-center justify-center overflow-hidden">
+                              <div className="flex items-center -space-x-1">
+                                <span className="w-3.5 h-3.5 rounded-full bg-[#eb001b] inline-block shadow-2xs" />
+                                <span className="w-3.5 h-3.5 rounded-full bg-[#00a2e8] inline-block opacity-90 shadow-2xs" />
+                              </div>
                             </div>
 
-                            {/* Plan Rows */}
-                            <div className="space-y-0.5">
-                              {bank.plans.map((plan) => {
-                                const isTenureSelected = selectedTenure === plan.months;
-                                return (
-                                  <div
-                                    key={plan.months}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setSelectedTenure(plan.months);
-                                    }}
-                                    className={`px-2.5 py-1.5 sm:py-2 grid grid-cols-[24px_1fr_1fr_1fr_1fr] items-center cursor-pointer transition-all select-none ${
-                                      isTenureSelected
-                                        ? "border border-[#005a9c] rounded-md bg-white shadow-2xs"
-                                        : "border border-transparent hover:bg-white/70 rounded-md"
-                                    }`}
-                                  >
-                                    {/* Radio Indicator */}
-                                    <div className="flex items-center">
-                                      <div
-                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all ${
-                                          isTenureSelected
-                                            ? "border-[#005a9c] bg-white"
-                                            : "border-slate-300 bg-white"
-                                        }`}
-                                      >
-                                        {isTenureSelected && (
-                                          <div className="w-1.5 h-1.5 rounded-full bg-[#005a9c]" />
-                                        )}
-                                      </div>
-                                    </div>
+                            {/* Visa Circle Badge */}
+                            <div className="w-7 h-7 rounded-full bg-[#eff4fe] border border-slate-200/80 shadow-2xs flex items-center justify-center overflow-hidden">
+                              <span className="text-[13px] font-black italic tracking-tighter text-[#1434cb] pl-0.5">
+                                V
+                              </span>
+                            </div>
 
-                                    {/* EMI */}
-                                    <div className="text-xs sm:text-sm font-normal text-slate-800 font-montserrat">
-                                      ₹{plan.monthlyAmount.toLocaleString("en-IN")}
-                                    </div>
-
-                                    {/* Duration */}
-                                    <div className="text-xs sm:text-sm font-normal text-slate-700 font-montserrat">
-                                      {String(plan.months).padStart(2, "0")} months
-                                    </div>
-
-                                    {/* Interest */}
-                                    <div>
-                                      {plan.isNoCost ? (
-                                        <span className="bg-[#e6fbf0] text-[#059669] px-1.5 py-0.5 rounded text-[10.5px] sm:text-[11px] font-normal inline-block font-montserrat">
-                                          No Cost
-                                        </span>
-                                      ) : (
-                                        <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[10.5px] sm:text-[11px] font-normal inline-block font-montserrat">
-                                          {plan.interestRate}%
-                                        </span>
-                                      )}
-                                    </div>
-
-                                    {/* Total Cost */}
-                                    <div className="text-xs sm:text-sm font-normal text-slate-800 font-montserrat text-right">
-                                      ₹{plan.totalPayable.toLocaleString("en-IN")}
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                            {/* RuPay Circle Badge */}
+                            <div className="w-8 h-7 rounded-full bg-[#f0fdf4] border border-slate-200/80 shadow-2xs flex items-center justify-center px-1 overflow-hidden">
+                              <span className="text-[9px] font-black italic text-[#0c4a9e] tracking-tight flex items-center">
+                                RuPay<span className="text-[8px] text-[#00a859] font-bold ml-0.5">›</span>
+                              </span>
                             </div>
                           </div>
                         )}
                       </div>
-                    );
-                  })}
+                    </div>
+                  </fieldset>
+
+                  {/* Field 3 & 4: Expiry Date & Enter CVV (2 Columns) */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Expiry Date */}
+                    <div className="border border-slate-200 focus-within:border-slate-800 rounded-2xl px-4 py-3 bg-white transition-colors">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={cardExpiry}
+                        onChange={handleExpiryChange}
+                        placeholder="Expiry Date"
+                        maxLength={5}
+                        className="w-full text-slate-900 font-medium text-sm outline-none bg-transparent placeholder:text-slate-300 font-mono"
+                      />
+                    </div>
+
+                    {/* Enter CVV */}
+                    <div className="border border-slate-200 focus-within:border-slate-800 rounded-2xl px-4 py-3 bg-white flex items-center justify-between transition-colors">
+                      <input
+                        type={showCvv ? "text" : "password"}
+                        inputMode="numeric"
+                        value={cardCvv}
+                        onChange={handleCvvChange}
+                        placeholder="Enter CVV"
+                        maxLength={4}
+                        className="w-full text-slate-900 font-medium text-sm outline-none bg-transparent placeholder:text-slate-300 font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCvv(!showCvv)}
+                        className="text-slate-900 hover:text-slate-600 p-0.5 cursor-pointer ml-1 shrink-0"
+                        aria-label="Toggle CVV visibility"
+                      >
+                        <Eye className="w-5 h-5 text-slate-900" strokeWidth={2.2} />
+                      </button>
+                    </div>
+                  </div>
+
+
+                  {/* Save Card Checkbox */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none pt-1">
+                    <input
+                      type="checkbox"
+                      checked={saveCardAsPerRbi}
+                      onChange={(e) => setSaveCardAsPerRbi(e.target.checked)}
+                      className="w-5 h-5 rounded-md border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                    />
+                    <span className="text-xs sm:text-[13px] text-slate-900 font-medium font-open-sans">
+                      Save card as per RBI guidelines
+                    </span>
+                  </label>
                 </div>
               </div>
 
-              {/* Bottom Sticky Action Button */}
+              {/* 4. Sticky Bottom Continue Button (Exact Match to Screenshot) */}
               <div
                 style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
-                className="shrink-0 bg-white/95 backdrop-blur-md border-t border-slate-100 px-4 sm:px-8 py-3.5 shadow-[0_-6px_20px_rgba(0,0,0,0.06)] z-20"
+                className="shrink-0 bg-white/95 backdrop-blur-md px-4 sm:px-8 py-3.5 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] z-20"
               >
                 <button
                   type="button"
-                  onClick={() => handleContinueEmi(selectedEmiBank, selectedTenure)}
-                  className="w-full bg-[#005a9c] hover:bg-[#004f8a] active:bg-[#004478] text-white font-bold font-montserrat text-sm sm:text-base tracking-wider py-3.5 rounded-xl shadow-sm transition-all active:scale-[0.99] cursor-pointer flex items-center justify-center uppercase"
+                  disabled={!isCardValid || isProcessingCard}
+                  onClick={handleProceedCardPayment}
+                  className={`w-full font-bold font-montserrat text-sm sm:text-base py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ${
+                    !isCardValid || isProcessingCard
+                      ? "bg-[#8e8e93] text-white cursor-not-allowed"
+                      : "bg-black hover:bg-slate-900 active:bg-slate-800 text-white cursor-pointer active:scale-[0.99]"
+                  }`}
                 >
-                  <span>CONTINUE WITH {selectedEmiBank.toUpperCase()} EMI ({selectedTenure}M)</span>
+                  {isProcessingCard ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Processing Details...</span>
+                    </>
+                  ) : (
+                    <span>Continue</span>
+                  )}
                 </button>
               </div>
+            </div>
+          ) : checkoutStep === "card_otp" ? (
+            /* ========================================================= */
+            /* SCREEN E: CARD OTP VERIFICATION (Exact Match to Image 2)  */
+            /* ========================================================= */
+            <div className="flex flex-col h-full flex-1 overflow-hidden bg-white">
+              {/* Header */}
+              <div className="shrink-0 px-4 sm:px-8 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white z-20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCheckoutStep("card_payment");
+                    setCardErrorMessage(null);
+                  }}
+                  className="flex items-center gap-2 text-slate-800 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
+                  aria-label="Back to card payment"
+                >
+                  <ArrowLeft size={18} />
+                  <span className="font-black text-sm tracking-wider font-montserrat">PROMEC</span>
+                </button>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium font-open-sans">
+                    <span>100% Secured Payment</span>
+                    <Lock size={13} className="text-slate-400" />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="w-8 h-8 bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 rounded-full flex items-center justify-center transition-colors focus:outline-none cursor-pointer shadow-2xs shrink-0"
+                    aria-label="Close modal"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Content Area */}
+              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 flex flex-col items-center justify-center no-scrollbar">
+                {/* Optional Error Alert */}
+                {cardErrorMessage && (
+                  <div className="w-full max-w-sm mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center justify-between">
+                    <span>{cardErrorMessage}</span>
+                    <button
+                      type="button"
+                      onClick={() => setCardErrorMessage(null)}
+                      className="text-red-500 font-bold ml-2 cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {/* 1. Credit Card Illustration with Lock inside Light Blue Container (Exact Match to media_1790406822318.png) */}
+                <div className="w-full max-w-sm bg-[#eaf4fe] rounded-3xl py-7 px-8 flex items-center justify-center shadow-xs">
+                  <svg width="128" height="90" viewBox="0 0 128 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
+                    {/* Blue Card Body */}
+                    <rect x="8" y="10" width="102" height="64" rx="9" fill="url(#card_blue_grad)" />
+                    {/* Magnetic Stripe / Surface reflection */}
+                    <path d="M8 25h102v7H8z" fill="white" fillOpacity="0.14" />
+                    {/* Card Chip */}
+                    <rect x="18" y="40" width="17" height="13" rx="2.5" fill="#f8e71c" stroke="#e0c200" strokeWidth="0.5" />
+                    <path d="M18 44.5h17M18 48.5h17M26.5 40v13" stroke="#b39700" strokeWidth="0.8" />
+                    {/* Contactless Wifi Icon */}
+                    <path d="M88 20a10 10 0 0 1 0 13M92 17a15 15 0 0 1 0 19M96 14a20 20 0 0 1 0 25" stroke="white" strokeWidth="1.7" strokeLinecap="round" opacity="0.85" />
+                    {/* Lock Body */}
+                    <rect x="74" y="44" width="36" height="30" rx="6" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.2" />
+                    {/* Lock Shackle */}
+                    <path d="M82 44V34a10 10 0 0 1 20 0v10" stroke="#0070ba" strokeWidth="3.8" strokeLinecap="round" fill="none" />
+                    {/* Lock Keyhole */}
+                    <circle cx="92" cy="56.5" r="2.8" fill="#0070ba" />
+                    <path d="M92 59v4" stroke="#0070ba" strokeWidth="2" strokeLinecap="round" />
+                    <defs>
+                      <linearGradient id="card_blue_grad" x1="8" y1="10" x2="110" y2="74" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#3b8ff3" />
+                        <stop offset="1" stopColor="#1e64c8" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+
+                {/* 2. Heading & Subtitle */}
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 text-center font-montserrat mt-5 tracking-tight">
+                  Securely saving your card
+                </h3>
+                <p className="text-xs sm:text-[13.5px] text-slate-600 text-center font-open-sans mt-2 max-w-[340px] leading-relaxed">
+                  OTP sent to{" "}
+                  <span className="font-semibold text-slate-900">
+                    {cardOtpRecipient
+                      ? cardOtpRecipient.startsWith("+")
+                        ? cardOtpRecipient
+                        : `+91${cardOtpRecipient.replace(/\D/g, "").slice(-10)}`
+                      : "your bank registered mobile number"}
+                  </span>{" "}
+                  for your card ending with{" "}
+                  <span className="font-semibold text-slate-900">
+                    ****{cardLast4 || rawCardDigits.slice(-4) || "card"}
+                  </span>
+                </p>
+
+                {/* 3. Six OTP Input Boxes */}
+                <div className="flex items-center justify-center gap-2 sm:gap-2.5 mt-6 w-full max-w-sm">
+                  {cardOtp.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      ref={(el) => {
+                        cardOtpInputsRef.current[idx] = el;
+                      }}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(idx, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                      onPaste={handleOtpPaste}
+                      className="w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-bold text-slate-900 bg-white border border-slate-300 rounded-xl focus:border-slate-900 focus:ring-1 focus:ring-slate-900 outline-none transition-all shadow-2xs"
+                    />
+                  ))}
+                </div>
+
+                {/* 4. Action Links: Skip OTP & Resend OTP */}
+                <div className="w-full max-w-sm flex items-center justify-between mt-3 px-1 text-xs sm:text-[13px] font-open-sans">
+                  <button
+                    type="button"
+                    onClick={() => handleConfirmCardOtp(true)}
+                    className="text-slate-600 hover:text-slate-950 font-medium cursor-pointer transition-colors"
+                  >
+                    Skip OTP
+                  </button>
+                  {cardOtpTimer > 0 ? (
+                    <span className="text-slate-500 font-medium">
+                      Resend OTP in <span className="font-semibold text-slate-700">{cardOtpTimer}s</span>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      className="text-[#005a9c] hover:underline font-semibold cursor-pointer"
+                    >
+                      Resend OTP
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* 5. Sticky Bottom Action Bar with Navy Continue Button & Secured by Razorpay */}
+              <div
+                style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
+                className="shrink-0 bg-white/95 backdrop-blur-md px-4 sm:px-8 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] z-20 flex flex-col items-center"
+              >
+                <button
+                  type="button"
+                  disabled={isVerifyingCardOtp}
+                  onClick={() => handleConfirmCardOtp(false)}
+                  className="w-full max-w-sm bg-[#0c192c] hover:bg-[#07111f] active:bg-black text-white font-bold font-montserrat text-sm sm:text-base py-3.5 rounded-xl shadow-md transition-all active:scale-[0.99] cursor-pointer flex items-center justify-center tracking-wider disabled:opacity-75 disabled:cursor-not-allowed"
+                >
+                  {isVerifyingCardOtp ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>CONFIRMING PAYMENT...</span>
+                    </span>
+                  ) : (
+                    <span>Continue</span>
+                  )}
+                </button>
+
+                {/* Secured by Razorpay footer */}
+                <div className="mt-3.5 flex items-center justify-center gap-1.5 text-xs text-slate-500 font-open-sans select-none">
+                  <span>Secured by</span>
+                  <div className="flex items-center gap-1 font-bold italic tracking-tighter text-[#0c2340]">
+                    <span className="text-[#005a9c] text-sm not-italic font-black">◢</span>
+                    <span className="text-sm font-black font-montserrat tracking-tight text-[#0c2340]">Razorpay</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : checkoutStep === "select_netbanking" ? (
+            /* ========================================================= */
+            /* SCREEN C: SELECT YOUR BANK (Matches User Images 1, 2, 3)  */
+            /* ========================================================= */
+            <div className="flex flex-col h-full flex-1 overflow-hidden bg-white relative">
+              {/* Header with Back Arrow and Bank Title */}
+              <div className="shrink-0 px-4 sm:px-8 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white z-20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCheckoutStep("details");
+                    setSelectedBankForSheet(null);
+                  }}
+                  className="flex items-center gap-2 text-slate-800 hover:text-slate-950 font-bold text-sm sm:text-base font-montserrat cursor-pointer hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors"
+                  aria-label="Back to checkout"
+                >
+                  <ArrowLeft size={18} />
+                  <Landmark size={18} className="text-slate-700" />
+                  <span>Select Your Bank</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="w-8 h-8 bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 rounded-full flex items-center justify-center transition-colors focus:outline-none cursor-pointer shadow-2xs shrink-0"
+                  aria-label="Close modal"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Scrollable Banks List View (Image 1) */}
+              <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-5 space-y-4 no-scrollbar">
+                {/* Search Bank Input */}
+                <div className="relative">
+                  <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search Bank"
+                    value={netbankingSearchQuery}
+                    onChange={(e) => setNetbankingSearchQuery(e.target.value)}
+                    className="w-full bg-white border border-slate-200 focus:border-slate-400 rounded-xl pl-10 pr-9 py-2.5 sm:py-3 text-xs sm:text-sm placeholder-slate-400 font-medium outline-none transition-all shadow-2xs"
+                  />
+                  {netbankingSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setNetbankingSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Filter Chips: Popular Banks | Other Banks */}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedNetbankingTab("popular");
+                      setNetbankingSearchQuery("");
+                    }}
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      selectedNetbankingTab === "popular" && !netbankingSearchQuery
+                        ? "bg-slate-200/90 text-slate-900 font-bold shadow-2xs"
+                        : "bg-slate-100/80 text-slate-600 hover:bg-slate-200/60"
+                    }`}
+                  >
+                    Popular Banks
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedNetbankingTab("other");
+                      setNetbankingSearchQuery("");
+                    }}
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      selectedNetbankingTab === "other" && !netbankingSearchQuery
+                        ? "bg-slate-200/90 text-slate-900 font-bold shadow-2xs"
+                        : "bg-slate-100/80 text-slate-600 hover:bg-slate-200/60"
+                    }`}
+                  >
+                    Other Banks
+                  </button>
+                </div>
+
+                {/* Section Title */}
+                <div className="text-xs sm:text-sm font-bold text-slate-800 pt-1">
+                  {netbankingSearchQuery.trim()
+                    ? `Search Results (${filteredNetbankingBanks.length})`
+                    : selectedNetbankingTab === "popular"
+                    ? "Popular Banks"
+                    : "Other Banks"}
+                </div>
+
+                {/* Banks List */}
+                <div className="space-y-2.5 pb-6">
+                  {filteredNetbankingBanks.length > 0 ? (
+                    filteredNetbankingBanks.map((bank) => (
+                      <div
+                        key={bank.code}
+                        onClick={() => setSelectedBankForSheet(bank)}
+                        className="w-full bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between cursor-pointer transition-all hover:shadow-xs active:scale-[0.99] select-none"
+                      >
+                        <div className="flex items-center gap-3.5 min-w-0">
+                          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-slate-100 flex items-center justify-center p-1 shrink-0 overflow-hidden shadow-2xs relative">
+                            <img
+                              src={bank.logo}
+                              alt={bank.name}
+                              className="w-full h-full object-contain relative z-10"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = "none";
+                              }}
+                            />
+                            <Landmark size={16} className="text-slate-400 absolute" />
+                          </div>
+                          <span className="text-xs sm:text-sm font-semibold text-slate-900 truncate">
+                            {bank.name}
+                          </span>
+                        </div>
+                        <ChevronRight size={18} className="text-slate-800 shrink-0" strokeWidth={2.2} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-12 text-center text-slate-500 text-xs sm:text-sm space-y-2">
+                      <p>No banks found matching &quot;{netbankingSearchQuery}&quot;</p>
+                      <button
+                        type="button"
+                        onClick={() => setNetbankingSearchQuery("")}
+                        className="text-[#005a9c] font-semibold text-xs underline cursor-pointer"
+                      >
+                        Clear search
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Bottom Sheet Confirmation Overlay (Exact Match to User Image 2) */}
+              {selectedBankForSheet && (
+                <div
+                  className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-30 flex flex-col justify-end p-0 sm:p-4 animate-in fade-in duration-200"
+                  onClick={(e) => {
+                    if (e.target === e.currentTarget && !isRedirectingToBank) {
+                      setSelectedBankForSheet(null);
+                    }
+                  }}
+                >
+                  {/* Center circular Close button directly above bottom card (Image 2) */}
+                  <div className="flex justify-center pb-3">
+                    <button
+                      type="button"
+                      disabled={isRedirectingToBank}
+                      onClick={() => setSelectedBankForSheet(null)}
+                      className="w-10 h-10 rounded-full bg-slate-200/90 hover:bg-slate-300 text-slate-700 flex items-center justify-center shadow-lg transition-transform active:scale-95 cursor-pointer disabled:opacity-50"
+                      aria-label="Close"
+                    >
+                      <X size={18} strokeWidth={2.5} />
+                    </button>
+                  </div>
+
+                  {/* Floating Bottom Card (Image 2) */}
+                  <div
+                    className="bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-100 animate-in slide-in-from-bottom duration-200"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Bank Info Row */}
+                    <div className="flex items-center gap-3.5 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-white border border-slate-100 p-2 flex items-center justify-center shrink-0 shadow-2xs overflow-hidden relative">
+                        <img
+                          src={selectedBankForSheet.logo}
+                          alt={selectedBankForSheet.name}
+                          className="w-full h-full object-contain relative z-10"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = "none";
+                          }}
+                        />
+                        <Landmark size={22} className="text-slate-400 absolute" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-medium text-slate-500">Paying with</div>
+                        <div className="text-sm sm:text-base font-bold text-slate-900 truncate">
+                          {selectedBankForSheet.name} Netbanking
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Helper Subtitle with Open Arrow (Image 2) */}
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-5">
+                      <ArrowUpRight size={14} className="shrink-0 text-slate-600" />
+                      <span>Continue opens {selectedBankForSheet.name}&apos;s page to approve payment</span>
+                    </div>
+
+                    {/* Full-width Black Continue Button (Image 2) */}
+                    <button
+                      type="button"
+                      disabled={isRedirectingToBank}
+                      onClick={() => handleProceedNetbankingDirect(selectedBankForSheet)}
+                      className="w-full bg-black hover:bg-slate-900 active:bg-slate-800 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all active:scale-[0.99] cursor-pointer shadow-md disabled:opacity-75 disabled:cursor-not-allowed"
+                    >
+                      {isRedirectingToBank ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span>Connecting to {selectedBankForSheet.shortName || selectedBankForSheet.name}...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Continue</span>
+                          <ArrowRight size={16} />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             /* ========================================================= */
@@ -2496,11 +5093,26 @@ interface CheckoutSubmitOptions {
                         <input
                           type="text"
                           required
-                          placeholder="Rahul Sharma"
+                          placeholder="Enter your full name"
                           value={formData.fullName}
-                          onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                          className="w-full bg-white border border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c] rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all font-open-sans"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setFormData((prev) => ({ ...prev, fullName: val }));
+                            if (formErrors.fullName && val.trim().length > 0) {
+                              setFormErrors((prev) => ({ ...prev, fullName: undefined }));
+                            }
+                          }}
+                          className={`w-full bg-white border ${
+                            formErrors.fullName
+                              ? "border-red-500 ring-1 ring-red-500"
+                              : "border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c]"
+                          } rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all font-open-sans`}
                         />
+                        {formErrors.fullName && (
+                          <p className="text-red-500 text-[11px] mt-1 font-open-sans font-medium">
+                            {formErrors.fullName}
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -2520,7 +5132,7 @@ interface CheckoutSubmitOptions {
                           inputMode="numeric"
                           maxLength={10}
                           required
-                          placeholder="9876543210"
+                          placeholder="10-digit mobile number"
                           value={formData.phone}
                           onChange={handlePhoneChange}
                           className={`w-full bg-white border ${
@@ -2546,7 +5158,7 @@ interface CheckoutSubmitOptions {
                         <input
                           type="email"
                           required
-                          placeholder="rahul.sharma@example.com"
+                          placeholder="name@example.com"
                           value={formData.email}
                           onChange={handleEmailChange}
                           className={`w-full bg-white border ${
@@ -2570,7 +5182,7 @@ interface CheckoutSubmitOptions {
                           type="tel"
                           inputMode="numeric"
                           maxLength={10}
-                          placeholder="9876543210"
+                          placeholder="Optional 10-digit number"
                           value={formData.altPhone}
                           onChange={handleAltPhoneChange}
                           className={`w-full bg-white border ${
@@ -2604,11 +5216,26 @@ interface CheckoutSubmitOptions {
                       <textarea
                         rows={2}
                         required
-                        placeholder="Street name, house/apartment number"
+                        placeholder="House / Flat no., Building, Street address"
                         value={formData.deliveryAddress}
-                        onChange={(e) => setFormData({ ...formData, deliveryAddress: e.target.value })}
-                        className="w-full bg-white border border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c] rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all resize-none h-[64px] sm:h-[68px] font-open-sans"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData((prev) => ({ ...prev, deliveryAddress: val }));
+                          if (formErrors.deliveryAddress && val.trim().length > 0) {
+                            setFormErrors((prev) => ({ ...prev, deliveryAddress: undefined }));
+                          }
+                        }}
+                        className={`w-full bg-white border ${
+                          formErrors.deliveryAddress
+                            ? "border-red-500 ring-1 ring-red-500"
+                            : "border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c]"
+                        } rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all resize-none h-[64px] sm:h-[68px] font-open-sans`}
                       />
+                      {formErrors.deliveryAddress && (
+                        <p className="text-red-500 text-[11px] mt-1 font-open-sans font-medium">
+                          {formErrors.deliveryAddress}
+                        </p>
+                      )}
                     </div>
 
                     {/* Row 3: Pincode, City, State */}
@@ -2623,7 +5250,7 @@ interface CheckoutSubmitOptions {
                             required
                             inputMode="numeric"
                             maxLength={6}
-                            placeholder="560010"
+                            placeholder="Enter 6-digit pincode"
                             value={formData.pincode}
                             onChange={handlePincodeChange}
                             className={`w-full bg-white border ${
@@ -2652,11 +5279,26 @@ interface CheckoutSubmitOptions {
                         <input
                           type="text"
                           required
-                          placeholder="Bengaluru"
+                          placeholder="City"
                           value={formData.city}
-                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                          className="w-full bg-white border border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c] rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all font-open-sans"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setFormData((prev) => ({ ...prev, city: val }));
+                            if (formErrors.city && val.trim().length > 0) {
+                              setFormErrors((prev) => ({ ...prev, city: undefined }));
+                            }
+                          }}
+                          className={`w-full bg-white border ${
+                            formErrors.city
+                              ? "border-red-500 ring-1 ring-red-500"
+                              : "border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c]"
+                          } rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all font-open-sans`}
                         />
+                        {formErrors.city && (
+                          <p className="text-red-500 text-[11px] mt-1 font-open-sans font-medium">
+                            {formErrors.city}
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -2666,11 +5308,26 @@ interface CheckoutSubmitOptions {
                         <input
                           type="text"
                           required
-                          placeholder="Karnataka"
+                          placeholder="State"
                           value={formData.state}
-                          onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                          className="w-full bg-white border border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c] rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all font-open-sans"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setFormData((prev) => ({ ...prev, state: val }));
+                            if (formErrors.state && val.trim().length > 0) {
+                              setFormErrors((prev) => ({ ...prev, state: undefined }));
+                            }
+                          }}
+                          className={`w-full bg-white border ${
+                            formErrors.state
+                              ? "border-red-500 ring-1 ring-red-500"
+                              : "border-slate-200 focus:border-[#005a9c] focus:ring-1 focus:ring-[#005a9c]"
+                          } rounded-lg px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-all font-open-sans`}
                         />
+                        {formErrors.state && (
+                          <p className="text-red-500 text-[11px] mt-1 font-open-sans font-medium">
+                            {formErrors.state}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -2712,17 +5369,17 @@ interface CheckoutSubmitOptions {
                           setPaymentMethod("FULL_ONLINE");
                           setOnlinePaymentMode("FULL");
                         }}
-                        className={`h-[54px] sm:h-[58px] px-2 sm:px-4 rounded-[14px] sm:rounded-[18px] flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                        className={`h-[56px] sm:h-[60px] px-2 sm:px-4 rounded-[14px] sm:rounded-[18px] flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
                           paymentMethod === "FULL_ONLINE" && onlinePaymentMode === "FULL"
                             ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
                             : "hover:bg-white/40"
                         }`}
                       >
                         <span
-                          className={`text-xs sm:text-[13px] font-semibold font-montserrat leading-tight ${
+                          className={`text-xs sm:text-[13px] font-medium font-montserrat leading-tight ${
                             paymentMethod === "FULL_ONLINE" && onlinePaymentMode === "FULL"
-                              ? "text-slate-900"
-                              : "text-slate-500"
+                              ? "text-slate-500"
+                              : "text-slate-400"
                           }`}
                         >
                           Pay in full
@@ -2734,35 +5391,36 @@ interface CheckoutSubmitOptions {
                               : "text-slate-600"
                           }`}
                         >
-                          ₹{totalPrice.toLocaleString("en-IN")}
+                          ₹{totalPrice.toLocaleString("en-IN")}.00
                         </span>
                       </button>
 
-                      {/* Segment 2: EMI on UPI & Cards (Opens dedicated EMI Screen) */}
+                      {/* Segment 2: EMI on Cards */}
                       <button
                         type="button"
                         onClick={() => {
                           setPaymentMethod("FULL_ONLINE");
                           setOnlinePaymentMode("EMI");
-                          setCheckoutStep("choose_emi");
                         }}
-                        className={`relative h-[54px] sm:h-[58px] px-2 sm:px-4 rounded-[14px] sm:rounded-[18px] flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                        className={`relative h-[56px] sm:h-[60px] px-2 sm:px-4 rounded-[14px] sm:rounded-[18px] flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
                           paymentMethod === "FULL_ONLINE" && onlinePaymentMode === "EMI"
                             ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
                             : "hover:bg-white/40"
                         }`}
                       >
-                        {/* No Cost EMI Ribbon Badge */}
-                        <RibbonBadge text="No Cost EMI" />
+                        {/* No Cost EMI Floating Green Badge */}
+                        <span className="absolute -top-3.5 right-6 px-3 py-0.5 rounded-full text-[10px] font-extrabold bg-[#059669] text-white shadow-xs tracking-tight">
+                          No Cost EMI
+                        </span>
 
                         <span
-                          className={`text-xs sm:text-[13px] font-semibold font-montserrat leading-tight ${
+                          className={`text-xs sm:text-[13px] font-medium font-montserrat leading-tight ${
                             paymentMethod === "FULL_ONLINE" && onlinePaymentMode === "EMI"
-                              ? "text-slate-900"
-                              : "text-slate-500"
+                              ? "text-slate-600"
+                              : "text-slate-400"
                           }`}
                         >
-                          EMI / No-Cost EMI
+                          EMI on Cards
                         </span>
                         <span
                           className={`text-sm sm:text-base font-extrabold font-montserrat mt-0.5 leading-tight ${
@@ -2771,42 +5429,132 @@ interface CheckoutSubmitOptions {
                               : "text-slate-600"
                           }`}
                         >
-                          ₹{monthlyEmi.toLocaleString("en-IN")}/m →
+                          3/6/9+ mo. EMI
                         </span>
                       </button>
                     </div>
 
-                    {/* Selected EMI Plan Banner */}
+                    {/* EMI View Mode: Exact Accordion Box (Matches media_1790415930939.png) */}
                     {onlinePaymentMode === "EMI" && paymentMethod !== "10_PERCENT_COD" && (
-                      <div className="mt-2.5 p-3 bg-blue-50/90 border border-blue-200/90 rounded-xl flex items-center justify-between text-xs shadow-2xs">
-                        <div className="flex items-center gap-2.5">
-                          {selectedEmiBankObj?.logo ? (
-                            <div className="w-8 h-8 rounded-full bg-white border border-slate-200 p-1 shrink-0 flex items-center justify-center overflow-hidden">
-                              <img
-                                src={selectedEmiBankObj.logo}
-                                alt={selectedEmiBank}
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
-                          ) : (
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                          )}
-                          <div>
-                            <div className="font-bold text-slate-800 font-montserrat">
-                              {selectedEmiBank} • {selectedTenure} Months {selectedEmiPlan?.isNoCost ? "No-Cost EMI" : "EMI"}
-                            </div>
-                            <div className="text-[11px] text-slate-500 font-open-sans">
-                              ₹{(selectedEmiPlan?.monthlyAmount || Math.round(totalPrice / selectedTenure)).toLocaleString("en-IN")}/month {selectedEmiPlan && !selectedEmiPlan.isNoCost && `(${selectedEmiPlan.interestRate}% p.a.)`}
+                      <div className="mt-3.5 border border-slate-200/90 rounded-2xl p-4 sm:p-5 bg-white shadow-xs space-y-3.5 animate-in fade-in duration-200">
+                        {/* Header Row */}
+                        <div
+                          onClick={() => setIsEmiAccordionOpen(!isEmiAccordionOpen)}
+                          className="flex items-center justify-between cursor-pointer select-none"
+                        >
+                          <div className="flex items-center gap-3">
+                            <EmiCardPercentIcon className="w-6 h-6 text-slate-700 shrink-0" />
+                            <div>
+                              <div className="font-extrabold text-sm sm:text-base text-slate-900 font-montserrat">
+                                EMI
+                              </div>
+                              <div className="text-xs font-bold text-[#059669] font-montserrat">
+                                No Cost EMI
+                              </div>
                             </div>
                           </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="font-extrabold text-sm sm:text-base text-slate-900 font-montserrat">
+                              ₹{totalPrice.toLocaleString("en-IN")}
+                            </span>
+                            <ChevronUp
+                              size={18}
+                              className={`text-slate-400 transition-transform duration-200 ${
+                                isEmiAccordionOpen ? "rotate-0" : "rotate-180"
+                              }`}
+                            />
+                          </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => setCheckoutStep("choose_emi")}
-                          className="text-[#005a9c] hover:text-[#004478] font-bold text-xs uppercase tracking-wider underline cursor-pointer font-montserrat"
-                        >
-                          Change Plan
-                        </button>
+
+                        {/* Collapsible Content */}
+                        {isEmiAccordionOpen && (
+                          <div className="space-y-3 pt-1">
+                            {/* Promo Offer Banner */}
+                            <div className="p-3 bg-red-50/60 border border-red-100 rounded-2xl flex items-center gap-3 shadow-2xs">
+                              <img
+                                src="https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/hdfc.png"
+                                alt="HDFC Bank"
+                                className="w-5 h-5 object-contain rounded shrink-0"
+                              />
+                              <span className="text-xs sm:text-[13px] font-bold text-slate-900 font-montserrat">
+                                10% off on using HDFC Bank Debit Card EMI
+                              </span>
+                            </div>
+
+                            {/* 3 Quick Recommended Banks (Dynamically selected from enabled banks) */}
+                            <div className="space-y-2.5">
+                              {(() => {
+                                const availableBanks = (liveEmiBanks && liveEmiBanks.length > 0) ? liveEmiBanks : DEFAULT_EMI_BANKS;
+                                const validBanks = availableBanks.filter(
+                                  (b) => b.id !== "hdfc_cc" && b.id !== "sbin" && b.id !== "bajaj" && b.id !== "icic_dc" && b.id !== "axis_dc" && b.id !== "sbin_dc"
+                                );
+                                const hdfcDc = validBanks.find((b) => b.id === "hdfc_dc");
+                                const otherBanks = validBanks.filter((b) => b.id !== "hdfc_dc");
+                                const quickBanks = hdfcDc ? [hdfcDc, ...otherBanks.slice(0, 2)] : validBanks.slice(0, 3);
+
+                                return quickBanks.map((bank) => (
+                                  <div
+                                    key={bank.id}
+                                    onClick={() => {
+                                      setSelectedEmiBankObj(bank);
+                                      setSelectedEmiBank(bank.name);
+                                      const plans = calculateBankEmiPlans(bank.id, bank.code, bank.name, totalPrice);
+                                      const popular = plans.find((p) => p.isMostPopular) || plans[0];
+                                      setSelectedTenure(popular ? popular.months : 6);
+                                      setSelectedEmiPlan(popular || null);
+                                      setCheckoutStep("emi_plan_select");
+                                    }}
+                                    className="p-3 sm:p-3.5 border border-slate-200 hover:border-slate-300 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:bg-slate-50/60 select-none shadow-2xs"
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-10 h-10 rounded-full bg-white border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                                        <img
+                                          src={bank.logo}
+                                          alt={bank.name}
+                                          className="w-full h-full object-contain"
+                                          onError={(e) => {
+                                            (e.target as HTMLImageElement).src = "https://cashfreelogo.cashfree.com/assets_images/pg/nb/64/axis.png";
+                                          }}
+                                        />
+                                      </div>
+                                      <div>
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="font-bold text-xs sm:text-sm text-slate-900 font-montserrat">
+                                            {bank.name}
+                                          </span>
+                                          {bank.hasOffer && bank.offerText && (
+                                            <span className="bg-[#e0f7f6] text-[#007b7b] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                              {bank.offerText}
+                                            </span>
+                                          )}
+                                          {bank.isNoCost && (
+                                            <span className="bg-[#fef3c7] text-[#92400e] text-[10px] font-bold px-2 py-0.5 rounded leading-tight">
+                                              No Cost
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="text-[11.5px] text-slate-500 font-open-sans mt-0.5">
+                                          EMI starts from ₹{calculateStartingEmi(bank.id, bank.code, bank.name, totalPrice).toLocaleString("en-IN")}/m
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <ChevronRight size={18} className="text-slate-400 shrink-0" />
+                                  </div>
+                                ));
+                              })()}
+                            </div>
+
+                            {/* View all banks Button */}
+                            <button
+                              type="button"
+                              onClick={() => setCheckoutStep("choose_emi")}
+                              className="w-full py-3 border border-slate-200 hover:border-slate-400 rounded-2xl bg-white text-slate-900 font-bold text-sm text-center font-montserrat shadow-2xs transition-colors cursor-pointer"
+                            >
+                              View all banks
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -2825,10 +5573,10 @@ interface CheckoutSubmitOptions {
                       <div
                         onClick={() => {
                           setPaymentMethod("FULL_ONLINE");
-                          setSelectedCustomPayment("upi");
                           setOnlinePaymentMode("FULL");
+                          setSelectedCustomPayment((prev) => (prev === "upi" ? "" : "upi"));
                         }}
-                        className="h-[54px] sm:h-[58px] px-3.5 sm:px-4 flex items-center justify-between cursor-pointer select-none"
+                        className="h-[54px] sm:h-[58px] px-3.5 sm:px-4 flex items-center justify-between cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
                       >
                         <div className="flex items-center gap-2.5 sm:gap-3">
                           <UpiPaymentIcon className="w-5 h-5 text-[#005DA6] shrink-0" />
@@ -2924,16 +5672,17 @@ interface CheckoutSubmitOptions {
                             </div>
                           </div>
 
-                          {/* Mobile Layout: UPI App Cards (Exact Match to media_1790178909732.png) */}
+                          {/* Mobile Layout: UPI App Cards */}
                           <div className="sm:hidden py-1 space-y-2.5">
                             <div className="flex items-stretch gap-2.5 overflow-x-auto no-scrollbar py-1.5 px-0.5 scroll-smooth snap-x">
                               {UPI_APP_OPTIONS.map((app) => {
                                 const isSelected = selectedUpiApp === app.id;
+                                const isThisAppLoading = isProcessingPayment && selectedUpiApp === app.id;
                                 return (
                                   <div
                                     key={app.id}
-                                    onClick={() => setSelectedUpiApp(app.id)}
-                                    className={`relative shrink-0 w-[84px] xs:w-[92px] h-[106px] rounded-2xl flex flex-col items-center justify-between cursor-pointer transition-all duration-200 select-none snap-start overflow-hidden ${
+                                    onClick={() => handleUpiAppSelectAndPay(app.id)}
+                                    className={`relative shrink-0 w-[84px] xs:w-[92px] h-[106px] rounded-2xl flex flex-col items-center justify-between cursor-pointer transition-all duration-200 select-none snap-start overflow-hidden active:scale-95 ${
                                       isSelected
                                         ? "border-2 border-[#005a9c] ring-2 ring-[#005a9c]/15 shadow-sm scale-[1.02]"
                                         : `border ${app.borderClass} hover:border-slate-300`
@@ -2970,10 +5719,14 @@ interface CheckoutSubmitOptions {
                                       </span>
                                     </div>
 
-                                    {/* Selected Checkmark Badge */}
+                                    {/* Selected Checkmark Badge / Loading Spinner */}
                                     {isSelected && (
                                       <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#005a9c] text-white flex items-center justify-center shadow-xs">
-                                        <Check size={10} strokeWidth={3.5} />
+                                        {isThisAppLoading ? (
+                                          <span className="w-2.5 h-2.5 border-2 border-white border-t-transparent rounded-full animate-spin block" />
+                                        ) : (
+                                          <Check size={10} strokeWidth={3.5} />
+                                        )}
                                       </div>
                                     )}
                                   </div>
@@ -2981,14 +5734,7 @@ interface CheckoutSubmitOptions {
                               })}
                             </div>
 
-                            {/* Active App Indicator */}
-                            <div className="flex items-center justify-between px-3 py-2 bg-slate-50/90 rounded-xl border border-slate-200/70 text-[11.5px] font-open-sans">
-                              <span className="text-slate-500">Selected UPI App:</span>
-                              <span className="font-bold text-slate-900 font-montserrat flex items-center gap-1.5">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                {UPI_APP_OPTIONS.find((a) => a.id === selectedUpiApp)?.name}
-                              </span>
-                            </div>
+
                           </div>
                         </div>
                       )}
@@ -3072,10 +5818,14 @@ interface CheckoutSubmitOptions {
                       <div
                         onClick={() => {
                           setPaymentMethod("FULL_ONLINE");
-                          setSelectedCustomPayment("netbanking");
                           setOnlinePaymentMode("FULL");
+                          setSelectedCustomPayment("netbanking");
+                          setNetbankingSearchQuery("");
+                          setSelectedNetbankingTab("popular");
+                          setSelectedBankForSheet(null);
+                          setCheckoutStep("select_netbanking");
                         }}
-                        className="h-[54px] sm:h-[58px] px-3.5 sm:px-4 flex items-center justify-between cursor-pointer select-none"
+                        className="h-[54px] sm:h-[58px] px-3.5 sm:px-4 flex items-center justify-between cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
                       >
                         <div className="flex items-center gap-2.5 sm:gap-3">
                           <BankPaymentIcon className="w-5 h-5 text-[#005a9c] shrink-0" />
@@ -3090,73 +5840,6 @@ interface CheckoutSubmitOptions {
                           <ChevronRight className="w-5 h-5 text-slate-400 shrink-0" strokeWidth={2.5} />
                         </div>
                       </div>
-
-                      {selectedCustomPayment === "netbanking" && paymentMethod !== "10_PERCENT_COD" && (
-                        <div className="p-4 bg-slate-50/70 border-t border-slate-100 space-y-3">
-                          {/* Popular Enabled Banks Grid */}
-                          <div>
-                            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 font-montserrat">
-                              Popular Banks
-                            </div>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                              {popularNetbankingBanks.map((b) => {
-                                const isBankSelected = selectedBank === b.code;
-                                return (
-                                  <button
-                                    key={b.code}
-                                    type="button"
-                                    onClick={() => setSelectedBank(b.code)}
-                                    className={`p-2.5 rounded-xl border flex items-center gap-2 transition-all cursor-pointer text-left ${
-                                      isBankSelected
-                                        ? "border-[#005a9c] bg-blue-50/80 ring-2 ring-[#005a9c]/20 shadow-xs"
-                                        : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
-                                    }`}
-                                  >
-                                    <div className="w-7 h-7 rounded-full bg-white border border-slate-200 p-0.5 shrink-0 flex items-center justify-center overflow-hidden">
-                                      <img
-                                        src={b.logo}
-                                        alt={b.shortName}
-                                        className="w-full h-full object-contain"
-                                        onError={(e) => {
-                                          (e.target as HTMLElement).style.display = "none";
-                                        }}
-                                      />
-                                    </div>
-                                    <span className="text-xs font-bold text-slate-800 font-montserrat truncate flex-1">
-                                      {b.shortName}
-                                    </span>
-                                    {isBankSelected && (
-                                      <Check size={14} className="text-[#005a9c] stroke-[3] shrink-0" />
-                                    )}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </div>
-
-                          {/* All Enabled Banks Dropdown */}
-                          <div>
-                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-montserrat">
-                              All Other Banks ({liveNetbankingBanks.length} available)
-                            </label>
-                            <div className="relative">
-                              <select
-                                value={selectedBank}
-                                onChange={(e) => setSelectedBank(e.target.value)}
-                                className="w-full bg-white border border-slate-200 focus:border-[#005a9c] rounded-xl pl-3.5 pr-9 py-2.5 text-xs sm:text-sm font-semibold text-slate-800 outline-none cursor-pointer appearance-none shadow-2xs"
-                              >
-                                {liveNetbankingBanks.map((b) => (
-                                  <option key={b.code} value={b.code}>
-                                    {b.name}
-                                  </option>
-                                ))}
-                              </select>
-                              <ChevronDown size={16} className="absolute right-3 top-3 text-slate-400 pointer-events-none" />
-                            </div>
-                          </div>
-
-                        </div>
-                      )}
                     </div>
 
                   </div>
@@ -3167,6 +5850,9 @@ interface CheckoutSubmitOptions {
                   <div className="flex items-center justify-between pb-1">
                     <span className="text-xs sm:text-[13px] font-bold text-slate-900 font-montserrat uppercase tracking-wide">
                       PRICE BREAKDOWN
+                    </span>
+                    <span className="bg-[#eff6ff] text-[#2563eb] border border-blue-200/70 text-[11px] font-semibold px-2.5 py-0.5 rounded-full font-open-sans">
+                      26% OFF
                     </span>
                   </div>
 
