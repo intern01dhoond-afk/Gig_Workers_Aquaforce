@@ -44,7 +44,7 @@ export default function DoorstepProfessionals() {
       <div className="absolute inset-0 w-full h-full select-none pointer-events-none overflow-hidden">
         <div className="relative w-full h-full sm:translate-x-[12%] md:translate-x-[15%] lg:translate-x-[18%] sm:scale-[1.15] md:scale-[1.18] lg:scale-[1.22] origin-bottom">
           <Image
-            src="/aquaforceforautocare/images/doorstep-rider-bg.png"
+            src="/aquaforceforautocare/images/doorstep-rider-bg.webp"
             alt="Cleaning professional riding motorcycle with Aquaforce gear"
             fill
             priority

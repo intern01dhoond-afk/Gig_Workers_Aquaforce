@@ -12,7 +12,7 @@ export default function CTABanner() {
     <section className="relative w-full h-[440px] min-h-[440px] overflow-hidden flex items-center">
       {/* Background Image - Full width edge-to-edge */}
       <Image
-        src="/aquaforceforautocare/images/cta-banner-bg.png"
+        src="/aquaforceforautocare/images/cta-banner-bg.webp"
         alt="Aquaforce Delivery Rider on Road"
         fill
         priority

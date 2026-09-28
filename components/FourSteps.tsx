@@ -6,25 +6,25 @@ const STEPS = [
     n: "01",
     title: "Fill Water",
     desc: "Submerge the filter hose in any clean water bucket",
-    imgSrc: "/aquaforceforautocare/images/steps/1.png",
+    imgSrc: "/aquaforceforautocare/images/steps/1.webp",
   },
   {
     n: "02",
     title: "Connect Hose",
     desc: "Click the quick connector into the coupling securely",
-    imgSrc: "/aquaforceforautocare/images/steps/2.png",
+    imgSrc: "/aquaforceforautocare/images/steps/2.webp",
   },
   {
     n: "03",
     title: "Switch ON",
     desc: "Press the trigger lock to start the pressure pump.",
-    imgSrc: "/aquaforceforautocare/images/steps/3.png",
+    imgSrc: "/aquaforceforautocare/images/steps/3.webp",
   },
   {
     n: "04",
     title: "Start Washing",
     desc: "Select your spray angle and sweep away the grit.",
-    imgSrc: "/aquaforceforautocare/images/steps/4.png",
+    imgSrc: "/aquaforceforautocare/images/steps/4.webp",
   },
 ];
 
