@@ -11,7 +11,7 @@ export default function StatsBar() {
             {/* Battery Icon - Aquaforce ( below sale (1).svg */}
             <div className="h-10 sm:h-12 flex items-center justify-center mb-1">
               <Image
-                src="/aquaforceforautocare/images/icons/icon-1.svg"
+                src="/aquaforceforgigworkers/images/icons/icon-1.svg"
                 alt="Aquaforce Battery 3 Hours Continuous Use"
                 width={48}
                 height={48}
@@ -34,7 +34,7 @@ export default function StatsBar() {
             {/* High Pressure Pump Icon - Aquaforce ( below sale (11).svg */}
             <div className="h-10 sm:h-12 flex items-center justify-center mb-1">
               <Image
-                src="/aquaforceforautocare/images/icons/icon-11.svg"
+                src="/aquaforceforgigworkers/images/icons/icon-11.svg"
                 alt="Aquaforce High Pressure Pump"
                 width={48}
                 height={48}
@@ -57,7 +57,7 @@ export default function StatsBar() {
             {/* No Sockets Needed Icon - Aquaforce ( below sale (12.svg */}
             <div className="h-10 sm:h-12 flex items-center justify-center mb-1">
               <Image
-                src="/aquaforceforautocare/images/icons/icon-12.svg"
+                src="/aquaforceforgigworkers/images/icons/icon-12.svg"
                 alt="Aquaforce No Sockets Needed"
                 width={48}
                 height={48}
@@ -80,7 +80,7 @@ export default function StatsBar() {
             {/* Cordless & Portable Icon - Aquaforce ( below sale (13.svg */}
             <div className="h-10 sm:h-12 flex items-center justify-center mb-1">
               <Image
-                src="/aquaforceforautocare/images/icons/icon-13.svg"
+                src="/aquaforceforgigworkers/images/icons/icon-13.svg"
                 alt="Aquaforce Cordless 100% Wireless"
                 width={48}
                 height={48}

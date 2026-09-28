@@ -12,7 +12,7 @@ export default function PromoBanner() {
       {/* Background Graphic */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/aquaforceforautocare/images/banner-desktop-1.webp"
+          src="/aquaforceforgigworkers/images/banner-desktop-1.webp"
           alt="Aquaforce 1400 promotional launch offer"
           fill
           priority

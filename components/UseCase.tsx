@@ -15,31 +15,31 @@ const USE_CASES: UseCaseItem[] = [
     id: "car-cleaning",
     label: "Car Cleaning",
     desc: "Exterior washing + interior vacuuming",
-    image: "/aquaforceforautocare/images/use-cases/1.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/1.webp",
   },
   {
     id: "bike-cleaning",
     label: "Bike Cleaning",
     desc: "Complete bike wash + deep chain degreasing",
-    image: "/aquaforceforautocare/images/use-cases/2.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/2.webp",
   },
   {
     id: "home-cleaning",
     label: "Home Cleaning",
     desc: "Balcony, floor tiles, windows & outdoor furniture deep cleaning",
-    image: "/aquaforceforautocare/images/use-cases/3.1.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/3.1.webp",
   },
   {
     id: "office-cleaning",
     label: "Office Cleaning",
     desc: "Commercial entryways, glass panels, carpets & floor washing",
-    image: "/aquaforceforautocare/images/use-cases/4.1.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/4.1.webp",
   },
   {
     id: "society-cleaning",
     label: "Society Cleaning",
     desc: "Parking bays, paved driveways, clubhouses & shared amenities",
-    image: "/aquaforceforautocare/images/use-cases/5.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/5.webp",
   },
 ];
 

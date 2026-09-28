@@ -214,12 +214,12 @@ export default function PerformanceVideoPlayer({
                 className="w-full h-full object-cover cursor-pointer block"
               >
                 <source
-                  src="/aquaforceforautocare/ASMR_PROMEC_LAPTOP_compressed.mp4"
+                  src="/aquaforceforgigworkers/ASMR_PROMEC_LAPTOP_compressed.mp4"
                   type="video/mp4"
                 />
                 <source src="/ASMR_PROMEC_LAPTOP_compressed.mp4" type="video/mp4" />
                 <source
-                  src="/aquaforceforautocare/ASMR%20PROMEC%20LAPTOP.mp4"
+                  src="/aquaforceforgigworkers/ASMR%20PROMEC%20LAPTOP.mp4"
                   type="video/mp4"
                 />
                 <source src="/ASMR%20PROMEC%20LAPTOP.mp4" type="video/mp4" />
@@ -284,7 +284,7 @@ export default function PerformanceVideoPlayer({
           >
             <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-6">
               <img
-                src="/aquaforceforautocare/images/Remainig%20images/features%20image.webp"
+                src="/aquaforceforgigworkers/images/Remainig%20images/features%20image.webp"
                 alt="Aquaforce 1400 PSI TECH portable high pressure washer machine"
                 className="w-full h-full max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-[1.02]"
               />

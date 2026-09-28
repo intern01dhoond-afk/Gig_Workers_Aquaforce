@@ -5,13 +5,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/aquaforceforautocare",
+  basePath: "/aquaforceforgigworkers",
   devIndicators: false,
   async redirects() {
     return [
       {
         source: "/",
-        destination: "/aquaforceforautocare",
+        destination: "/aquaforceforgigworkers",
         basePath: false,
         permanent: false,
       },

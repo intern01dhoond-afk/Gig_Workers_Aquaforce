@@ -101,7 +101,7 @@ export default function ProblemsSolution() {
               {/* Machine Graphic */}
               <div className="relative w-[240px] sm:w-[280px] h-[220px] sm:h-[260px] -my-2 sm:-my-3">
                 <Image
-                  src="/aquaforceforautocare/images/Remainig%20images/Product%20mockup%204Y.webp"
+                  src="/aquaforceforgigworkers/images/Remainig%20images/Product%20mockup%204Y.webp"
                   alt="AQUAFORCE 1400 Portable Pressure Washer System"
                   fill
                   priority

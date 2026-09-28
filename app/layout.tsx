@@ -58,11 +58,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/aquaforceforautocare/images/favicon.ico" },
-      { url: "/aquaforceforautocare/favicon.ico" },
+      { url: "/aquaforceforgigworkers/images/favicon.ico" },
+      { url: "/aquaforceforgigworkers/favicon.ico" },
     ],
-    shortcut: "/aquaforceforautocare/images/favicon.ico",
-    apple: "/aquaforceforautocare/images/favicon.ico",
+    shortcut: "/aquaforceforgigworkers/images/favicon.ico",
+    apple: "/aquaforceforgigworkers/images/favicon.ico",
   },
 };
 

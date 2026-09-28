@@ -13,7 +13,7 @@ export default function CTABanner() {
       {/* Mobile Background Image */}
       <div className="sm:hidden absolute inset-0 z-0">
         <Image
-          src="/aquaforceforautocare/images/cta-banner-bg-mobile.webp"
+          src="/aquaforceforgigworkers/images/cta-banner-bg-mobile.webp"
           alt="Aquaforce Delivery Rider on Road"
           fill
           priority
@@ -26,7 +26,7 @@ export default function CTABanner() {
       {/* Desktop Background Image */}
       <div className="hidden sm:block absolute inset-0 z-0">
         <Image
-          src="/aquaforceforautocare/images/cta-banner-bg.webp"
+          src="/aquaforceforgigworkers/images/cta-banner-bg.webp"
           alt="Aquaforce Delivery Rider on Road"
           fill
           priority

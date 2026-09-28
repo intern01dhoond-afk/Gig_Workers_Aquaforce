@@ -72,7 +72,7 @@ export default function Hero() {
         {/* Mobile Background Image */}
         <div className="sm:hidden absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/1.1.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/1.1.webp"
             alt="Aquaforce 1400 Cordless Portable Pressure Washer"
             fill
             priority
@@ -85,7 +85,7 @@ export default function Hero() {
         {/* Desktop Background Image */}
         <div className="hidden sm:block absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/1.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/1.webp"
             alt="Aquaforce 1400 On the Move for a Brighter Tomorrow"
             fill
             priority
@@ -205,7 +205,7 @@ export default function Hero() {
         {/* Mobile Background Image */}
         <div className="sm:hidden absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/2.1.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/2.1.webp"
             alt="Aquaforce 1400 Promotional Launch Offer 26% OFF"
             fill
             priority
@@ -218,7 +218,7 @@ export default function Hero() {
         {/* Desktop Background Image */}
         <div className="hidden sm:block absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/2.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/2.webp"
             alt="Aquaforce 1400 Promotional Launch Offer 26% OFF"
             fill
             priority
@@ -358,7 +358,7 @@ export default function Hero() {
         {/* Mobile Background Image */}
         <div className="sm:hidden absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/3.1.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/3.1.webp"
             alt="Aquaforce 1400 Cordless Portable Cleaning System"
             fill
             priority
@@ -371,7 +371,7 @@ export default function Hero() {
         {/* Desktop Background Image */}
         <div className="hidden sm:block absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/3.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/3.webp"
             alt="Aquaforce 1400 Clean More Earn More"
             fill
             priority
@@ -497,7 +497,7 @@ export default function Hero() {
         {/* Mobile Background Image */}
         <div className="sm:hidden absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/4.1.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/4.1.webp"
             alt="Aquaforce 1400 Stay Home Earn Money"
             fill
             priority
@@ -510,7 +510,7 @@ export default function Hero() {
         {/* Desktop Background Image */}
         <div className="hidden sm:block absolute inset-0 z-0">
           <Image
-            src="/aquaforceforautocare/images/Hero%20section%20Images/4.webp"
+            src="/aquaforceforgigworkers/images/Hero%20section%20Images/4.webp"
             alt="Aquaforce 1400 Stay Home Earn Money"
             fill
             priority

@@ -42,7 +42,7 @@ const SpeedingTruckIcon = ({ className = "w-5 h-5 text-[#0066cc]" }: { className
 
 const getApiPath = (endpoint: string) => {
   const clean = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  return `/aquaforceforautocare${clean}`;
+  return `/aquaforceforgigworkers${clean}`;
 };
 
 type UpiAppId = "paytm" | "phonepe" | "gpay" | "amazonpay" | "bhim";
@@ -1076,17 +1076,17 @@ const PRODUCT_DATA = {
       hex: "#f5c518",
       inStock: true,
       images: [
-        "/aquaforceforautocare/images/products/yellow/1.webp",
-        "/aquaforceforautocare/images/products/yellow/2.webp",
-        "/aquaforceforautocare/images/products/yellow/3.webp",
-        "/aquaforceforautocare/images/products/yellow/4.webp",
-        "/aquaforceforautocare/images/products/yellow/5.webp",
-        "/aquaforceforautocare/images/products/yellow/6.webp",
-        "/aquaforceforautocare/images/products/yellow/7.webp",
-        "/aquaforceforautocare/images/products/yellow/8.webp",
-        "/aquaforceforautocare/images/products/yellow/9.webp",
-        "/aquaforceforautocare/images/products/yellow/10.webp",
-        "/aquaforceforautocare/images/products/yellow/11.webp",
+        "/aquaforceforgigworkers/images/products/yellow/1.webp",
+        "/aquaforceforgigworkers/images/products/yellow/2.webp",
+        "/aquaforceforgigworkers/images/products/yellow/3.webp",
+        "/aquaforceforgigworkers/images/products/yellow/4.webp",
+        "/aquaforceforgigworkers/images/products/yellow/5.webp",
+        "/aquaforceforgigworkers/images/products/yellow/6.webp",
+        "/aquaforceforgigworkers/images/products/yellow/7.webp",
+        "/aquaforceforgigworkers/images/products/yellow/8.webp",
+        "/aquaforceforgigworkers/images/products/yellow/9.webp",
+        "/aquaforceforgigworkers/images/products/yellow/10.webp",
+        "/aquaforceforgigworkers/images/products/yellow/11.webp",
       ],
     },
     {
@@ -1094,17 +1094,17 @@ const PRODUCT_DATA = {
       hex: "#0066cc",
       inStock: false,
       images: [
-        "/aquaforceforautocare/images/products/blue/1.webp",
-        "/aquaforceforautocare/images/products/blue/2.webp",
-        "/aquaforceforautocare/images/products/blue/3.webp",
-        "/aquaforceforautocare/images/products/blue/4.webp",
-        "/aquaforceforautocare/images/products/blue/5.webp",
-        "/aquaforceforautocare/images/products/blue/6.webp",
-        "/aquaforceforautocare/images/products/blue/7.webp",
-        "/aquaforceforautocare/images/products/blue/8.webp",
-        "/aquaforceforautocare/images/products/blue/9.webp",
-        "/aquaforceforautocare/images/products/blue/10.webp",
-        "/aquaforceforautocare/images/products/blue/11.webp",
+        "/aquaforceforgigworkers/images/products/blue/1.webp",
+        "/aquaforceforgigworkers/images/products/blue/2.webp",
+        "/aquaforceforgigworkers/images/products/blue/3.webp",
+        "/aquaforceforgigworkers/images/products/blue/4.webp",
+        "/aquaforceforgigworkers/images/products/blue/5.webp",
+        "/aquaforceforgigworkers/images/products/blue/6.webp",
+        "/aquaforceforgigworkers/images/products/blue/7.webp",
+        "/aquaforceforgigworkers/images/products/blue/8.webp",
+        "/aquaforceforgigworkers/images/products/blue/9.webp",
+        "/aquaforceforgigworkers/images/products/blue/10.webp",
+        "/aquaforceforgigworkers/images/products/blue/11.webp",
       ],
     },
   ],
@@ -2548,8 +2548,8 @@ interface CheckoutSubmitOptions {
             });
           }
 
-          const targetThankYou = window.location.pathname.startsWith("/aquaforceforautocare")
-            ? "/aquaforceforautocare/thank-you"
+          const targetThankYou = window.location.pathname.startsWith("/aquaforceforgigworkers")
+            ? "/aquaforceforgigworkers/thank-you"
             : "/thank-you";
           const methodLabel = isEmi
             ? `EMI on Card (${selectedEmiBankObj?.name || "Bank"} - ${selectedTenure} Months)`
@@ -2846,8 +2846,8 @@ interface CheckoutSubmitOptions {
           console.warn("Netbanking verify note:", vErr);
         }
 
-        const targetThankYou = window.location.pathname.startsWith("/aquaforceforautocare")
-          ? "/aquaforceforautocare/thank-you"
+        const targetThankYou = window.location.pathname.startsWith("/aquaforceforgigworkers")
+          ? "/aquaforceforgigworkers/thank-you"
           : "/thank-you";
         window.location.href = `${targetThankYou}?payment_id=${encodeURIComponent(payId)}&order_id=${encodeURIComponent(orderData.orderId || orderData.id)}&amount=${encodeURIComponent(totalPrice)}&total_amount=${encodeURIComponent(totalPrice)}&name=${encodeURIComponent(formData.fullName)}&method=${encodeURIComponent(`${bank.name} Netbanking`)}${generatedWaybill ? `&waybill=${encodeURIComponent(generatedWaybill)}` : ""}`;
       };
@@ -3081,8 +3081,8 @@ interface CheckoutSubmitOptions {
             });
           }
 
-          const targetThankYou = window.location.pathname.startsWith("/aquaforceforautocare")
-            ? "/aquaforceforautocare/thank-you"
+          const targetThankYou = window.location.pathname.startsWith("/aquaforceforgigworkers")
+            ? "/aquaforceforgigworkers/thank-you"
             : "/thank-you";
           setTimeout(() => {
             window.location.href = `${targetThankYou}?payment_id=${encodeURIComponent(payId)}&order_id=${encodeURIComponent(orderData.orderId || orderData.id)}&amount=${encodeURIComponent(advanceAmountPaid)}&total_amount=${encodeURIComponent(totalAmount)}&cod_balance=${encodeURIComponent(codBalanceDue)}&name=${encodeURIComponent(formData.fullName)}&method=${encodeURIComponent(isCodOrder ? "10% Cash on Delivery" : isEmiMode ? "No Cost EMI" : "Full Online Payment")}${generatedWaybill ? `&waybill=${encodeURIComponent(generatedWaybill)}` : ""}`;
@@ -6218,7 +6218,7 @@ interface CheckoutSubmitOptions {
                       {/* Delivery Info on right side */}
                       <div className="flex items-center gap-2 text-xs sm:text-[13px] text-slate-800 font-semibold font-open-sans">
                         <Image
-                          src="/aquaforceforautocare/images/TRUCK-03.svg"
+                          src="/aquaforceforgigworkers/images/TRUCK-03.svg"
                           alt="Express Delivery Truck"
                           width={36}
                           height={36}

@@ -20,7 +20,7 @@ export default function Footer() {
           <Link href="/#home" className="flex items-center justify-center group mb-6 sm:mb-8 select-none cursor-pointer">
             <div className="relative w-[135px] h-[28px] sm:w-[170px] sm:h-[34px] lg:w-[190px] lg:h-[38px]">
               <Image
-                src="/aquaforceforautocare/images/promec-logo.svg"
+                src="/aquaforceforgigworkers/images/promec-logo.svg"
                 alt="PROMEC"
                 fill
                 sizes="(max-width: 640px) 135px, (max-width: 1024px) 170px, 190px"

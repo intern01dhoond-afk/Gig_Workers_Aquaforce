@@ -8,32 +8,32 @@ const SERVICE_CARDS = [
   {
     title: "Car Cleaning",
     subtitle: "Exterior washing & detailing",
-    image: "/aquaforceforautocare/images/use-cases/1.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/1.webp",
   },
   {
     title: "Bike Cleaning",
     subtitle: "Two-wheeler wash & degreasing",
-    image: "/aquaforceforautocare/images/use-cases/2.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/2.webp",
   },
   {
     title: "Home Cleaning",
     subtitle: "Balcony, tiles & patio wash",
-    image: "/aquaforceforautocare/images/use-cases/3.1.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/3.1.webp",
   },
   {
     title: "Office Cleaning",
     subtitle: "Glass panels & commercial entryways",
-    image: "/aquaforceforautocare/images/use-cases/4.1.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/4.1.webp",
   },
   {
     title: "Society Cleaning",
     subtitle: "Paved driveways & shared spaces",
-    image: "/aquaforceforautocare/images/use-cases/5.webp",
+    image: "/aquaforceforgigworkers/images/use-cases/5.webp",
   },
   {
     title: "Doorstep Detailing",
     subtitle: "Portable on-site equipment setup",
-    image: "/aquaforceforautocare/images/Remainig%20images/12.webp",
+    image: "/aquaforceforgigworkers/images/Remainig%20images/12.webp",
   },
 ];
 

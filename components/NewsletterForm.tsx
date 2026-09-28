@@ -14,7 +14,7 @@ export default function NewsletterForm() {
     if (!email) return;
     setStatus("loading");
     try {
-      const res = await fetch("/aquaforceforautocare/api/contact", {
+      const res = await fetch("/aquaforceforgigworkers/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

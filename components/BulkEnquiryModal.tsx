@@ -146,7 +146,7 @@ export default function BulkEnquiryModal({ isOpen, onClose }: BulkEnquiryModalPr
     setErrorMsg("");
 
     try {
-      const res = await fetch("/aquaforceforautocare/api/enquiry", {
+      const res = await fetch("/aquaforceforgigworkers/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

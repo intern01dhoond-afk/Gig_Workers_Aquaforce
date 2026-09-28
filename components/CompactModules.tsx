@@ -4,22 +4,22 @@ import ScrollReveal, { ScrollRevealStagger, ScrollRevealItem } from "./ScrollRev
 
 const MODULES = [
   {
-    iconSrc: "/aquaforceforautocare/images/icons/engineering-1.svg",
+    iconSrc: "/aquaforceforgigworkers/images/icons/engineering-1.svg",
     title: "Lithium-Ion Battery pack",
     desc: "Intelligent thermal vents and quick-charge support protect cell longevity.",
   },
   {
-    iconSrc: "/aquaforceforautocare/images/icons/engineering-2.svg",
+    iconSrc: "/aquaforceforgigworkers/images/icons/engineering-2.svg",
     title: "Heavy-Duty DC Pump",
     desc: "Forged alloy pistons deliver stable maximum fluid flow and zero corrosion risk.",
   },
   {
-    iconSrc: "/aquaforceforautocare/images/icons/engineering-3.svg",
+    iconSrc: "/aquaforceforgigworkers/images/icons/engineering-3.svg",
     title: "Compact Water Tank Option",
     desc: "Mount the onboard tank directly or drop the hose in any external vessel.",
   },
   {
-    iconSrc: "/aquaforceforautocare/images/icons/engineering-4.svg",
+    iconSrc: "/aquaforceforgigworkers/images/icons/engineering-4.svg",
     title: "Dynamic Power Control",
     desc: "Manage motor speeds dynamically using the tactile dual-mode pressure trigger.",
   },

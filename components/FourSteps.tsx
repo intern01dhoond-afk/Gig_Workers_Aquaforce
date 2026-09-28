@@ -6,25 +6,25 @@ const STEPS = [
     n: "01",
     title: "Fill Water",
     desc: "Submerge the filter hose in any clean water bucket",
-    imgSrc: "/aquaforceforautocare/images/steps/1.webp",
+    imgSrc: "/aquaforceforgigworkers/images/steps/1.webp",
   },
   {
     n: "02",
     title: "Connect Hose",
     desc: "Click the quick connector into the coupling securely",
-    imgSrc: "/aquaforceforautocare/images/steps/2.webp",
+    imgSrc: "/aquaforceforgigworkers/images/steps/2.webp",
   },
   {
     n: "03",
     title: "Switch ON",
     desc: "Press the trigger lock to start the pressure pump.",
-    imgSrc: "/aquaforceforautocare/images/steps/3.webp",
+    imgSrc: "/aquaforceforgigworkers/images/steps/3.webp",
   },
   {
     n: "04",
     title: "Start Washing",
     desc: "Select your spray angle and sweep away the grit.",
-    imgSrc: "/aquaforceforautocare/images/steps/4.webp",
+    imgSrc: "/aquaforceforgigworkers/images/steps/4.webp",
   },
 ];
 
@@ -37,7 +37,7 @@ export default function FourSteps() {
       {/* Mobile Cinematic Background Image */}
       <div className="sm:hidden absolute inset-0 z-0">
         <Image
-          src="/aquaforceforautocare/images/Remainig%20images/mobile%20banner%207.1.webp"
+          src="/aquaforceforgigworkers/images/Remainig%20images/mobile%20banner%207.1.webp"
           alt="Aquaforce 4 Steps to Pristine Clean mobile background"
           fill
           priority
@@ -52,7 +52,7 @@ export default function FourSteps() {
       {/* Desktop Cinematic Background Image */}
       <div className="hidden sm:block absolute inset-0 z-0">
         <Image
-          src="/aquaforceforautocare/images/Remainig%20images/four-steps-desktop.webp"
+          src="/aquaforceforgigworkers/images/Remainig%20images/four-steps-desktop.webp"
           alt="Aquaforce on workshop workbench 4 Steps to Pristine Clean"
           fill
           priority

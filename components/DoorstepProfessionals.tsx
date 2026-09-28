@@ -45,7 +45,7 @@ export default function DoorstepProfessionals() {
         {/* Mobile Background Image */}
         <div className="sm:hidden absolute inset-0">
           <Image
-            src="/aquaforceforautocare/images/doorstep-rider-bg-mobile.webp"
+            src="/aquaforceforgigworkers/images/doorstep-rider-bg-mobile.webp"
             alt="Cleaning professional riding motorcycle with Aquaforce gear"
             fill
             priority
@@ -59,7 +59,7 @@ export default function DoorstepProfessionals() {
         {/* Desktop Background Image */}
         <div className="hidden sm:block relative w-full h-full sm:translate-x-[12%] md:translate-x-[15%] lg:translate-x-[18%] sm:scale-[1.15] md:scale-[1.18] lg:scale-[1.22] origin-bottom">
           <Image
-            src="/aquaforceforautocare/images/doorstep-rider-bg.webp"
+            src="/aquaforceforgigworkers/images/doorstep-rider-bg.webp"
             alt="Cleaning professional riding motorcycle with Aquaforce gear"
             fill
             priority

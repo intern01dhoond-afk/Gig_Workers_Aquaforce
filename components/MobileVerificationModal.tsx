@@ -114,7 +114,7 @@ export default function MobileVerificationModal({
     setDevOtpNotice(null);
 
     try {
-      const res = await fetch("/aquaforceforautocare/api/otp/send", {
+      const res = await fetch("/aquaforceforgigworkers/api/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -202,7 +202,7 @@ export default function MobileVerificationModal({
     setError(null);
 
     try {
-      const res = await fetch("/aquaforceforautocare/api/otp/verify", {
+      const res = await fetch("/aquaforceforgigworkers/api/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

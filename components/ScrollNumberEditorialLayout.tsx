@@ -119,7 +119,7 @@ export default function ScrollNumberEditorialLayout({
         <div className="flex items-center gap-6 lg:gap-10">
           <Link href="/" className="relative w-[130px] h-[30px] sm:w-[160px] sm:h-[34px] block shrink-0">
             <Image
-              src="/aquaforceforautocare/images/promec-logo.svg"
+              src="/aquaforceforgigworkers/images/promec-logo.svg"
               alt="PROMEC"
               fill
               sizes="(max-width: 640px) 130px, 160px"

@@ -2,35 +2,35 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/aquaforceforautocare"
+      "destination": "/aquaforceforgigworkers"
     },
     {
       "source": "/thank-you",
-      "destination": "/aquaforceforautocare/thank-you"
+      "destination": "/aquaforceforgigworkers/thank-you"
     },
     {
       "source": "/privacy-policy",
-      "destination": "/aquaforceforautocare/privacy-policy"
+      "destination": "/aquaforceforgigworkers/privacy-policy"
     },
     {
       "source": "/terms-of-service",
-      "destination": "/aquaforceforautocare/terms-of-service"
+      "destination": "/aquaforceforgigworkers/terms-of-service"
     },
     {
       "source": "/terms-and-conditions",
-      "destination": "/aquaforceforautocare/terms-and-conditions"
+      "destination": "/aquaforceforgigworkers/terms-and-conditions"
     },
     {
       "source": "/cancellation-policy",
-      "destination": "/aquaforceforautocare/cancellation-policy"
+      "destination": "/aquaforceforgigworkers/cancellation-policy"
     },
     {
       "source": "/refund-policy",
-      "destination": "/aquaforceforautocare/refund-policy"
+      "destination": "/aquaforceforgigworkers/refund-policy"
     },
     {
       "source": "/api/:path*",
-      "destination": "/aquaforceforautocare/api/:path*"
+      "destination": "/aquaforceforgigworkers/api/:path*"
     }
   ]
 }

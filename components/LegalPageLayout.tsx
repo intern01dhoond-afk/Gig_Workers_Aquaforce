@@ -43,7 +43,7 @@ export default function LegalPageLayout({
 
             <Link href="/" className="relative w-[125px] h-[28px] sm:w-[155px] sm:h-[32px] block">
               <Image
-                src="/aquaforceforautocare/images/promec-logo.svg"
+                src="/aquaforceforgigworkers/images/promec-logo.svg"
                 alt="PROMEC"
                 fill
                 sizes="(max-width: 640px) 125px, 155px"
