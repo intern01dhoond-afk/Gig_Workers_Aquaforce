@@ -41,21 +41,21 @@ export default function CTABanner() {
 
       {/* Content Container aligned within standard page max-width */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-16 md:py-20 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
-        <ScrollReveal direction="up" className="w-full max-w-[380px] sm:max-w-[560px] lg:max-w-[620px] flex flex-col items-center sm:items-start">
-          <h2 className="text-3xl xs:text-[34px] sm:text-4xl md:text-5xl lg:text-[54px] font-bold font-montserrat text-white tracking-tight leading-[1.12]">
+        <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[560px] lg:max-w-[620px] flex flex-col items-center sm:items-start">
+          <h2 className="w-[339.5px] max-w-full text-[28.34px] sm:text-4xl md:text-5xl lg:text-[54px] font-semibold sm:font-bold font-montserrat text-white tracking-tight leading-normal sm:leading-[1.12] text-center sm:text-left">
             Your Services. Your
             <br />
             Business.
           </h2>
 
-          <p className="text-white/95 text-xs xs:text-sm sm:text-base lg:text-lg font-normal font-montserrat mt-2.5 sm:mt-4 leading-relaxed max-w-[320px] xs:max-w-[360px] sm:max-w-[480px]">
+          <p className="text-white text-[12px] xs:text-[13px] sm:text-base lg:text-lg font-normal font-montserrat mt-2 sm:mt-4 leading-relaxed max-w-[339.5px] sm:max-w-[480px] text-center sm:text-left">
             Start your doorstep cleaning business with AquaForce by Promec.
           </p>
 
           <button
             type="button"
             onClick={openModal}
-            className="w-full sm:w-auto mt-5 sm:mt-8 inline-flex items-center justify-center gap-2.5 bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0062ff] font-montserrat text-xs xs:text-sm font-bold tracking-wider uppercase px-8 py-3.5 sm:py-3.5 rounded-[8px] shadow-2xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer group"
+            className="w-[339.5px] max-w-full sm:w-auto mt-6 sm:mt-8 inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0062ff] font-montserrat text-xs xs:text-sm font-bold tracking-wider uppercase px-8 py-3.5 sm:py-3.5 rounded-[6px] sm:rounded-[8px] shadow-2xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer group"
           >
             <span>SHOP NOW</span>
             <ArrowRight className="w-4 h-4 text-[#0062ff] stroke-[2.5] transition-transform duration-200 group-hover:translate-x-1" />
