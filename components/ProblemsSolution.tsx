@@ -99,13 +99,13 @@ export default function ProblemsSolution() {
               </div>
 
               {/* Machine Graphic */}
-              <div className="relative w-[150px] sm:w-[175px] h-[160px] sm:h-[185px] my-3 sm:my-4">
+              <div className="relative w-[180px] sm:w-[210px] h-[185px] sm:h-[215px] my-2 sm:my-3">
                 <Image
-                  src="/aquaforceforautocare/images/aquaforce-machine-transparent.webp"
+                  src="/aquaforceforautocare/images/products/yellow/1.webp"
                   alt="AQUAFORCE 1400 Portable Pressure Washer System"
                   fill
                   priority
-                  className="object-contain"
+                  className="object-contain drop-shadow-md"
                 />
               </div>
 
