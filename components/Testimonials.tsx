@@ -67,11 +67,14 @@ export default function Testimonials() {
       badge="GIG WORKER TESTIMONIALS"
       title="Trusted by Doorstep Auto Care Gig Workers"
       subtitle={
-        <>
-          Real stories from freelance car washers, bike detailers, and doorstep cleaning{" "}
-          <br className="hidden sm:inline" />
-          professionals across India who doubled their daily earnings with Aquaforce® 1400.
-        </>
+        <span className="inline-block max-w-[840px] text-center">
+          <span className="block">
+            Real stories from freelance car washers, bike detailers, and doorstep cleaning
+          </span>
+          <span className="block">
+            professionals across India who doubled their daily earnings with Aquaforce® 1400.
+          </span>
+        </span>
       }
     />
   );

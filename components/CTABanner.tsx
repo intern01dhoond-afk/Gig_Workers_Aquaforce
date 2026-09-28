@@ -9,7 +9,7 @@ export default function CTABanner() {
   const { openModal } = useOrderModal();
 
   return (
-    <section className="relative w-full h-[580px] xs:h-[640px] sm:h-[440px] min-h-[580px] xs:min-h-[640px] sm:min-h-[440px] overflow-hidden flex items-end sm:items-center">
+    <section className="relative w-full h-[680px] xs:h-[720px] sm:h-[440px] min-h-[680px] xs:min-h-[720px] sm:min-h-[440px] overflow-hidden flex items-end sm:items-center">
       {/* Mobile Background Image */}
       <div className="sm:hidden absolute inset-0 z-0">
         <Image
@@ -18,10 +18,10 @@ export default function CTABanner() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-top"
+          className="object-cover object-bottom"
         />
         {/* Soft bottom contrast gradient for crystal clear text readability over asphalt */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 via-45% to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 via-28% to-transparent pointer-events-none" />
       </div>
 
       {/* Desktop Background Image */}

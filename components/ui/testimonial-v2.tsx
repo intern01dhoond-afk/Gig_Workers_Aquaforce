@@ -178,7 +178,7 @@ export const TestimonialsSection = ({
         className="w-full relative z-10"
       >
         {/* Header matching exact styling and Montserrat typography */}
-        <div className="flex flex-col items-center justify-center max-w-[640px] mx-auto mb-6 sm:mb-8 text-center px-4">
+        <div className="flex flex-col items-center justify-center max-w-[880px] mx-auto mb-6 sm:mb-8 text-center px-4">
           {/* Eyebrow Pill Badge */}
           <div className="flex justify-center">
             <div className="border border-sky-400/80 px-4 sm:px-5 py-1 sm:py-1.5 rounded-full font-montserrat text-[10.5px] sm:text-[11.5px] font-bold tracking-[0.16em] uppercase text-[#0F1729] bg-transparent">
@@ -195,7 +195,7 @@ export const TestimonialsSection = ({
           </h2>
 
           {/* Subtitle */}
-          <p className="mt-3 sm:mt-3.5 text-slate-500 dark:text-neutral-400 text-sm sm:text-base font-normal font-montserrat leading-relaxed max-w-[620px]">
+          <p className="mt-3 sm:mt-3.5 text-slate-500 dark:text-neutral-400 text-sm sm:text-base font-normal font-montserrat leading-relaxed max-w-[860px]">
             {subtitle}
           </p>
         </div>
