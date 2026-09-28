@@ -81,8 +81,8 @@ export default function DoorstepProfessionals() {
             BUILT FOR DOORSTEP PROFESSIONALS
           </div>
 
-          {/* Headline */}
-          <h2 className="text-[28px] xs:text-[32px] font-bold font-montserrat text-white tracking-tight leading-[1.18] mt-3 xs:mt-4">
+          {/* Headline (Exact Figma: font-family: Montserrat; font-size: 28px; font-weight: 500; line-height: 110%; text-align: center; color: #FFF; align-self: stretch;) */}
+          <h2 className="self-stretch w-full text-[28px] font-medium font-montserrat text-white text-center tracking-normal leading-[110%] mt-3 xs:mt-4">
             Made for Cleaning
             <br />
             Professionals on the
