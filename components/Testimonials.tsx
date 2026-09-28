@@ -5,58 +5,58 @@ import { TestimonialsSection, type Testimonial } from "@/components/ui/testimoni
 
 const testimonials: Testimonial[] = [
   {
-    text: "Bhai honestly, apartment parking mein car wash karna was always a headache. Aquaforce lene ke baad wire aur socket ka jhanjhat hi khatam! Ek bucket paani aur 15 mins mein car ekdum showroom clean.",
+    text: "Apartment basements mein socket dhoondne ke liye security guard se request karni padti thi. Aquaforce lene ke baad wire ka jhanjhat hi khatam! Machine bike ke carrier pe fit hoti hai, bucket mein siphon daalo aur 20 mins mein deep foam wash finish. Daily 7-8 cars aaram se cover hoti hain!",
     image: "/aquaforceforautocare/images/testimonials/rahul-sharma1.webp",
     name: "Rahul Sharma",
-    role: "Car Enthusiast, Mumbai",
+    role: "Doorstep Wash Partner, Urban Company (Bengaluru)",
   },
   {
-    text: "Weekend trail ride ke baad bike pe stubborn mud jam jata tha. The 1400 PSI pressure is seriously impressive — radiator ke delicate fins ko bina damage kiye saari mitti saaf kar deta hai.",
+    text: "Bike pe mobile detailing service chalata hoon. Pehle petrol generator carry karna padta tha jo heavy aur noisy tha. Aquaforce ka 1400 PSI pressure superb hai — chain grime, engine fins aur tyre mud bina kisi wire ke 15 minute mein clean. Mera daily fuel cost ₹250 bach gaya!",
     image: "/aquaforceforautocare/images/testimonials/arjun-mehta1.webp",
     name: "Arjun Mehta",
-    role: "Superbike Owner, Pune",
+    role: "Two-Wheeler Mobile Detailer, Pune",
   },
   {
-    text: "Cordless hone ka sabse bada advantage ye hai ki basement parking mein socket dhoondne ki tension nahi. Very lightweight, easy to carry, and the battery easily lasts for a full deep wash.",
+    text: "Gated societies mein hose pipe connect karna strictly not allowed hota hai. Aquaforce bucket se paani siphon karta hai aur sirf 2 bucket mein poori SUV chamka deta hai. Customers cordless professional look dekh ke impress hote hain aur regular monthly subscriptions dete hain.",
     image: "/aquaforceforautocare/images/testimonials/priya-nair1.webp",
     name: "Priya Nair",
-    role: "Creta Owner, Bengaluru",
+    role: "Doorstep Auto Spa Specialist, Hyderabad",
   },
   {
-    text: "I run a mobile auto detailing setup in Hyderabad. Customers are always amazed seeing a cordless pressure washer with such high power. Foam cannon ke sath turnaround time double fast ho gaya hai.",
+    text: "Maine 3 Aquaforce units apni mobile wash team ke liye li hain. Hamare riders bike pe carry karke din bhar societies mein travel karte hain. Battery backup solid hai, foam cannon quality top-class hai, aur har cleaner ab 30% zyada daily orders complete kar raha hai.",
     image: "/aquaforceforautocare/images/testimonials/vikram-reddy1.webp",
     name: "Vikram Reddy",
-    role: "Auto Detailing Studio, Hyderabad",
+    role: "Owner, QuickClean Mobile Detailing, Chennai",
   },
   {
-    text: "Society mein water hose pipe allow nahi thi wash ke liye. Aquaforce is a lifesaver. Siphon pipe bucket mein daalo aur instantly powerful spray start. Balcony tiles aur car dono easily clean ho jaate hain.",
+    text: "Pehle 40 meter ka extension wire leke ghoomna padta tha. Wire ulajh jata tha aur high-rise parking mein plug point milna mushkil tha. Is cordless machine ne mera kaam bohot aasan kar diya. Bas battery lagao aur direct start. Mera daily income almost double ho gaya!",
     image: "/aquaforceforautocare/images/testimonials/sneha-kapoor1.webp",
     name: "Sneha Kapoor",
-    role: "Home & Garden, Delhi NCR",
+    role: "Freelance Doorstep Detailing Partner, Delhi NCR",
   },
   {
-    text: "Pehle Sunday car wash center pe 2 ghante line mein lagna padta tha. Ab ghar ke driveway pe 20 minutes mein complete DIY wash ho jata hai. Solid machine and powerful water throw!",
+    text: "Motorcycle ke peeche carrier pe pura setup fix ho jata hai. Subah se shaam tak 6 cars aur 4 bikes easily wash kar leta hoon. 1400 PSI se wheel arches aur chassis ka hard mud turant nikalta hai. Auto care gig workers ke liye ye best investment hai.",
     image: "/aquaforceforautocare/images/testimonials/manoj-kumar1.webp",
     name: "Manoj Kumar",
-    role: "Fortuner Owner, Chandigarh",
+    role: "Freelance Car & Bike Washer, Chandigarh",
   },
   {
-    text: "The 1400 PSI pressure rating is well calibrated for automotive paintwork. No swirl marks, high flow rate, and seamless cordless portability. Absolutely worth the investment.",
+    text: "Car wash ke sath sath main AC outdoor units aur rooftop solar panels bhi clean karta hoon. Seedhi pe chadh ke wire carry karna risky tha, lekin Aquaforce cordless hone se single-handedly koi bhi rooftop ya balcony job bina power socket ke kar leta hoon.",
     image: "/aquaforceforautocare/images/testimonials/karthik-rao1.webp",
     name: "Karthik Rao",
-    role: "Vehicle Care Expert, Chennai",
+    role: "Doorstep Multi-Service Cleaning Pro, Bengaluru",
   },
   {
-    text: "Compact design is a huge plus point. I keep it in the car boot during road trips. Whenever needed, kisi bhi bucket ya container se connect karke instant wash kar lo. Very convenient!",
+    text: "High-rise apartments ke podium parking mein paani ka tap aur plug point dono nahi milte. Aquaforce bucket se direct water lift karta hai. Foam spray itna thick aata hai ki customer turant 5-star rating dete hain app pe aur extra tip bhi milti hai!",
     image: "/aquaforceforautocare/images/testimonials/ananya-rao1.webp",
     name: "Ananya Rao",
-    role: "Daily Commuter, Kochi",
+    role: "Doorstep Car Care Partner, Mumbai",
   },
   {
-    text: "Thar off-roading ke baad remote locations mein wash karna pehle impossible tha. Ab highway dhabe pe bhi bucket paani se chassis aur tyre arches ekdum clean kar lete hain. Gazab product hai!",
+    text: "Doorstep car wash business start karne ke liye expensive shop lene ki zaroorat nahi padi. Sirf ek bike aur ye Aquaforce machine se apna business shuru kiya. 1 mahine mein machine ki poori cost vasool ho gayi. Har cleaning professional ke paas ye honi chahiye!",
     image: "/aquaforceforautocare/images/testimonials/aditya-singh1.webp",
     name: "Aditya Singh",
-    role: "Off-Road Enthusiast, Jaipur",
+    role: "Independent Mobile Detailing Entrepreneur, Jaipur",
   },
 ];
 
@@ -64,13 +64,13 @@ export default function Testimonials() {
   return (
     <TestimonialsSection
       testimonials={testimonials}
-      badge="CUSTOMER STORIES"
-      title="What Our Users Say"
+      badge="GIG WORKER TESTIMONIALS"
+      title="Trusted by Doorstep Auto Care Gig Workers"
       subtitle={
         <>
-          Real feedback from car enthusiasts, bike owners, and professionals across{" "}
+          Real stories from freelance car washers, bike detailers, and doorstep cleaning{" "}
           <br className="hidden sm:inline" />
-          India who trust Aquaforce® 1400.
+          professionals across India who doubled their daily earnings with Aquaforce® 1400.
         </>
       }
     />
