@@ -13,6 +13,7 @@ import UseCase from "@/components/UseCase";
 import DoorstepProfessionals from "@/components/DoorstepProfessionals";
 import ComparisonTable from "@/components/ComparisonTable";
 import CompactModules from "@/components/CompactModules";
+import WhatsInTheBox from "@/components/WhatsInTheBox";
 import Testimonials from "@/components/Testimonials";
 import CTABanner from "@/components/CTABanner";
 import Footer from "@/components/Footer";
@@ -43,6 +44,7 @@ export default function Home() {
       <DoorstepProfessionals />
       <ComparisonTable />
       <CompactModules />
+      <WhatsInTheBox />
       <Testimonials />
       <CTABanner />
       <Footer />
