@@ -214,72 +214,80 @@ export default function WhatsInTheBox() {
 }
 
 // -------------------------------------------------------------
-// Pixel-Matched Vector Icons (Matching Figma screenshots)
+// Pixel-Matched Vector Icons (Exact SVGs from Figma)
 // -------------------------------------------------------------
 
-function MachineIcon({ className = "w-6 h-6" }: { className?: string }) {
+function MachineIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="6" width="18" height="15" rx="2.5" />
-      <path d="M8 6V4a1.5 1.5 0 0 1 1.5-1.5h5A1.5 1.5 0 0 1 16 4v2" />
-      <circle cx="12" cy="13.5" r="2.75" />
-      <path d="M12 11.5v2l1.25.75" />
+    <svg className={className} width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="10" width="20" height="14" rx="2" stroke="#005DA6" strokeWidth="1.6"/>
+      <path d="M8 8C8 6.89543 8.89543 6 10 6H18C19.1046 6 20 6.89543 20 8V10H8V8Z" stroke="#005DA6" strokeWidth="1.6"/>
+      <circle cx="14" cy="17" r="2" stroke="#005DA6" strokeWidth="1.6"/>
     </svg>
   );
 }
 
-function FoamCannonIcon({ className = "w-6 h-6" }: { className?: string }) {
+function FoamCannonIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 2h4v3h-4z" />
-      <path d="M12 5v3" />
-      <path d="M8 8h8a1.5 1.5 0 0 1 1.5 1.5v.5a3 3 0 0 1-1 2.2V19a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3v-6.8a3 3 0 0 1-1-2.2v-.5A1.5 1.5 0 0 1 8 8z" />
-      <path d="M9.5 14h5" />
+    <svg className={className} width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clipPath="url(#clip0_1126_21)">
+        <rect x="8" y="10" width="12" height="14" rx="2" stroke="#005DA6" strokeWidth="1.6"/>
+        <path d="M10 6C10 5.44772 10.4477 5 11 5H17C17.5523 5 18 5.44772 18 6V9C18 9.55228 17.5523 10 17 10H11C10.4477 10 10 9.55228 10 9V6Z" stroke="#005DA6" strokeWidth="1.6"/>
+        <path d="M14.1992 4.2002V2.8002" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+        <path d="M12.8008 1.2002H17.2008" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_1126_21">
+          <rect width="28" height="28" fill="white"/>
+        </clipPath>
+      </defs>
     </svg>
   );
 }
 
-function SprayGunIcon({ className = "w-6 h-6" }: { className?: string }) {
+function SprayGunIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 7h13a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9l-3 8H2.5l2.5-8H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" />
-      <path d="M17 9h4.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H17" />
-      <path d="M8 13v3" />
+    <svg className={className} width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="6" width="18" height="6" rx="2" stroke="#005DA6" strokeWidth="1.6"/>
+      <rect x="14" y="12" width="6" height="12" rx="2" stroke="#005DA6" strokeWidth="1.6"/>
+      <rect x="9" y="12" width="5" height="4" rx="1" stroke="#005DA6" strokeWidth="1.6"/>
     </svg>
   );
 }
 
-function NozzlesIcon({ className = "w-6 h-6" }: { className?: string }) {
+function NozzlesIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="4.5" cy="13.5" r="2.25" />
-      <circle cx="9.5" cy="13.5" r="2.25" />
-      <circle cx="14.5" cy="13.5" r="2.25" />
-      <circle cx="19.5" cy="13.5" r="2.25" />
-      <path d="M4.5 11.25V8.5" />
-      <path d="M9.5 11.25V8.5" />
-      <path d="M14.5 11.25V8.5" />
-      <path d="M19.5 11.25V8.5" />
+    <svg className={className} width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="4.25" cy="10.5" r="2.5" stroke="#005DA6" strokeWidth="1.6"/>
+      <circle cx="10.75" cy="10.5" r="2.5" stroke="#005DA6" strokeWidth="1.6"/>
+      <circle cx="17.25" cy="10.5" r="2.5" stroke="#005DA6" strokeWidth="1.6"/>
+      <circle cx="23.75" cy="10.5" r="2.5" stroke="#005DA6" strokeWidth="1.6"/>
+      <line x1="4.8" y1="17.2" x2="23.2" y2="17.2" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+      <line x1="5.05" y1="13.8" x2="5.05" y2="17.2" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+      <line x1="11.55" y1="13.8" x2="11.55" y2="17.2" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+      <line x1="18.05" y1="13.8" x2="18.05" y2="17.2" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+      <line x1="24.55" y1="13.8" x2="24.55" y2="17.2" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
     </svg>
   );
 }
 
-function HoseIcon({ className = "w-6 h-6" }: { className?: string }) {
+function HoseIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M1.5 12h2.5" />
-      <path d="M20 12h2.5" />
-      <path d="M18 8.5c2.76 0 4.5 1.57 4.5 3.5s-1.74 3.5-4.5 3.5c-3.1 0-5.05-3.5-6-3.5s-2.9 3.5-6 3.5C3.24 15.5 1.5 13.93 1.5 12s1.74-3.5 4.5-3.5c3.1 0 5.05 3.5 6 3.5s2.9-3.5 6-3.5z" />
+    <svg className={className} width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="9" cy="13" r="5" stroke="#005DA6" strokeWidth="1.6"/>
+      <circle cx="19" cy="13" r="5" stroke="#005DA6" strokeWidth="1.6"/>
+      <line x1="3.2" y1="13.8" x2="1.8" y2="13.8" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
+      <line x1="24.8" y1="12.2" x2="26.2" y2="12.2" stroke="#005DA6" strokeWidth="1.6" strokeLinecap="round"/>
     </svg>
   );
 }
 
-function BatteryChargerIcon({ className = "w-6 h-6" }: { className?: string }) {
+function BatteryChargerIcon({ className = "w-7 h-7" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="6" width="17" height="12" rx="2.5" />
-      <path d="M22 10.5v3" />
-      <path d="M11 9l-2.5 3.5h3L9 16" />
+    <svg className={className} width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.9004 4C21.005 4 21.9004 4.89543 21.9004 6V18C21.9004 19.1046 21.005 20 19.9004 20H6C4.89543 20 4 19.1046 4 18V6C4 4.89543 4.89543 4 6 4H19.9004Z" stroke="#005DA6" strokeWidth="1.6"/>
+      <path d="M13.4504 7.72168L9.40039 13.1217H13.0004L12.5504 16.7217L16.6004 11.3217H13.0004L13.4504 7.72168Z" stroke="#005DA6" strokeWidth="0.771429" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M25 9C25.5523 9 26 9.44772 26 10V14C26 14.5523 25.5523 15 25 15H23.1405C22.5882 15 22.1405 14.5523 22.1405 14V10C22.1405 9.44772 22.5882 9 23.1405 9H25Z" stroke="#005DA6" strokeWidth="1.6"/>
     </svg>
   );
 }
