@@ -9,7 +9,7 @@ export default function CTABanner() {
   const { openModal } = useOrderModal();
 
   return (
-    <section className="relative w-full h-[680px] xs:h-[720px] sm:h-[520px] lg:h-[560px] min-h-[680px] xs:min-h-[720px] sm:min-h-[520px] lg:min-h-[560px] overflow-hidden flex items-end sm:items-center">
+    <section className="relative w-full h-[660px] xs:h-[700px] sm:h-[480px] lg:h-[510px] min-h-[660px] xs:min-h-[700px] sm:min-h-[480px] lg:min-h-[510px] overflow-hidden flex items-end sm:items-center">
       {/* Mobile Background Image */}
       <div className="sm:hidden absolute inset-0 z-0">
         <Image
@@ -21,7 +21,7 @@ export default function CTABanner() {
           className="object-cover object-bottom"
         />
         {/* Soft bottom contrast gradient for crystal clear text readability over asphalt */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 via-28% to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 via-30% to-transparent pointer-events-none" />
       </div>
 
       {/* Desktop Background Image */}
@@ -35,32 +35,31 @@ export default function CTABanner() {
           className="object-cover object-[62%_center] lg:object-center"
         />
         {/* Dark gradient overlay on left for crisp text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 via-40% to-black/15 to-65% pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 via-35% to-transparent to-55% pointer-events-none" />
       </div>
 
       {/* Content Container aligned within standard page max-width */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-16 md:py-20 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
-        <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[560px] lg:max-w-[620px] flex flex-col items-center sm:items-start">
-          <h2 className="w-[339.5px] max-w-full text-[28.34px] sm:text-[42px] md:text-[52px] lg:text-[60px] font-semibold sm:font-black font-montserrat text-white tracking-tight leading-normal sm:leading-[1.1] text-center sm:text-left">
-            Your Services.{" "}
-            <br className="hidden sm:block" />
-            Your{" "}
-            <br className="sm:hidden" />
-            Business.
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-12 md:py-16 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
+        <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[500px] lg:max-w-[560px] flex flex-col items-center sm:items-start">
+          <h2 className="text-white font-extrabold font-montserrat text-[34px] xs:text-[40px] sm:text-[48px] md:text-[56px] lg:text-[64px] xl:text-[70px] leading-[0.96] tracking-tight text-center sm:text-left">
+            <span className="block">Your</span>
+            <span className="block">Services.</span>
+            <span className="block">Your</span>
+            <span className="block">Business.</span>
           </h2>
 
-          <p className="text-white text-[12px] xs:text-[13px] sm:text-base lg:text-lg font-normal font-montserrat mt-2 sm:mt-4 leading-relaxed max-w-[339.5px] sm:max-w-[480px] text-center sm:text-left">
-            Start your doorstep cleaning business with AquaForce by Promec.
+          <p className="text-white/90 text-[13px] xs:text-[14px] sm:text-[15.5px] lg:text-[17px] font-normal font-montserrat mt-3.5 sm:mt-5 leading-snug sm:leading-relaxed text-center sm:text-left">
+            Start your doorstep cleaning business with
+            <br className="hidden sm:inline" /> AquaForce by Promec.
           </p>
 
           <button
             type="button"
             onClick={openModal}
-            className="w-[339.5px] max-w-full sm:w-auto mt-6 sm:mt-8 inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0062ff] font-montserrat text-xs xs:text-sm font-bold tracking-wider uppercase px-8 py-3.5 sm:py-3.5 rounded-[6px] sm:rounded-[8px] shadow-2xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer group"
+            className="w-full sm:w-auto mt-6 sm:mt-7 inline-flex items-center justify-center gap-2.5 bg-white hover:bg-slate-100 active:bg-slate-200 text-[#0066cc] font-montserrat text-xs sm:text-[13px] font-bold tracking-wider uppercase px-7 sm:px-8 py-3 sm:py-3.5 rounded-[6px] shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer group"
           >
             <span>SHOP NOW</span>
-            <ArrowRight className="w-4 h-4 text-[#0062ff] stroke-[2.5] transition-transform duration-200 group-hover:translate-x-1" />
+            <ArrowRight className="w-4 h-4 text-[#0066cc] stroke-[2.5] transition-transform duration-200 group-hover:translate-x-1" />
           </button>
         </ScrollReveal>
       </div>
