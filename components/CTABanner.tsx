@@ -9,7 +9,7 @@ export default function CTABanner() {
   const { openModal } = useOrderModal();
 
   return (
-    <section className="relative w-full h-[660px] xs:h-[700px] sm:h-[480px] lg:h-[510px] min-h-[660px] xs:min-h-[700px] sm:min-h-[480px] lg:min-h-[510px] overflow-hidden flex items-end sm:items-center">
+    <section className="relative w-full h-[620px] xs:h-[660px] sm:h-[480px] md:h-[520px] lg:h-[550px] min-h-[620px] xs:min-h-[660px] sm:min-h-[480px] md:min-h-[520px] lg:min-h-[550px] overflow-hidden flex items-end sm:items-center">
       {/* Mobile Background Image */}
       <div className="sm:hidden absolute inset-0 z-0">
         <Image
@@ -39,12 +39,11 @@ export default function CTABanner() {
       </div>
 
       {/* Content Container aligned within standard page max-width */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-12 md:py-16 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
-        <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[500px] lg:max-w-[560px] flex flex-col items-center sm:items-start">
-          <h2 className="text-white font-bold font-montserrat text-3xl xs:text-4xl sm:text-5xl md:text-[54px] lg:text-[62px] tracking-tight leading-[1.12] text-center sm:text-left">
-            Your Services. Your
-            <br />
-            Business.
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-8 md:py-10 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
+        <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[560px] lg:max-w-[680px] flex flex-col items-center sm:items-start">
+          <h2 className="text-white font-bold font-montserrat text-3xl xs:text-4xl sm:text-[40px] md:text-[46px] lg:text-[52px] xl:text-[56px] tracking-tight leading-[1.08] text-center sm:text-left">
+            <span className="block whitespace-nowrap">Your Services.</span>
+            <span className="block whitespace-nowrap">Your Business.</span>
           </h2>
 
           <p className="text-white/90 text-[13px] xs:text-[14px] sm:text-base lg:text-[17px] font-normal font-montserrat mt-3 sm:mt-4 leading-relaxed max-w-[480px] text-center sm:text-left">
