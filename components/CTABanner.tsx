@@ -9,7 +9,7 @@ export default function CTABanner() {
   const { openModal } = useOrderModal();
 
   return (
-    <section className="relative w-full h-[680px] xs:h-[720px] sm:h-[440px] min-h-[680px] xs:min-h-[720px] sm:min-h-[440px] overflow-hidden flex items-end sm:items-center">
+    <section className="relative w-full h-[680px] xs:h-[720px] sm:h-[520px] lg:h-[560px] min-h-[680px] xs:min-h-[720px] sm:min-h-[520px] lg:min-h-[560px] overflow-hidden flex items-end sm:items-center">
       {/* Mobile Background Image */}
       <div className="sm:hidden absolute inset-0 z-0">
         <Image
@@ -35,16 +35,18 @@ export default function CTABanner() {
           className="object-cover object-[62%_center] lg:object-center"
         />
         {/* Dark gradient overlay on left for crisp text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 via-45% to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 via-40% to-black/15 to-65% pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25 pointer-events-none" />
       </div>
 
       {/* Content Container aligned within standard page max-width */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-16 md:py-20 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
         <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[560px] lg:max-w-[620px] flex flex-col items-center sm:items-start">
-          <h2 className="w-[339.5px] max-w-full text-[28.34px] sm:text-4xl md:text-5xl lg:text-[54px] font-semibold sm:font-bold font-montserrat text-white tracking-tight leading-normal sm:leading-[1.12] text-center sm:text-left">
-            Your Services. Your
-            <br />
+          <h2 className="w-[339.5px] max-w-full text-[28.34px] sm:text-[42px] md:text-[52px] lg:text-[60px] font-semibold sm:font-black font-montserrat text-white tracking-tight leading-normal sm:leading-[1.1] text-center sm:text-left">
+            Your Services.{" "}
+            <br className="hidden sm:block" />
+            Your{" "}
+            <br className="sm:hidden" />
             Business.
           </h2>
 
