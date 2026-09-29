@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
@@ -39,19 +39,61 @@ const BOX_ITEMS = [
 
 export default function WhatsInTheBox() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [userPaused, setUserPaused] = useState(false);
+
+  // Autoplay video on mount and when scrolled into view
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const attemptPlay = () => {
+      if (!userPaused) {
+        video.muted = true;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => setIsPlaying(true))
+            .catch(() => {
+              setIsPlaying(false);
+            });
+        }
+      }
+    };
+
+    attemptPlay();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !userPaused && video.paused) {
+            attemptPlay();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [userPaused]);
 
   const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
 
     if (video.paused) {
+      setUserPaused(false);
       video
         .play()
         .then(() => setIsPlaying(true))
         .catch(() => setIsPlaying(false));
     } else {
+      setUserPaused(true);
       video.pause();
       setIsPlaying(false);
     }
@@ -66,22 +108,23 @@ export default function WhatsInTheBox() {
   };
 
   return (
-    <section id="whats-in-the-box" className="w-full bg-white py-14 sm:py-18 lg:py-20 overflow-hidden">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 sm:gap-12 lg:gap-14 xl:gap-16">
+    <section id="whats-in-the-box" className="w-full bg-white py-12 sm:py-16 lg:py-20 overflow-hidden">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between gap-8 sm:gap-10 lg:gap-12 xl:gap-16">
           
           {/* ========================================================= */}
-          {/* LEFT COLUMN: Video Player Card (Figma: card-freelance)    */}
+          {/* LEFT COLUMN: Video Player Card (Aligned within bounds)    */}
           {/* ========================================================= */}
           <ScrollReveal direction="right" className="w-full lg:w-auto shrink-0 flex justify-center">
             <div
-              className="relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-[438px] sm:w-[438px] h-[480px] xs:h-[540px] sm:h-[620px] rounded-[9px] border-[0.75px] border-[#E5E7EB] shadow-[0_3px_12px_rgba(0,0,0,0.08)] overflow-hidden bg-slate-950 group cursor-pointer select-none"
+              className="relative w-full max-w-[290px] xs:max-w-[320px] sm:max-w-[340px] lg:w-[325px] h-[400px] xs:h-[430px] sm:h-[450px] lg:h-[460px] rounded-[9px] border-[0.75px] border-[#E5E7EB] shadow-[0_3px_12px_rgba(0,0,0,0.08)] overflow-hidden bg-slate-950 group cursor-pointer select-none"
               onClick={togglePlay}
             >
               <video
                 ref={videoRef}
+                autoPlay
                 playsInline
-                preload="metadata"
+                preload="auto"
                 loop
                 muted={isMuted}
                 onPlay={() => setIsPlaying(true)}
@@ -98,13 +141,15 @@ export default function WhatsInTheBox() {
                 />
               </video>
 
-              {/* Center Play Button Overlay */}
+              {/* Play / Pause Overlay Button */}
               <div
-                className={`absolute inset-0 flex items-center justify-center transition-all duration-300 pointer-events-none ${
-                  isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
+                className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+                  isPlaying
+                    ? "opacity-0 group-hover:opacity-100 bg-black/20"
+                    : "opacity-100 bg-black/40"
                 }`}
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-xs flex items-center justify-center text-white shadow-xl transition-transform hover:scale-105 active:scale-95">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-xs flex items-center justify-center text-white shadow-xl transition-transform hover:scale-105 active:scale-95 pointer-events-none">
                   {isPlaying ? (
                     <Pause className="w-6 h-6 text-white fill-white" />
                   ) : (
