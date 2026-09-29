@@ -41,16 +41,15 @@ export default function CTABanner() {
       {/* Content Container aligned within standard page max-width */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-12 md:px-16 lg:px-20 xl:px-24 pb-8 xs:pb-10 sm:pb-0 py-0 sm:py-12 md:py-16 flex flex-col justify-end sm:justify-center items-center sm:items-start text-center sm:text-left">
         <ScrollReveal direction="up" className="w-full max-w-[340px] sm:max-w-[500px] lg:max-w-[560px] flex flex-col items-center sm:items-start">
-          <h2 className="text-white font-extrabold font-montserrat text-[34px] xs:text-[40px] sm:text-[48px] md:text-[56px] lg:text-[64px] xl:text-[70px] leading-[0.96] tracking-tight text-center sm:text-left">
-            <span className="block">Your</span>
-            <span className="block">Services.</span>
-            <span className="block">Your</span>
-            <span className="block">Business.</span>
+          <h2 className="text-white font-bold font-montserrat text-3xl xs:text-4xl sm:text-5xl md:text-[54px] lg:text-[62px] tracking-tight leading-[1.12] text-center sm:text-left">
+            Your Services. Your
+            <br />
+            Business.
           </h2>
 
-          <p className="text-white/90 text-[13px] xs:text-[14px] sm:text-[15.5px] lg:text-[17px] font-normal font-montserrat mt-3.5 sm:mt-5 leading-snug sm:leading-relaxed text-center sm:text-left">
-            Start your doorstep cleaning business with
-            <br className="hidden sm:inline" /> AquaForce by Promec.
+          <p className="text-white/90 text-[13px] xs:text-[14px] sm:text-base lg:text-[17px] font-normal font-montserrat mt-3 sm:mt-4 leading-relaxed max-w-[480px] text-center sm:text-left">
+            Start your doorstep cleaning business with AquaForce
+            <br className="hidden sm:inline" /> by Promec.
           </p>
 
           <button
