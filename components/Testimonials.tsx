@@ -68,10 +68,10 @@ export default function Testimonials() {
       title="Trusted by Doorstep Auto Care Gig Workers"
       subtitle={
         <span className="inline-block max-w-[840px] text-center">
-          <span className="block">
-            Real stories from freelance car washers, bike detailers, and doorstep cleaning
+          <span className="sm:block">
+            Real stories from freelance car washers, bike detailers, and doorstep cleaning{" "}
           </span>
-          <span className="block">
+          <span className="sm:block">
             professionals across India who doubled their daily earnings with Aquaforce® 1400.
           </span>
         </span>

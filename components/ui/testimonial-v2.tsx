@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from "framer-motion";
-import { Sun, Moon } from 'lucide-react';
 
 // --- Types ---
 export interface Testimonial {
@@ -168,11 +167,11 @@ export const TestimonialsSection = ({
       className="bg-transparent pt-2 sm:pt-4 lg:pt-5 pb-4 sm:pb-6 lg:pb-8 relative overflow-hidden"
     >
       <motion.div 
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
+        viewport={{ once: true, margin: "-30px" }}
         transition={{ 
-          duration: 0.8, 
+          duration: 0.7, 
           ease: [0.16, 1, 0.3, 1],
         }}
         className="w-full relative z-10"
@@ -189,13 +188,13 @@ export const TestimonialsSection = ({
           {/* Heading */}
           <h2 
             id="testimonials-heading" 
-            className="text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] font-medium font-montserrat tracking-tight mt-4 sm:mt-5 text-[#0F1729] dark:text-white"
+            className="text-2xl xs:text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] font-medium font-montserrat tracking-tight leading-tight sm:leading-tight mt-4 sm:mt-5 text-[#0F1729]"
           >
             {title}
           </h2>
 
           {/* Subtitle */}
-          <p className="mt-3 sm:mt-3.5 text-slate-500 dark:text-neutral-400 text-sm sm:text-base font-normal font-montserrat leading-relaxed max-w-[860px]">
+          <p className="mt-3 sm:mt-3.5 text-slate-600 text-sm sm:text-base font-normal font-montserrat leading-relaxed max-w-[860px]">
             {subtitle}
           </p>
         </div>
@@ -219,30 +218,4 @@ export const TestimonialsSection = ({
   );
 };
 
-// --- Main App Component ---
-export default function App() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
-
-  return (
-    <div className="w-screen min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 flex flex-col justify-center relative selection:bg-primary selection:text-white">
-      {/* Dark Mode Toggle */}
-      <button 
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800 shadow-xl hover:scale-110 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/50"
-        aria-label="Toggle Dark Mode"
-      >
-        {isDark ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
-
-      <TestimonialsSection />
-    </div>
-  );
-}
+export default TestimonialsSection;
