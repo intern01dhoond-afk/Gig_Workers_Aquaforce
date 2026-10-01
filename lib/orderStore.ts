@@ -92,6 +92,12 @@ export interface PromecOrder {
     reason?: string;
   };
 
+  cancellation?: {
+    cancelledAt?: string;
+    reason?: string;
+    cancelledBy?: string;
+  };
+
   processedWebhookEvents: string[];
 }
 
@@ -108,6 +114,8 @@ export interface IOrderStore {
   ): Promise<void>;
   failFulfillment(orderId: string, error: string): Promise<void>;
   recordWebhookEvent(orderId: string, eventId: string): Promise<boolean>;
+  getOrdersByPhone(phone: string): Promise<PromecOrder[]>;
+  getAllOrders(): Promise<PromecOrder[]>;
 }
 
 /**
@@ -289,7 +297,33 @@ class LocalFileOrderStore implements IOrderStore {
     await this.persist();
     return true;
   }
+
+  async getOrdersByPhone(phone: string): Promise<PromecOrder[]> {
+    if (!phone) return [];
+    const cleanPhone = phone.replace(/\D/g, "").slice(-10);
+    if (!cleanPhone) return [];
+
+    const matches: PromecOrder[] = [];
+    for (const order of this.memoryCache.values()) {
+      const orderPhone = (order.customer?.phone || "").replace(/\D/g, "").slice(-10);
+      if (orderPhone === cleanPhone) {
+        matches.push(order);
+      }
+    }
+
+    return matches.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getAllOrders(): Promise<PromecOrder[]> {
+    return Array.from(this.memoryCache.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
 }
 
-// Export singleton instance
-export const orderStore: IOrderStore = new LocalFileOrderStore();
+// Export singleton instance backed by Supabase with local file fallback
+import { SupabaseOrderStore } from "./supabaseOrderStore";
+const localFileStore = new LocalFileOrderStore();
+export const orderStore: IOrderStore = new SupabaseOrderStore(localFileStore);

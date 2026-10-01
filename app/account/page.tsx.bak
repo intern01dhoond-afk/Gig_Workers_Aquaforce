@@ -1,0 +1,1427 @@
+"use client";
+
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  Package,
+  Truck,
+  ShieldCheck,
+  Phone,
+  User,
+  LogOut,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Copy,
+  Check,
+  Printer,
+  FileText,
+  RotateCcw,
+  Sparkles,
+  MessageSquare,
+  Wrench,
+  Search,
+  Award,
+  ArrowRight,
+  ShieldAlert,
+  MapPin,
+  Mail,
+  Building2,
+  Edit3,
+  Lock,
+  Headphones,
+  CheckCircle,
+  HelpCircle,
+  X,
+} from "lucide-react";
+import { PromecOrder } from "@/lib/orderStore";
+import dynamic from "next/dynamic";
+import { PromecDispute } from "@/lib/disputeStore";
+import AccountLoginModal from "@/components/account/AccountLoginModal";
+import Header from "@/components/Header";
+
+const OrderTrackingModal = dynamic(() => import("@/components/account/OrderTrackingModal"), { ssr: false });
+const DisputeModal = dynamic(() => import("@/components/account/DisputeModal"), { ssr: false });
+const InvoiceModal = dynamic(() => import("@/components/account/InvoiceModal"), { ssr: false });
+const SupportModal = dynamic(() => import("@/components/account/SupportModal"), { ssr: false });
+const WarrantyCardModal = dynamic(() => import("@/components/account/WarrantyCardModal"), { ssr: false });
+
+type TabType = "orders" | "disputes" | "support" | "profile";
+
+function AccountDashboardContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryOrderId = searchParams.get("orderId") || "";
+  const queryTab = searchParams.get("tab") as TabType | null;
+
+  // Auth state initialized synchronously from localStorage
+  const [user, setUser] = useState<{ phone: string; fullName: string } | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved =
+          localStorage.getItem("aquaforce_user") ||
+          localStorage.getItem("promec_verified_user");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed?.phone) {
+            return {
+              phone: parsed.phone,
+              fullName: parsed.fullName || "Customer",
+            };
+          }
+        }
+      } catch (e) {}
+    }
+    return null;
+  });
+  const [authChecked, setAuthChecked] = useState(true);
+
+  // Tab state (defaults to "profile", or "orders" if orderId is specified in URL)
+  const [activeTab, setActiveTab] = useState<TabType>(
+    queryTab || (queryOrderId ? "orders" : "profile")
+  );
+
+  // Data states
+  const [orders, setOrders] = useState<PromecOrder[]>([]);
+  const [disputes, setDisputes] = useState<PromecDispute[]>([]);
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [orderFilter, setOrderFilter] = useState<"all" | "in_transit" | "delivered" | "cod">("all");
+
+  // Modals state
+  const [selectedOrderForTracking, setSelectedOrderForTracking] = useState<PromecOrder | null>(null);
+  const [selectedOrderForDispute, setSelectedOrderForDispute] = useState<PromecOrder | null>(null);
+  const [isDisputeModalOpen, setIsDisputeModalOpen] = useState(false);
+  const [selectedOrderForInvoice, setSelectedOrderForInvoice] = useState<PromecOrder | null>(null);
+  const [selectedOrderForWarranty, setSelectedOrderForWarranty] = useState<PromecOrder | null>(null);
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
+
+  // Profile edit state
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    fullName: "",
+    email: "",
+    shippingAddress: "",
+    city: "",
+    state: "",
+    pincode: "",
+    gstNumber: "",
+  });
+  const [profileSaveSuccess, setProfileSaveSuccess] = useState(false);
+
+  // Copy helper
+  const [copiedId, setCopiedId] = useState("");
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(text);
+    setTimeout(() => setCopiedId(""), 2000);
+  };
+
+  // Sync tab with URL param if it changes
+  useEffect(() => {
+    if (queryTab && ["orders", "disputes", "support", "profile"].includes(queryTab)) {
+      setActiveTab(queryTab);
+    }
+  }, [queryTab]);
+
+  // Check saved session on mount
+  useEffect(() => {
+    try {
+      const saved =
+        localStorage.getItem("aquaforce_user") ||
+        localStorage.getItem("promec_verified_user");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.phone) {
+          const userObj = {
+            phone: parsed.phone,
+            fullName: parsed.fullName || "Customer",
+          };
+          setUser(userObj);
+          localStorage.setItem("aquaforce_user", JSON.stringify(userObj));
+          localStorage.setItem("promec_verified_user", JSON.stringify(userObj));
+        }
+      }
+    } catch (e) {
+      console.warn("Could not read auth storage", e);
+    }
+    setAuthChecked(true);
+  }, []);
+
+  // Fetch orders, disputes, and profile when user is authenticated
+  useEffect(() => {
+    if (!user?.phone) return;
+    loadAccountData(user.phone);
+  }, [user]);
+
+  const loadAccountData = async (phoneStr: string) => {
+    const cleanPhone = phoneStr.replace(/\D/g, "").slice(-10);
+    if (!cleanPhone || cleanPhone.length !== 10) return;
+
+    // Fast-path: Check for instantly saved customer address in local storage
+    try {
+      const localAddress = localStorage.getItem(`aquaforce_saved_address_${cleanPhone}`);
+      if (localAddress) {
+        const parsed = JSON.parse(localAddress);
+        if (parsed) {
+          setProfile(parsed);
+          setProfileForm({
+            fullName: parsed.fullName || user?.fullName || "",
+            email: parsed.email || "",
+            shippingAddress: parsed.shippingAddress || "",
+            city: parsed.city || "",
+            state: parsed.state || "",
+            pincode: parsed.pincode || "",
+            gstNumber: parsed.gstNumber || "",
+          });
+        }
+      }
+    } catch (e) {}
+
+    // Check session cache for instant zero-latency render
+    try {
+      const cached = sessionStorage.getItem(`promec_cached_account_${cleanPhone}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.orders) setOrders(parsed.orders);
+        if (parsed.disputes) setDisputes(parsed.disputes);
+        if (parsed.profile) {
+          setProfile(parsed.profile);
+          setProfileForm({
+            fullName: parsed.profile.fullName || user?.fullName || "",
+            email: parsed.profile.email || "",
+            shippingAddress: parsed.profile.shippingAddress || "",
+            city: parsed.profile.city || "",
+            state: parsed.profile.state || "",
+            pincode: parsed.profile.pincode || "",
+            gstNumber: parsed.profile.gstNumber || "",
+          });
+        }
+      } else {
+        setLoading(true);
+      }
+    } catch (e) {
+      setLoading(true);
+    }
+
+    try {
+      const [ordersRes, disputesRes, profileRes] = await Promise.all([
+        fetch(`/aquaforceforgigworkers/api/account/orders?phone=${cleanPhone}`),
+        fetch(`/aquaforceforgigworkers/api/account/disputes?phone=${cleanPhone}`),
+        fetch(`/aquaforceforgigworkers/api/account/profile?phone=${cleanPhone}`),
+      ]);
+
+      const [ordersData, disputesData, profileData] = await Promise.all([
+        ordersRes.json(),
+        disputesRes.json(),
+        profileRes.json(),
+      ]);
+
+      let newOrders = orders;
+      let newDisputes = disputes;
+      let newProfile = profile;
+
+      if (ordersData.success && Array.isArray(ordersData.orders)) {
+        newOrders = ordersData.orders;
+        setOrders(newOrders);
+      }
+
+      if (disputesData.success && Array.isArray(disputesData.disputes)) {
+        newDisputes = disputesData.disputes;
+        setDisputes(newDisputes);
+      }
+
+      if (profileData.success && profileData.profile) {
+        newProfile = profileData.profile;
+        setProfile(newProfile);
+        setProfileForm({
+          fullName: newProfile.fullName || user?.fullName || "",
+          email: newProfile.email || "",
+          shippingAddress: newProfile.shippingAddress || "",
+          city: newProfile.city || "",
+          state: newProfile.state || "",
+          pincode: newProfile.pincode || "",
+          gstNumber: newProfile.gstNumber || "",
+        });
+
+        // Save local backup
+        try {
+          localStorage.setItem(`aquaforce_saved_address_${cleanPhone}`, JSON.stringify(newProfile));
+        } catch (e) {}
+      }
+
+      // Cache payload for smooth instantaneous re-visits
+      try {
+        sessionStorage.setItem(
+          `promec_cached_account_${cleanPhone}`,
+          JSON.stringify({ orders: newOrders, disputes: newDisputes, profile: newProfile })
+        );
+      } catch (e) {}
+    } catch (err) {
+      console.error("Failed to load account data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoginSuccess = (userData: { phone: string; fullName: string }) => {
+    setUser(userData);
+    try {
+      localStorage.setItem("aquaforce_user", JSON.stringify(userData));
+      localStorage.setItem("promec_verified_user", JSON.stringify(userData));
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("aquaforce_auth_changed"));
+      }
+    } catch (e) {}
+    loadAccountData(userData.phone);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    try {
+      localStorage.removeItem("aquaforce_user");
+      localStorage.removeItem("promec_verified_user");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("aquaforce_auth_changed"));
+      }
+    } catch (e) {}
+    setOrders([]);
+    setDisputes([]);
+    setProfile(null);
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.phone) return;
+    try {
+      const cleanPhone = user.phone.replace(/\D/g, "").slice(-10);
+      const updatedProfileObj = {
+        fullName: profileForm.fullName.trim() || user.fullName || "Customer",
+        phone: cleanPhone,
+        email: profileForm.email.trim(),
+        shippingAddress: profileForm.shippingAddress.trim(),
+        city: profileForm.city.trim(),
+        state: profileForm.state.trim(),
+        pincode: profileForm.pincode.trim(),
+        gstNumber: profileForm.gstNumber.trim(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      // Optimistic update
+      setProfile(updatedProfileObj);
+      setEditingProfile(false);
+      setProfileSaveSuccess(true);
+      setTimeout(() => setProfileSaveSuccess(false), 3000);
+
+      // Persist to local caches immediately
+      try {
+        localStorage.setItem(`aquaforce_saved_address_${cleanPhone}`, JSON.stringify(updatedProfileObj));
+        sessionStorage.setItem(
+          `promec_cached_account_${cleanPhone}`,
+          JSON.stringify({ orders, disputes, profile: updatedProfileObj })
+        );
+        if (profileForm.fullName.trim()) {
+          const updatedUser = { ...user, fullName: profileForm.fullName.trim() };
+          setUser(updatedUser);
+          localStorage.setItem("aquaforce_user", JSON.stringify(updatedUser));
+          localStorage.setItem("promec_verified_user", JSON.stringify(updatedUser));
+          window.dispatchEvent(new Event("aquaforce_auth_changed"));
+        }
+      } catch (e) {}
+
+      const res = await fetch("/aquaforceforgigworkers/api/account/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: cleanPhone,
+          ...profileForm,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.profile) {
+        setProfile(data.profile);
+        setProfileForm({
+          fullName: data.profile.fullName || profileForm.fullName,
+          email: data.profile.email || "",
+          shippingAddress: data.profile.shippingAddress || "",
+          city: data.profile.city || "",
+          state: data.profile.state || "",
+          pincode: data.profile.pincode || "",
+          gstNumber: data.profile.gstNumber || "",
+        });
+      }
+    } catch (err) {
+      console.error("Profile save error:", err);
+    }
+  };
+
+  // Filtered orders
+  const filteredOrders = orders.filter((o) => {
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const matchId = o.id.toLowerCase().includes(q);
+      const matchItem = o.items.some((it) => it.productName.toLowerCase().includes(q));
+      const matchCity = o.customer.city.toLowerCase().includes(q);
+      const matchAwb = (o.fulfillment.waybill || "").toLowerCase().includes(q);
+      if (!matchId && !matchItem && !matchCity && !matchAwb) return false;
+    }
+    if (orderFilter === "in_transit") {
+      return o.orderStatus === "shipped" || Boolean(o.fulfillment.waybill);
+    }
+    if (orderFilter === "delivered") {
+      return o.orderStatus === "delivered";
+    }
+    if (orderFilter === "cod") {
+      return o.payment.method === "COD_ADVANCE";
+    }
+    return true;
+  });
+
+  // Not logged in -> Show login modal over clean portal backdrop with current site Header
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-open-sans">
+        {/* Dark top backdrop for Header */}
+        <div className="fixed top-0 left-0 right-0 h-[64px] sm:h-[76px] lg:h-[82px] bg-black/95 border-b border-white/10 z-40" />
+        <Header />
+        <div className="flex-1 flex items-center justify-center p-3 sm:p-4 pt-24">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
+            <AccountLoginModal
+              onSuccess={handleLoginSuccess}
+              onClose={() => router.push("/")}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Count metrics & labels
+  const totalOrdersCount = orders.length;
+  const inTransitCount = orders.filter((o) => o.orderStatus === "shipped" || Boolean(o.fulfillment.waybill)).length;
+  const deliveredCount = orders.filter((o) => o.orderStatus === "delivered").length;
+  const displayName = profile?.fullName || user.fullName || "Customer";
+  const initials = displayName.charAt(0).toUpperCase();
+  const cleanPhone = user.phone.replace(/\D/g, "").slice(-10);
+  const userCity = profile?.city || "";
+  const userState = profile?.state || "";
+  const cityState = [userCity, userState].filter(Boolean).join(", ");
+  const hasSavedAddress = Boolean(profile?.shippingAddress && profile.shippingAddress.trim().length > 0);
+
+  return (
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-open-sans">
+      {/* Dark top backdrop for Header */}
+      <div className="fixed top-0 left-0 right-0 h-[64px] sm:h-[76px] lg:h-[82px] bg-black/95 border-b border-white/10 z-40" />
+
+      {/* Current Site Header */}
+      <Header />
+
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16">
+        {/* MOBILE NAVIGATION TABS (4 columns) */}
+        <div className="md:hidden mb-5">
+          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-200/70 rounded-xl">
+            <button
+              type="button"
+              onClick={() => setActiveTab("profile")}
+              className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all cursor-pointer ${
+                activeTab === "profile"
+                  ? "bg-white text-[#0066cc] font-bold shadow-2xs"
+                  : "text-slate-600 font-medium hover:text-slate-900"
+              }`}
+            >
+              <User size={16} className="shrink-0" />
+              <span className="text-[10px] font-montserrat mt-0.5 leading-tight truncate">
+                Profile
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("orders")}
+              className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all cursor-pointer ${
+                activeTab === "orders"
+                  ? "bg-white text-[#0066cc] font-bold shadow-2xs"
+                  : "text-slate-600 font-medium hover:text-slate-900"
+              }`}
+            >
+              <Package size={16} className="shrink-0" />
+              <span className="text-[10px] font-montserrat mt-0.5 leading-tight truncate">
+                Orders
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("disputes")}
+              className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all cursor-pointer ${
+                activeTab === "disputes"
+                  ? "bg-white text-[#0066cc] font-bold shadow-2xs"
+                  : "text-slate-600 font-medium hover:text-slate-900"
+              }`}
+            >
+              <ShieldCheck size={16} className="shrink-0" />
+              <span className="text-[10px] font-montserrat mt-0.5 leading-tight truncate">
+                Claims
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("support")}
+              className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all cursor-pointer ${
+                activeTab === "support"
+                  ? "bg-white text-[#0066cc] font-bold shadow-2xs"
+                  : "text-slate-600 font-medium hover:text-slate-900"
+              }`}
+            >
+              <HelpCircle size={16} className="shrink-0" />
+              <span className="text-[10px] font-montserrat mt-0.5 leading-tight truncate">
+                Warranty
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* 2-COLUMN LAYOUT: LEFT SIDEBAR + MAIN CONTENT */}
+        <div className="flex flex-col md:flex-row gap-6 lg:gap-8 items-start">
+          {/* DESKTOP LEFT SIDEBAR (Matching reference image) */}
+          <aside className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 md:sticky md:top-24">
+            <div className="bg-white border border-slate-200/90 rounded-2xl shadow-xs p-3.5 flex flex-col justify-between w-full">
+              {/* Vertical Navigation Links */}
+              <nav className="space-y-1">
+                {/* 1. Profile */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("profile")}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer text-left ${
+                    activeTab === "profile"
+                      ? "bg-[#edf5fd] text-[#0066cc] font-semibold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <User size={18} className={activeTab === "profile" ? "text-[#0066cc]" : "text-slate-500"} />
+                  <span>Profile</span>
+                </button>
+
+                {/* 2. Orders */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("orders")}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer text-left ${
+                    activeTab === "orders"
+                      ? "bg-[#edf5fd] text-[#0066cc] font-semibold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <Package size={18} className={activeTab === "orders" ? "text-[#0066cc]" : "text-slate-500"} />
+                  <span>Orders</span>
+                </button>
+
+                {/* 3. Claims & Replacements */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("disputes")}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer text-left ${
+                    activeTab === "disputes"
+                      ? "bg-[#edf5fd] text-[#0066cc] font-semibold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <ShieldCheck size={18} className={activeTab === "disputes" ? "text-[#0066cc]" : "text-slate-500"} />
+                  <span>Claims & Replacements</span>
+                </button>
+
+                {/* 4. 1-Year Warranty & Help */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("support")}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer text-left ${
+                    activeTab === "support"
+                      ? "bg-[#edf5fd] text-[#0066cc] font-semibold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <HelpCircle size={18} className={activeTab === "support" ? "text-[#0066cc]" : "text-slate-500"} />
+                  <span>1-Year Warranty & Help</span>
+                </button>
+              </nav>
+
+              {/* Bottom Need Help Box */}
+              <div className="mt-14 border border-slate-200/80 rounded-xl p-3.5 bg-white text-left space-y-1">
+                <div className="flex items-center gap-2 text-slate-900 font-bold text-xs sm:text-[13px] font-montserrat">
+                  <Headphones size={15} className="text-slate-700 shrink-0" />
+                  <span>Need help?</span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed font-open-sans">
+                  Our service team is available Monday–Saturday, 9am–7pm.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsSupportModalOpen(true)}
+                  className="text-xs font-semibold text-[#0066cc] hover:underline cursor-pointer pt-1 block"
+                >
+                  Contact support
+                </button>
+              </div>
+            </div>
+
+            {/* Logout outside the card below */}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer text-left mt-2 group"
+            >
+              <LogOut size={16} className="shrink-0 transition-transform group-hover:-translate-x-0.5" />
+              <span>Log out</span>
+            </button>
+          </aside>
+
+          {/* Right Column: Tab Content */}
+          <div className="flex-1 min-w-0 w-full">
+            {/* ============================================================ */}
+            {/* TAB: PROFILE (Matches uploaded reference image exactly)       */}
+            {/* ============================================================ */}
+            {activeTab === "profile" && (
+              <div className="space-y-5">
+                {/* Breadcrumbs */}
+                <div className="flex items-center gap-1.5 text-xs font-open-sans text-slate-400">
+                  <Link href="/" className="hover:text-slate-600 font-medium">Home</Link>
+                  <span className="text-slate-300">›</span>
+                  <span className="text-[#0066cc] font-semibold">My Account</span>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-2xl sm:text-3xl font-bold font-montserrat text-slate-900 tracking-tight">
+                  Profile
+                </h1>
+
+                {/* Card 1: User Profile Header Card */}
+                <div className="bg-[#edf5fd] border border-[#d6e8fa] rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#0066cc] text-white flex items-center justify-center text-2xl font-bold font-montserrat shrink-0 shadow-xs">
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="text-lg sm:text-xl font-bold font-montserrat text-slate-900 truncate">
+                          {displayName}
+                        </h2>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider uppercase bg-[#dbeafe] text-[#0284c7] border border-[#bfdbfe]">
+                          <ShieldCheck size={12} className="shrink-0" />
+                          VERIFIED
+                        </span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-500 font-open-sans mt-0.5 truncate">
+                        +91 {cleanPhone}{cityState ? ` · ${cityState}` : ""}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditingProfile(true)}
+                    className="px-3.5 py-1.5 bg-white border border-slate-200/90 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center gap-1.5 cursor-pointer shrink-0 self-start sm:self-auto"
+                  >
+                    <Edit3 size={13} className="text-slate-600" />
+                    <span>Edit profile</span>
+                  </button>
+                </div>
+
+                {profileSaveSuccess && (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs flex items-center gap-2 font-open-sans animate-in fade-in duration-200">
+                    <CheckCircle2 size={16} className="shrink-0 text-emerald-600" />
+                    <span className="font-medium">Profile details updated successfully!</span>
+                  </div>
+                )}
+
+                {/* Card 2: Personal Information Card */}
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                    <h3 className="text-sm sm:text-base font-bold font-montserrat text-slate-900">
+                      Personal Information
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setEditingProfile(true)}
+                      className="text-xs sm:text-sm font-semibold text-[#0066cc] hover:text-[#0052b3] cursor-pointer flex items-center gap-1"
+                    >
+                      <Edit3 size={13} />
+                      <span>Edit</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium block">Full name</span>
+                      <span className="text-sm font-semibold text-slate-900 mt-1 block truncate">
+                        {displayName}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium block">Mobile number</span>
+                      <span className="text-sm font-semibold text-slate-900 mt-1 block">
+                        +91 {cleanPhone}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium block">Email address</span>
+                      {profile?.email ? (
+                        <span className="text-sm font-semibold text-slate-900 mt-1 block truncate">
+                          {profile.email}
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setEditingProfile(true)}
+                          className="text-sm font-semibold text-[#0066cc] hover:underline cursor-pointer mt-1 block text-left"
+                        >
+                          + Add email
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-5 pt-4 border-t border-slate-100">
+                    <span className="text-xs text-slate-400 font-medium block">Business GSTIN</span>
+                    {profile?.gstNumber ? (
+                      <span className="text-sm font-semibold text-slate-900 mt-1 block font-mono">
+                        {profile.gstNumber}
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setEditingProfile(true)}
+                        className="text-sm font-semibold text-[#0066cc] hover:underline cursor-pointer mt-1 block text-left"
+                      >
+                        + Add GST details
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Card 3: Saved Delivery Addresses Card */}
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                    <h3 className="text-sm sm:text-base font-bold font-montserrat text-slate-900">
+                      Saved Delivery Addresses
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setEditingProfile(true)}
+                      className="text-xs sm:text-sm font-semibold text-[#0066cc] hover:text-[#0052b3] cursor-pointer"
+                    >
+                      + Add address
+                    </button>
+                  </div>
+
+                  {hasSavedAddress ? (
+                    <div className="border border-slate-200/80 rounded-xl p-4 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-[#0066cc] border border-blue-200 px-2 py-0.5 rounded">
+                            Primary Shipping Address
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm font-medium text-slate-800 font-open-sans">
+                          {profile.shippingAddress}
+                        </p>
+                        <p className="text-xs text-slate-500 font-open-sans">
+                          {[profile.city, profile.state].filter(Boolean).join(", ")} {profile.pincode ? `- ${profile.pincode}` : ""}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setEditingProfile(true)}
+                        className="text-xs font-semibold text-[#0066cc] hover:underline cursor-pointer shrink-0 self-start sm:self-auto"
+                      >
+                        Edit Address
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="py-8 text-center flex flex-col items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-3">
+                        <MapPin size={22} className="stroke-[1.6]" />
+                      </div>
+                      <h4 className="text-sm font-semibold text-slate-800 font-montserrat">
+                        No delivery address saved yet
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-1 max-w-sm font-open-sans">
+                        Add an address to make future service visits and deliveries faster.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setEditingProfile(true)}
+                        className="text-xs font-semibold text-[#0066cc] hover:underline cursor-pointer mt-2.5 inline-block"
+                      >
+                        + Add delivery address
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ============================================================ */}
+            {/* TAB 1: ORDERS & TRACKING DASHBOARD                           */}
+            {/* ============================================================ */}
+            {activeTab === "orders" && (
+              <div className="space-y-4">
+                {/* Orders Welcome & Stats Summary Banner */}
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-xs bg-gradient-to-br from-white via-sky-50/20 to-blue-50/20">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h1 className="text-base sm:text-xl font-bold font-montserrat text-[#0F1729]">
+                          Welcome, {displayName}
+                        </h1>
+                      </div>
+                      <p className="text-[11px] sm:text-xs text-slate-600 font-open-sans mt-0.5">
+                        Live Delhivery express tracking, 1-year warranty coverage & fast replacement claims.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2 pt-1 sm:pt-0">
+                      <button
+                        onClick={() => {
+                          setSelectedOrderForDispute(orders[0] || null);
+                          setIsDisputeModalOpen(true);
+                        }}
+                        className="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-[11px] sm:text-xs font-bold font-montserrat uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <ShieldAlert size={13} className="shrink-0" />
+                        <span>Claim / Replace</span>
+                      </button>
+
+                      <button
+                        onClick={() => setIsSupportModalOpen(true)}
+                        className="px-3 py-2 rounded-xl bg-[#0066cc] hover:bg-[#0052b3] text-white text-[11px] sm:text-xs font-bold font-montserrat uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Phone size={13} className="shrink-0" />
+                        <span>Call Support</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Summary Metric Counters */}
+                  <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-100 text-center text-xs">
+                    <div className="bg-white/80 p-2 rounded-xl border border-slate-200/50">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 font-montserrat block">
+                        Total Orders
+                      </span>
+                      <span className="text-sm sm:text-base font-bold text-slate-900 font-montserrat mt-0.5 block">
+                        {totalOrdersCount}
+                      </span>
+                    </div>
+
+                    <div className="bg-white/80 p-2 rounded-xl border border-slate-200/50">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 font-montserrat block">
+                        In Transit
+                      </span>
+                      <span className="text-sm sm:text-base font-bold text-[#0066cc] font-montserrat mt-0.5 block">
+                        {inTransitCount}
+                      </span>
+                    </div>
+
+                    <div className="bg-white/80 p-2 rounded-xl border border-slate-200/50">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 font-montserrat block">
+                        Delivered
+                      </span>
+                      <span className="text-sm sm:text-base font-bold text-emerald-600 font-montserrat mt-0.5 block">
+                        {deliveredCount}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Filter and Search Bar */}
+                <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:p-3 shadow-xs flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                    {[
+                      { id: "all", label: "All Orders", count: orders.length },
+                      { id: "in_transit", label: "In Transit", count: inTransitCount },
+                      { id: "delivered", label: "Delivered", count: deliveredCount },
+                      {
+                        id: "cod",
+                        label: "Pay on Delivery",
+                        count: orders.filter((o) => o.payment.method === "COD_ADVANCE").length,
+                      },
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => setOrderFilter(tab.id as any)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-montserrat font-bold whitespace-nowrap transition-all cursor-pointer ${
+                          orderFilter === tab.id
+                            ? "bg-[#0066cc] text-white shadow-2xs"
+                            : "bg-slate-100 hover:bg-slate-200/70 text-slate-700"
+                        }`}
+                      >
+                        {tab.label} ({tab.count})
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="relative min-w-[200px]">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Search ID, item, city..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0066cc]"
+                    />
+                  </div>
+                </div>
+
+                {/* Orders List */}
+                {loading ? (
+                  <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-xs">
+                    <div className="w-8 h-8 border-3 border-[#0066cc] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-xs text-slate-500 font-open-sans">
+                      Loading your verified machine orders...
+                    </p>
+                  </div>
+                ) : filteredOrders.length === 0 ? (
+                  <div className="bg-white border border-slate-200 rounded-2xl p-8 sm:p-12 text-center shadow-xs space-y-3">
+                    <div className="w-14 h-14 rounded-full bg-blue-50 text-[#0066cc] flex items-center justify-center mx-auto">
+                      <Package size={28} />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold font-montserrat text-slate-800">
+                        {orders.length === 0 ? "No Orders Found For This Number" : "No Orders Match Your Filter"}
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 font-open-sans">
+                        {orders.length === 0
+                          ? `We couldn't find any orders placed with +91 ${cleanPhone}. If you purchased under another phone number, please log in with that number.`
+                          : "Try adjusting your search query or switching filters to view all orders."}
+                      </p>
+                    </div>
+                    {orders.length === 0 && (
+                      <Link
+                        href="/"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0066cc] hover:bg-[#0052b3] text-white text-xs font-bold font-montserrat rounded-xl shadow-xs transition-colors mt-2"
+                      >
+                        <Package size={14} />
+                        <span>Order Aquaforce 1400 Now</span>
+                      </Link>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-3.5">
+                    {filteredOrders.map((order) => {
+                      const item = order.items?.[0] || {
+                        productName: "Aquaforce 1400 PSI Tech",
+                        color: "Yellow",
+                        quantity: 1,
+                        totalAmountInINR: 37999,
+                      };
+                      const isCod = order.payment.method === "COD_ADVANCE";
+                      const waybill = order.fulfillment.waybill;
+                      const isYellow = item.color?.toLowerCase() === "yellow";
+                      const productImg = isYellow
+                        ? "/aquaforceforgigworkers/images/products/yellow/1.webp"
+                        : "/aquaforceforgigworkers/images/products/blue/1.webp";
+
+                      return (
+                        <div
+                          key={order.id}
+                          className="bg-white border border-slate-200/90 hover:border-slate-300 rounded-2xl p-3.5 sm:p-5 transition-all space-y-3.5 shadow-xs hover:shadow-md"
+                        >
+                          {/* Top Order Metadata Bar */}
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5 text-xs font-open-sans">
+                            <div className="flex items-center gap-2">
+                              <span className="font-montserrat font-bold text-slate-900 tracking-wide text-xs sm:text-sm">
+                                {order.id}
+                              </span>
+                              <button
+                                onClick={() => handleCopy(order.id)}
+                                title="Copy Order ID"
+                                className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
+                              >
+                                {copiedId === order.id ? (
+                                  <Check size={12} className="text-emerald-600" />
+                                ) : (
+                                  <Copy size={12} />
+                                )}
+                              </button>
+                            </div>
+
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-slate-400 text-[11px]">
+                                {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                })}
+                              </span>
+
+                              {/* Order Status Badge */}
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-montserrat uppercase tracking-wider ${
+                                  order.orderStatus === "delivered"
+                                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                    : order.orderStatus === "shipped" || waybill
+                                    ? "bg-sky-50 text-sky-700 border border-sky-200"
+                                    : "bg-amber-50 text-amber-800 border border-amber-200"
+                                }`}
+                              >
+                                {order.orderStatus === "delivered"
+                                  ? "Delivered"
+                                  : order.orderStatus === "shipped" || waybill
+                                  ? "In Transit"
+                                  : "Confirmed"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Middle Order Item Details */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0">
+                                <Image
+                                  src={productImg}
+                                  alt={item.productName}
+                                  fill
+                                  className="object-contain p-1"
+                                />
+                              </div>
+                              <div>
+                                <h4 className="text-xs sm:text-sm font-bold font-montserrat text-slate-900 leading-tight">
+                                  {item.productName}
+                                </h4>
+                                <div className="text-[11px] text-slate-500 font-open-sans mt-0.5 flex items-center gap-2">
+                                  <span>Color: <strong>{item.color}</strong></span>
+                                  <span>•</span>
+                                  <span>Qty: <strong>{item.quantity}</strong></span>
+                                </div>
+                                <div className="text-xs font-bold font-montserrat text-[#0066cc] mt-1">
+                                  ₹{item.totalAmountInINR.toLocaleString("en-IN")}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Payment / Tracking summary chip */}
+                            <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-right sm:text-right flex sm:flex-col justify-between items-center sm:items-end">
+                              <div>
+                                <span className="text-[10px] uppercase font-bold text-slate-400 font-montserrat block">
+                                  Payment Mode
+                                </span>
+                                <span className="text-xs font-bold font-montserrat text-slate-800">
+                                  {isCod ? "Cash on Delivery" : "Prepaid Online"}
+                                </span>
+                              </div>
+                              {isCod && (
+                                <span className="text-[11px] text-amber-700 font-semibold font-open-sans mt-0.5 block">
+                                  Due at Doorstep: ₹{Math.round(order.payment.amountDueInPaise / 100).toLocaleString("en-IN")}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Bottom Action Buttons */}
+                          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                            <div className="flex items-center gap-2 text-xs text-slate-500 font-open-sans">
+                              {waybill ? (
+                                <span className="flex items-center gap-1 font-mono text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+                                  AWB: {waybill}
+                                </span>
+                              ) : (
+                                <span>Dispatches in 24h</span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap ml-auto">
+                              <button
+                                onClick={() => setSelectedOrderForTracking(order)}
+                                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0066cc] text-[11px] sm:text-xs font-bold font-montserrat rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                              >
+                                <Truck size={13} />
+                                <span>Track</span>
+                              </button>
+
+                              <button
+                                onClick={() => setSelectedOrderForInvoice(order)}
+                                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] sm:text-xs font-bold font-montserrat rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                              >
+                                <FileText size={13} />
+                                <span>Invoice</span>
+                              </button>
+
+                              <button
+                                onClick={() => setSelectedOrderForWarranty(order)}
+                                className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 text-[11px] sm:text-xs font-bold font-montserrat rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                              >
+                                <Award size={13} />
+                                <span>Warranty</span>
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setSelectedOrderForDispute(order);
+                                  setIsDisputeModalOpen(true);
+                                }}
+                                className="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 text-[11px] sm:text-xs font-bold font-montserrat rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                              >
+                                <RotateCcw size={13} />
+                                <span>Claim</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ============================================================ */}
+            {/* TAB 2: REPLACEMENTS & CLAIMS                                 */}
+            {/* ============================================================ */}
+            {activeTab === "disputes" && (
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200/90 p-4 sm:p-5 rounded-2xl shadow-xs">
+                  <div>
+                    <h3 className="text-base font-bold font-montserrat text-slate-900">
+                      Self-Service Replacement & Claims Center
+                    </h3>
+                    <p className="text-xs text-slate-500 font-open-sans mt-0.5">
+                      Prompt 24-hour turnaround for missing parts, pump issues, or transit damages.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSelectedOrderForDispute(orders[0] || null);
+                      setIsDisputeModalOpen(true);
+                    }}
+                    className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-montserrat uppercase tracking-wider rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                  >
+                    <ShieldAlert size={14} />
+                    <span>File New Claim</span>
+                  </button>
+                </div>
+
+                {disputes.length === 0 ? (
+                  <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-xs space-y-2">
+                    <CheckCircle2 size={32} className="text-emerald-500 mx-auto" />
+                    <h4 className="text-sm font-bold font-montserrat text-slate-800">
+                      No Active Replacement Claims
+                    </h4>
+                    <p className="text-xs text-slate-500 font-open-sans max-w-sm mx-auto">
+                      All your machine orders are in good standing. If you ever face transit impact or performance defects, you can file a one-click replacement claim here.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {disputes.map((dispute) => (
+                      <div
+                        key={dispute.id}
+                        className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3"
+                      >
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 text-xs">
+                          <span className="font-bold font-montserrat text-slate-900">
+                            Claim #{dispute.id}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-montserrat uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
+                            {dispute.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-700 font-open-sans">
+                          <strong>Reason:</strong> {dispute.reasonLabel}
+                        </p>
+                        <p className="text-xs text-slate-600 font-open-sans bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                          {dispute.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ============================================================ */}
+            {/* TAB 3: WARRANTY & FAST SUPPORT                               */}
+            {/* ============================================================ */}
+            {activeTab === "support" && (
+              <div className="space-y-4">
+                {/* Warranty Certificate Hero Card */}
+                <div className="bg-gradient-to-br from-amber-50/90 via-amber-100/30 to-white border border-amber-200 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Award size={20} className="text-amber-700" />
+                      <h3 className="text-base sm:text-lg font-bold font-montserrat text-slate-900">
+                        1-Year Pan-India Replacement Warranty
+                      </h3>
+                    </div>
+                    <p className="text-xs text-slate-600 font-open-sans mt-1 max-w-xl">
+                      Your Aquaforce 1400 is covered by AMEC Mobility Pvt Ltd. Full replacement coverage for high-pressure pump mechanism, motor, 25V battery cells, and circuit board.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (orders.length > 0) {
+                        setSelectedOrderForWarranty(orders[0]);
+                      }
+                    }}
+                    className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold font-montserrat uppercase tracking-wider rounded-xl shadow-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Award size={14} />
+                    <span>Download Warranty</span>
+                  </button>
+                </div>
+
+                {/* Concierge Support Hotline Card */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-base font-bold font-montserrat text-slate-900">
+                      AMEC Priority Technical Support Desk
+                    </h3>
+                    <p className="text-xs text-slate-500 font-open-sans mt-0.5">
+                      Need machine tuning, foam cannon tips, or troubleshooting advice? Talk directly to our technical team.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      onClick={() => setIsSupportModalOpen(true)}
+                      className="px-4 py-2 bg-[#0066cc] hover:bg-[#0052b3] text-white text-xs font-bold font-montserrat uppercase tracking-wider rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Phone size={14} />
+                      <span>Request Callback</span>
+                    </button>
+                    <a
+                      href="tel:+917387588963"
+                      className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold font-montserrat uppercase tracking-wider rounded-xl transition-colors flex items-center gap-1.5"
+                    >
+                      <Phone size={14} />
+                      <span>Call +91 7387588963</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-5 border-t border-slate-200 bg-white text-center text-xs text-slate-500 font-open-sans px-4">
+        &copy; 2026 PROMEC INDIA • AMEC MOBILITY PRIVATE LIMITED • Nagpur, Maharashtra, India
+      </footer>
+
+      {/* ============================================================ */}
+      {/* MODAL: EDIT PROFILE & DELIVERY ADDRESS                       */}
+      {/* ============================================================ */}
+      {editingProfile && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-[560px] bg-white border border-slate-200 rounded-2xl shadow-2xl p-5 sm:p-6 overflow-y-auto max-h-[90vh]">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+              <div>
+                <h3 className="text-base font-bold font-montserrat text-slate-900">
+                  Edit Personal Information
+                </h3>
+                <p className="text-xs text-slate-500 font-open-sans">
+                  Update your contact details and default delivery address.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingProfile(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="space-y-4 text-xs font-open-sans">
+              <div>
+                <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={profileForm.fullName}
+                  onChange={(e) => setProfileForm({ ...profileForm, fullName: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-open-sans focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                  required
+                  placeholder="Your full name"
+                />
+              </div>
+
+              <div>
+                <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                  Mobile Number (Registered ID)
+                </label>
+                <input
+                  type="text"
+                  value={`+91 ${cleanPhone}`}
+                  disabled
+                  className="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-500 text-xs font-montserrat font-medium cursor-not-allowed select-none"
+                />
+              </div>
+
+              <div>
+                <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={profileForm.email}
+                  onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                  placeholder="name@example.com"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-open-sans focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                  Street / Delivery Address
+                </label>
+                <textarea
+                  rows={2}
+                  value={profileForm.shippingAddress}
+                  onChange={(e) => setProfileForm({ ...profileForm, shippingAddress: e.target.value })}
+                  placeholder="House/Flat No., Building Name, Street, Landmark..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-900 text-xs font-open-sans focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-2.5">
+                <div>
+                  <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    value={profileForm.city}
+                    onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-open-sans focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                    placeholder="e.g. Hyderabad"
+                  />
+                </div>
+                <div>
+                  <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    value={profileForm.state}
+                    onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-open-sans focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                    placeholder="e.g. Telangana"
+                  />
+                </div>
+                <div>
+                  <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                    Pincode
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={profileForm.pincode}
+                    onChange={(e) => setProfileForm({ ...profileForm, pincode: e.target.value.replace(/\D/g, "") })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-montserrat font-bold tracking-wider focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                    placeholder="e.g. 500001"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                  Business GSTIN (Optional)
+                </label>
+                <input
+                  type="text"
+                  maxLength={15}
+                  value={profileForm.gstNumber}
+                  onChange={(e) => setProfileForm({ ...profileForm, gstNumber: e.target.value.toUpperCase() })}
+                  placeholder="e.g. 36AAMCA1234F1Z8"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-montserrat uppercase tracking-wider focus:outline-none focus:border-[#0066cc] focus:bg-white"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingProfile(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium text-xs cursor-pointer transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-[#0066cc] hover:bg-[#0052b3] text-white font-semibold text-xs cursor-pointer shadow-xs transition-colors"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modals */}
+      <OrderTrackingModal
+        order={selectedOrderForTracking}
+        isOpen={Boolean(selectedOrderForTracking)}
+        onClose={() => setSelectedOrderForTracking(null)}
+        onFileDispute={(ord) => {
+          setSelectedOrderForDispute(ord);
+          setIsDisputeModalOpen(true);
+        }}
+      />
+
+      <DisputeModal
+        orders={orders}
+        preSelectedOrder={selectedOrderForDispute}
+        customerPhone={user.phone}
+        customerName={user.fullName || "Customer"}
+        isOpen={isDisputeModalOpen}
+        onClose={() => setIsDisputeModalOpen(false)}
+        onDisputeCreated={(newDispute) => {
+          setDisputes((prev) => [newDispute, ...prev]);
+          setActiveTab("disputes");
+        }}
+      />
+
+      <InvoiceModal
+        order={selectedOrderForInvoice}
+        isOpen={Boolean(selectedOrderForInvoice)}
+        onClose={() => setSelectedOrderForInvoice(null)}
+      />
+
+      <WarrantyCardModal
+        order={selectedOrderForWarranty}
+        isOpen={Boolean(selectedOrderForWarranty)}
+        onClose={() => setSelectedOrderForWarranty(null)}
+      />
+
+      <SupportModal
+        orders={orders}
+        customerPhone={user.phone}
+        customerName={user.fullName || "Customer"}
+        isOpen={isSupportModalOpen}
+        onClose={() => setIsSupportModalOpen(false)}
+      />
+    </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-[#0066cc] border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <AccountDashboardContent />
+    </Suspense>
+  );
+}

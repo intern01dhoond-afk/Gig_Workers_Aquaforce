@@ -65,6 +65,27 @@
   animation-play-state: paused;
 }
 
+@keyframes preloader-slide {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(260%);
+    opacity: 0;
+  }
+}
+
+.animate-preloader-slide {
+  animation: preloader-slide 0.85s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 /* Universal Scrollbar Elimination */
 * {
   scrollbar-width: none !important;

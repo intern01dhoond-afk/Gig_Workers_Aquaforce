@@ -1,9 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import {
+  Menu,
+  X,
+  ArrowRight,
+  ChevronDown,
+  Car,
+  Bike,
+  Home,
+  Building2,
+} from "lucide-react";
 import { useOrderModal } from "@/context/OrderModalContext";
+import { useBulkEnquiry } from "@/context/BulkEnquiryContext";
 
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
@@ -11,10 +22,106 @@ const NAV_LINKS = [
   { label: "How It Works", href: "#how-it-works" },
 ];
 
+const CATEGORY_ITEMS = [
+  {
+    name: "Autocare",
+    desc: "Vehicle pressure washing",
+    href: "https://promectools.in/aquaforceforautocare",
+    icon: Car,
+    iconColor: "text-[#38bdf8]",
+    iconBg: "bg-blue-500/20 border-blue-500/30",
+  },
+  {
+    name: "GigWorker",
+    desc: "Delivery & rider partners",
+    href: "/aquaforceforgigworkers",
+    icon: Bike,
+    iconColor: "text-amber-400",
+    iconBg: "bg-amber-500/20 border-amber-500/30",
+    badge: "Current",
+  },
+  {
+    name: "Home Care",
+    desc: "Driveway & domestic cleaning",
+    href: "#",
+    icon: Home,
+    iconColor: "text-emerald-400",
+    iconBg: "bg-emerald-500/20 border-emerald-500/30",
+  },
+  {
+    name: "Corporate & Facility Care",
+    desc: "Industrial & commercial fleets",
+    action: "bulk_modal",
+    icon: Building2,
+    iconColor: "text-purple-400",
+    iconBg: "bg-purple-500/20 border-purple-500/30",
+  },
+];
+
+function ProfileIcon({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <g clipPath="url(#header_profile_clip)">
+        <path
+          d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z"
+          fill="white"
+          fillOpacity="0.1"
+        />
+        <path
+          d="M26.3992 28C24.3992 30.4 21.5992 31.2 16.1992 32.2C9.19922 31.2 7.99922 30.4 5.19922 28C5.19922 24.9072 9.79272 19.2 16.1992 19.2C22.6057 19.2 26.3992 24.9072 26.3992 28Z"
+          fill="white"
+        />
+        <circle cx="15.9992" cy="11.2" r="4.8" fill="white" />
+      </g>
+      <defs>
+        <clipPath id="header_profile_clip">
+          <path
+            d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z"
+            fill="white"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { openModal } = useOrderModal();
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
+  const [mobileNavbarCategoriesOpen, setMobileNavbarCategoriesOpen] = useState(false);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+  const { openModal, verifiedUser, openAccountModal } = useOrderModal();
+  const { openBulkModal } = useBulkEnquiry();
+
+  const handleAccountClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (verifiedUser) {
+      window.location.href = "/aquaforceforgigworkers/account";
+    } else {
+      openAccountModal();
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        categoriesRef.current &&
+        !categoriesRef.current.contains(e.target as Node)
+      ) {
+        setCategoriesOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,9 +132,9 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when mobile menu or categories dropdown is open
   useEffect(() => {
-    if (open) {
+    if (open || mobileNavbarCategoriesOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -35,7 +142,7 @@ export default function Header() {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [open]);
+  }, [open, mobileNavbarCategoriesOpen]);
 
   return (
     <header
@@ -83,10 +190,144 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+
+          {/* Categories Dropdown */}
+          <div
+            ref={categoriesRef}
+            className="relative"
+            onMouseEnter={() => setCategoriesOpen(true)}
+            onMouseLeave={() => setCategoriesOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setCategoriesOpen((v) => !v)}
+              aria-expanded={categoriesOpen}
+              className="flex items-center gap-1.5 text-[14.5px] lg:text-[16px] font-semibold text-white/90 hover:text-white transition-colors tracking-normal drop-shadow-sm hover:drop-shadow cursor-pointer select-none py-1 group"
+            >
+              <span>Categories</span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-200 ${
+                  categoriesOpen ? "rotate-180 text-white" : "text-white/70 group-hover:text-white"
+                }`}
+              />
+            </button>
+
+            {/* Dropdown Menu Popup */}
+            {categoriesOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="w-[290px] bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] p-2 space-y-1">
+                  {CATEGORY_ITEMS.map((item) => {
+                    const Icon = item.icon;
+                    if (item.action === "bulk_modal") {
+                      return (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={() => {
+                            setCategoriesOpen(false);
+                            openBulkModal();
+                          }}
+                          className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left cursor-pointer group/item"
+                        >
+                          <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 border transition-transform group-hover/item:scale-105`}>
+                            <Icon size={16} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="text-[13.5px] font-bold text-white font-montserrat truncate">
+                              {item.name}
+                            </div>
+                            <div className="text-[11px] text-white/60 font-open-sans truncate">
+                              {item.desc}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    }
+
+                    const isExternal = item.href?.startsWith("http");
+                    const linkClassName =
+                      "flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left group/item";
+                    const content = (
+                      <>
+                        <div
+                          className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 border transition-transform group-hover/item:scale-105`}
+                        >
+                          <Icon size={16} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[13.5px] font-bold text-white font-montserrat flex items-center gap-2 truncate">
+                            <span className="truncate">{item.name}</span>
+                            {item.badge && (
+                              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 shrink-0">
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-white/60 font-open-sans truncate">
+                            {item.desc}
+                          </div>
+                        </div>
+                      </>
+                    );
+
+                    if (item.href === "#" || !item.href) {
+                      return (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCategoriesOpen(false);
+                          }}
+                          className={linkClassName}
+                        >
+                          {content}
+                        </button>
+                      );
+                    }
+
+                    if (isExternal) {
+                      return (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setCategoriesOpen(false)}
+                          className={linkClassName}
+                        >
+                          {content}
+                        </a>
+                      );
+                    }
+
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setCategoriesOpen(false)}
+                        className={linkClassName}
+                      >
+                        {content}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </nav>
 
-        {/* Shop Now Action Button */}
-        <div className="hidden md:flex items-center">
+        {/* Shop Now & My Account Action Buttons */}
+        <div className="hidden md:flex items-center gap-3 lg:gap-4">
+          <button
+            onClick={handleAccountClick}
+            title="My Account"
+            aria-label="My Account"
+            className="flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer hover:opacity-90 shrink-0"
+          >
+            <ProfileIcon className="w-8 h-8 sm:w-[34px] sm:h-[34px]" />
+          </button>
+
           <button
             onClick={openModal}
             className="bg-white hover:bg-slate-100 text-[#0f172a] text-xs font-bold tracking-wider uppercase px-5 lg:px-6 py-2 sm:py-2.5 rounded-[6px] shadow-sm transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer font-montserrat"
@@ -95,14 +336,44 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <button
-          className="md:hidden text-white p-2 -mr-1 hover:bg-white/10 rounded-lg focus:outline-none transition-colors cursor-pointer"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile Header Action Buttons */}
+        <div className="md:hidden flex items-center gap-1.5 sm:gap-2">
+          {/* Mobile Categories Button in Navbar */}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileNavbarCategoriesOpen((v) => !v);
+              if (open) setOpen(false);
+            }}
+            className={`flex items-center gap-1 text-[12px] sm:text-[13px] font-semibold px-2.5 py-1 sm:py-1.5 rounded-full border transition-all active:scale-95 cursor-pointer font-montserrat shrink-0 ${
+              mobileNavbarCategoriesOpen
+                ? "bg-white text-black border-white shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+                : "text-white/95 bg-white/10 hover:bg-white/15 border-white/20 backdrop-blur-md"
+            }`}
+            aria-label="Categories menu"
+            aria-expanded={mobileNavbarCategoriesOpen}
+          >
+            <span>Categories</span>
+            <ChevronDown
+              size={13}
+              className={`transition-transform duration-200 ${
+                mobileNavbarCategoriesOpen ? "rotate-180" : "text-white/70"
+              }`}
+            />
+          </button>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            className="text-white p-2 -mr-1 hover:bg-white/10 rounded-lg focus:outline-none transition-colors cursor-pointer"
+            onClick={() => {
+              setOpen((v) => !v);
+              if (mobileNavbarCategoriesOpen) setMobileNavbarCategoriesOpen(false);
+            }}
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Dropdown Menu with Backdrop */}
@@ -128,6 +399,116 @@ export default function Header() {
                   {link.label}
                 </a>
               ))}
+
+              {/* Mobile Categories Accordion */}
+              <div className="border-t border-b border-white/10 py-1.5 my-0.5">
+                <button
+                  type="button"
+                  onClick={() => setMobileCategoriesOpen((v) => !v)}
+                  className="w-full flex items-center justify-between text-[16px] font-semibold text-white/90 hover:text-white py-2 px-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-left"
+                >
+                  <span>Categories</span>
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform duration-200 ${
+                      mobileCategoriesOpen ? "rotate-180 text-white" : "text-white/60"
+                    }`}
+                  />
+                </button>
+
+                {mobileCategoriesOpen && (
+                  <div className="pl-3 pr-1 py-1 space-y-1 animate-in fade-in duration-150">
+                    {CATEGORY_ITEMS.map((item) => {
+                      const Icon = item.icon;
+                      if (item.action === "bulk_modal") {
+                        return (
+                          <button
+                            key={item.name}
+                            type="button"
+                            onClick={() => {
+                              setOpen(false);
+                              openBulkModal();
+                            }}
+                            className="w-full flex items-center gap-2.5 py-2 px-3 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/10 text-left cursor-pointer"
+                          >
+                            <Icon size={15} className={item.iconColor} />
+                            <span>{item.name}</span>
+                          </button>
+                        );
+                      }
+                      const isExternal = item.href?.startsWith("http");
+                      const mobileClass =
+                        "flex items-center gap-2.5 py-2 px-3 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/10";
+                      const mobileContent = (
+                        <>
+                          <Icon size={15} className={item.iconColor} />
+                          <span>{item.name}</span>
+                          {item.badge && (
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 ml-auto">
+                              {item.badge}
+                            </span>
+                          )}
+                        </>
+                      );
+
+                      if (item.href === "#" || !item.href) {
+                        return (
+                          <button
+                            key={item.name}
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setOpen(false);
+                            }}
+                            className={`${mobileClass} text-left w-full cursor-pointer`}
+                          >
+                            {mobileContent}
+                          </button>
+                        );
+                      }
+
+                      if (isExternal) {
+                        return (
+                          <a
+                            key={item.name}
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className={mobileClass}
+                          >
+                            {mobileContent}
+                          </a>
+                        );
+                      }
+
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className={mobileClass}
+                        >
+                          {mobileContent}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={(e) => {
+                  setOpen(false);
+                  handleAccountClick(e);
+                }}
+                className="w-full flex items-center justify-between text-[16px] font-semibold text-[#38bdf8] hover:text-white py-2.5 px-3 rounded-lg hover:bg-white/10 active:bg-white/15 transition-colors cursor-pointer text-left"
+              >
+                <div className="flex items-center gap-2.5">
+                  <ProfileIcon className="w-6 h-6 shrink-0" />
+                  <span>My Account & Orders</span>
+                </div>
+                <ArrowRight size={16} className="text-white/40" />
+              </button>
+
               <button
                 onClick={() => {
                   setOpen(false);
@@ -139,6 +520,139 @@ export default function Header() {
                 <ArrowRight className="w-4 h-4 text-white shrink-0" />
               </button>
             </nav>
+          </div>
+        </>
+      )}
+
+      {/* Mobile Categories Dropdown Menu with Backdrop */}
+      {mobileNavbarCategoriesOpen && (
+        <>
+          <div
+            className="md:hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-40 transition-opacity pointer-events-auto"
+            onClick={() => setMobileNavbarCategoriesOpen(false)}
+          />
+          <div
+            className={`md:hidden fixed left-4 right-4 z-50 bg-[#0c121e]/98 backdrop-blur-xl border border-white/20 p-3 rounded-2xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto max-w-[420px] mx-auto ${
+              scrolled ? "top-[70px] sm:top-[76px]" : "top-[72px] sm:top-[86px]"
+            }`}
+          >
+            <div className="text-[11px] font-bold text-white/50 uppercase tracking-wider px-2 pb-2 font-montserrat border-b border-white/10 mb-1.5 flex items-center justify-between">
+              <span>Categories</span>
+              <button
+                type="button"
+                onClick={() => setMobileNavbarCategoriesOpen(false)}
+                className="text-white/60 hover:text-white p-0.5 rounded cursor-pointer"
+                aria-label="Close categories"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="space-y-1">
+              {CATEGORY_ITEMS.map((item) => {
+                const Icon = item.icon;
+                if (item.action === "bulk_modal") {
+                  return (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={() => {
+                        setMobileNavbarCategoriesOpen(false);
+                        openBulkModal();
+                      }}
+                      className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left cursor-pointer group/item"
+                    >
+                      <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 border transition-transform group-hover/item:scale-105`}>
+                        <Icon size={16} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13.5px] font-bold text-white font-montserrat flex items-center gap-2 truncate">
+                          <span className="truncate">{item.name}</span>
+                        </div>
+                        <div className="text-[11px] text-white/60 font-open-sans truncate">
+                          {item.desc}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                }
+
+                if (item.href === "#" || !item.href) {
+                  return (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setMobileNavbarCategoriesOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left cursor-pointer group/item"
+                    >
+                      <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 border transition-transform group-hover/item:scale-105`}>
+                        <Icon size={16} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13.5px] font-bold text-white font-montserrat flex items-center gap-2 truncate">
+                          <span className="truncate">{item.name}</span>
+                        </div>
+                        <div className="text-[11px] text-white/60 font-open-sans truncate">
+                          {item.desc}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                }
+
+                const isExternal = item.href?.startsWith("http");
+                if (isExternal) {
+                  return (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setMobileNavbarCategoriesOpen(false)}
+                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left group/item cursor-pointer"
+                    >
+                      <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 border transition-transform group-hover/item:scale-105`}>
+                        <Icon size={16} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13.5px] font-bold text-white font-montserrat flex items-center gap-2 truncate">
+                          <span className="truncate">{item.name}</span>
+                        </div>
+                        <div className="text-[11px] text-white/60 font-open-sans truncate">
+                          {item.desc}
+                        </div>
+                      </div>
+                    </a>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileNavbarCategoriesOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left group/item cursor-pointer"
+                  >
+                    <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0 border transition-transform group-hover/item:scale-105`}>
+                      <Icon size={16} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[13.5px] font-bold text-white font-montserrat flex items-center gap-2 truncate">
+                        <span className="truncate">{item.name}</span>
+                        {item.badge && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 shrink-0">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-white/60 font-open-sans truncate">
+                        {item.desc}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </>
       )}
