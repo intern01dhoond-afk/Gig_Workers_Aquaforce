@@ -134,12 +134,13 @@ export default function Hero() {
                 <span>SHOP NOW</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
-              <a
-                href="#features"
+              <button
+                type="button"
+                onClick={openBulkModal}
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                EXPLORE FEATURES
-              </a>
+                ENQUIRE BULK
+              </button>
             </div>
           </div>
         </div>
@@ -180,12 +181,13 @@ export default function Hero() {
                   <span>SHOP NOW</span>
                   <ArrowRight className="w-4 h-4 text-white" />
                 </button>
-                <a
-                  href="#features"
+                <button
+                  type="button"
+                  onClick={openBulkModal}
                   className="inline-flex items-center border border-white/80 hover:border-white text-white hover:bg-white/15 bg-black/40 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
                 >
-                  EXPLORE FEATURES
-                </a>
+                  Enquire Bulk Quantity
+                </button>
               </div>
             </div>
           </div>
@@ -273,12 +275,13 @@ export default function Hero() {
               >
                 <span>SHOP NOW +</span>
               </button>
-              <a
-                href="#features"
+              <button
+                type="button"
+                onClick={openBulkModal}
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                EXPLORE FEATURES
-              </a>
+                ENQUIRE BULK
+              </button>
             </div>
 
             {/* Micro Footer Note */}
@@ -329,12 +332,13 @@ export default function Hero() {
               >
                 <span>SHOP NOW +</span>
               </button>
-              <a
-                href="#features"
+              <button
+                type="button"
+                onClick={openBulkModal}
                 className="inline-flex items-center border border-white/60 hover:border-white text-white hover:bg-white/15 bg-black/20 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3.5 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
               >
-                EXPLORE FEATURES
-              </a>
+                Enquire Bulk Quantity
+              </button>
             </div>
 
             {/* Micro Footer Note */}
@@ -396,7 +400,7 @@ export default function Hero() {
               EARN MORE.
             </h2>
             <p className="mt-1.5 text-white/90 font-open-sans text-[12.5px] xs:text-[13px] leading-relaxed drop-shadow">
-              One complete portable cleaning system for Car, Bike, Home, Office & Society cleaning services.
+              One complete portable cleaning system for Car, Bike, Home, Office & Industrial cleaning services.
             </p>
 
             {/* Pricing & Discount */}
@@ -423,12 +427,13 @@ export default function Hero() {
                 <span>SHOP NOW</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
-              <a
-                href="#features"
+              <button
+                type="button"
+                onClick={openBulkModal}
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                EXPLORE FEATURES
-              </a>
+                ENQUIRE BULK
+              </button>
             </div>
           </div>
         </div>
@@ -449,7 +454,7 @@ export default function Hero() {
 
           {/* Subtitle */}
           <p className="mt-3 sm:mt-4 text-white/90 font-open-sans text-[14px] sm:text-[15.5px] lg:text-[16.5px] leading-relaxed max-w-xl font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-            One complete portable cleaning system for Car, Bike, Home, Office & Society cleaning services.
+            One complete portable cleaning system for Car, Bike, Home, Office & Industrial cleaning services.
           </p>
 
           {/* Pricing Line */}
@@ -474,12 +479,13 @@ export default function Hero() {
               <span>SHOP NOW</span>
               <ArrowRight className="w-4 h-4 text-white" />
             </button>
-            <a
-              href="#features"
+            <button
+              type="button"
+              onClick={openBulkModal}
               className="inline-flex items-center border border-white/80 hover:border-white text-white hover:bg-white/15 bg-black/40 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
             >
-              EXPLORE FEATURES
-            </a>
+              Enquire Bulk Quantity
+            </button>
           </div>
         </div>
       </div>
@@ -554,12 +560,13 @@ export default function Hero() {
                 <span>SHOP NOW</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
-              <a
-                href="#features"
+              <button
+                type="button"
+                onClick={openBulkModal}
                 className="w-full inline-flex items-center justify-center border border-white/70 bg-black/25 backdrop-blur-xs active:border-white text-white active:bg-white/15 font-open-sans text-[11.5px] font-bold tracking-wider uppercase py-3 rounded-[6px] transition-all active:scale-[0.98] drop-shadow text-center cursor-pointer"
               >
-                EXPLORE FEATURES
-              </a>
+                ENQUIRE BULK
+              </button>
             </div>
           </div>
         </div>
@@ -600,12 +607,13 @@ export default function Hero() {
                   <span>SHOP NOW</span>
                   <ArrowRight className="w-4 h-4 text-white" />
                 </button>
-                <a
-                  href="#features"
+                <button
+                  type="button"
+                  onClick={openBulkModal}
                   className="inline-flex items-center border border-white/80 hover:border-white text-white hover:bg-white/15 bg-black/40 backdrop-blur-xs font-open-sans text-xs sm:text-sm font-black tracking-wider uppercase px-6 sm:px-7 py-3 rounded-[4px] transition-all active:scale-[0.98] drop-shadow cursor-pointer"
                 >
-                  EXPLORE FEATURES
-                </a>
+                  Enquire Bulk Quantity
+                </button>
               </div>
             </div>
           </div>

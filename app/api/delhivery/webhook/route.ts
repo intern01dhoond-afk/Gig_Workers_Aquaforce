@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { orderStore } from "@/lib/orderStore";
 
 export async function POST(req: Request) {
   try {
@@ -8,10 +9,41 @@ export async function POST(req: Request) {
     const shipment = payload?.Shipment || payload;
     const awb = shipment?.AWB || shipment?.waybill || shipment?.wbn;
     const orderId = shipment?.Order || shipment?.order_id;
-    const status = shipment?.Status?.Status || shipment?.status || "UPDATED";
-    const statusType = shipment?.Status?.StatusType || "";
+    const status = (shipment?.Status?.Status || shipment?.status || "").toString();
+    const statusType = (shipment?.Status?.StatusType || "").toString();
 
     console.log(`Delhivery Status Update -> AWB: ${awb}, Order: ${orderId}, Status: ${status} (${statusType})`);
+
+    if (orderId || awb) {
+      let targetOrder = orderId ? await orderStore.getOrderById(orderId) : null;
+      if (!targetOrder && awb) {
+        const all = await orderStore.getAllOrders();
+        targetOrder = all.find((o) => o.fulfillment?.waybill === awb) || null;
+      }
+
+      if (targetOrder) {
+        const lower = status.toLowerCase();
+        let newOrderStatus = targetOrder.orderStatus;
+        if (lower.includes("delivered") || statusType.toLowerCase() === "dl") {
+          newOrderStatus = "delivered";
+        } else if (
+          lower.includes("transit") ||
+          lower.includes("dispatched") ||
+          lower.includes("out for delivery") ||
+          statusType.toLowerCase() === "ud"
+        ) {
+          newOrderStatus = "shipped";
+        }
+
+        await orderStore.updateOrder(targetOrder.id, {
+          orderStatus: newOrderStatus,
+          fulfillment: {
+            ...targetOrder.fulfillment,
+            status: newOrderStatus === "delivered" ? "completed" : "processing",
+          },
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Phone, MessageSquare, Mail, Clock, CheckCircle2, ChevronDown, Wrench, ShieldCheck, Send } from "lucide-react";
 import { PromecOrder } from "@/lib/orderStore";
 import { TicketCategory } from "@/lib/ticketStore";
@@ -12,6 +12,7 @@ interface SupportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onTicketCreated?: (ticket: any) => void;
+  isCommercial?: boolean;
 }
 
 export default function SupportModal({
@@ -21,6 +22,7 @@ export default function SupportModal({
   isOpen,
   onClose,
   onTicketCreated,
+  isCommercial = false,
 }: SupportModalProps) {
   const [activeTab, setActiveTab] = useState<"quick" | "callback" | "faq">("quick");
   const [category, setCategory] = useState<TicketCategory>("callback_request");
@@ -31,13 +33,19 @@ export default function SupportModal({
   const [submitting, setSubmitting] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState("");
 
+  useEffect(() => {
+    if (!isCommercial && activeTab === "callback") {
+      setActiveTab("quick");
+    }
+  }, [isCommercial, activeTab]);
+
   if (!isOpen) return null;
 
   const latestOrder = orders.find((o) => o.id === selectedOrderId) || orders[0];
 
   const handleWhatsApp = () => {
     const text = encodeURIComponent(
-      `Hello AMEC Aquaforce Support Team,\nMy Name: ${customerName}\nPhone: ${customerPhone}\n${
+      `Hello PROMEC Aquaforce Support Team,\nMy Name: ${customerName}\nPhone: ${customerPhone}\n${
         latestOrder ? `Order ID: ${latestOrder.id}\n` : ""
       }I need assistance with my Aquaforce Cordless Washer.`
     );
@@ -69,7 +77,7 @@ export default function SupportModal({
       const data = await res.json();
       if (data.success) {
         setSubmittedMessage(
-          `Technician callback requested (#${data.ticketId}). An AMEC specialist will call you on +91 ${customerPhone} within the requested time.`
+          `Technician callback requested (#${data.ticketId}). A PROMEC specialist will call you on +91 ${customerPhone} within the requested time.`
         );
         if (onTicketCreated) onTicketCreated(data.ticket);
       }
@@ -118,16 +126,18 @@ export default function SupportModal({
           >
             Fast Channels
           </button>
-          <button
-            onClick={() => { setActiveTab("callback"); setSubmittedMessage(""); }}
-            className={`pb-2.5 px-3 border-b-2 transition-all cursor-pointer ${
-              activeTab === "callback"
-                ? "border-[#0066cc] text-[#0066cc] font-bold"
-                : "border-transparent text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            Request Technician Call
-          </button>
+          {isCommercial && (
+            <button
+              onClick={() => { setActiveTab("callback"); setSubmittedMessage(""); }}
+              className={`pb-2.5 px-3 border-b-2 transition-all cursor-pointer ${
+                activeTab === "callback"
+                  ? "border-[#0066cc] text-[#0066cc] font-bold"
+                  : "border-transparent text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Request Technician Call
+            </button>
+          )}
           <button
             onClick={() => { setActiveTab("faq"); setSubmittedMessage(""); }}
             className={`pb-2.5 px-3 border-b-2 transition-all cursor-pointer ${
@@ -144,17 +154,28 @@ export default function SupportModal({
         <div className="p-5 sm:p-6 overflow-y-auto space-y-5 text-sm bg-white font-open-sans">
           {activeTab === "quick" && (
             <div className="space-y-4">
-              {/* WhatsApp VIP Card */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 via-emerald-50/50 to-white border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
+              {/* WhatsApp Quick Card */}
+              <div className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs ${
+                isCommercial
+                  ? "bg-gradient-to-r from-amber-500/10 via-amber-50/50 to-white border-amber-200"
+                  : "bg-gradient-to-r from-emerald-50 via-emerald-50/50 to-white border-emerald-200"
+              }`}>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                    <h4 className="text-sm font-bold text-slate-900 font-montserrat">
-                      WhatsApp VIP Concierge
+                    <span className={`w-2.5 h-2.5 rounded-full animate-ping ${isCommercial ? "bg-amber-500" : "bg-emerald-500"}`} />
+                    <h4 className="text-sm font-bold text-slate-900 font-montserrat flex items-center gap-1.5">
+                      <span>{isCommercial ? "WhatsApp VIP Concierge" : "WhatsApp Support Desk"}</span>
+                      {isCommercial && (
+                        <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                          VIP Priority
+                        </span>
+                      )}
                     </h4>
                   </div>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed font-open-sans">
-                    Chat directly with an AMEC technical expert. Average response under 3 minutes.
+                    {isCommercial
+                      ? "Direct priority channel with Senior Engineers for commercial partners. Fast response under 2 minutes."
+                      : "Chat directly with PROMEC customer care team. Average response under 3 minutes."}
                   </p>
                 </div>
                 <button
@@ -167,53 +188,58 @@ export default function SupportModal({
                 </button>
               </div>
 
-              {/* Direct Helpline */}
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900 font-montserrat">
-                    Direct Voice Helpline
-                  </h4>
-                  <p className="text-xs text-slate-500 mt-0.5 font-open-sans">
-                    Mon - Sat (9:30 AM – 7:30 PM IST)
-                  </p>
-                  <span className="text-base font-bold font-montserrat text-[#0066cc] mt-1 block tracking-wide">
-                    +91 7387588963
-                  </span>
-                </div>
-                <a
-                  href="tel:+917387588963"
-                  className="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 font-montserrat border border-slate-200 shadow-2xs"
-                >
-                  <Phone size={15} />
-                  <span>Call Support Now</span>
-                </a>
-              </div>
+              {/* Direct Helpline & Official Care Email: Commercial Only */}
+              {isCommercial && (
+                <>
+                  {/* Direct Helpline */}
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 font-montserrat">
+                        Direct Voice Helpline
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-0.5 font-open-sans">
+                        Mon - Sat (9:30 AM – 7:30 PM IST)
+                      </p>
+                      <span className="text-base font-bold font-montserrat text-[#0066cc] mt-1 block tracking-wide">
+                        +91 7387588963
+                      </span>
+                    </div>
+                    <a
+                      href="tel:+917387588963"
+                      className="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 font-montserrat border border-slate-200 shadow-2xs"
+                    >
+                      <Phone size={15} />
+                      <span>Call Support Now</span>
+                    </a>
+                  </div>
 
-              {/* Direct Email */}
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900 font-montserrat">
-                    Official Care Email
-                  </h4>
-                  <p className="text-xs text-slate-500 mt-0.5 font-open-sans">
-                    For corporate, GST invoicing, or detailed claims
-                  </p>
-                  <span className="text-xs font-montserrat font-medium text-slate-700 mt-1 block">
-                    promec.india@gmail.com
-                  </span>
-                </div>
-                <a
-                  href={`mailto:promec.india@gmail.com?subject=AMEC Care Support Request - Phone: ${customerPhone}`}
-                  className="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 font-montserrat border border-slate-200 shadow-2xs"
-                >
-                  <Mail size={15} />
-                  <span>Send Email</span>
-                </a>
-              </div>
+                  {/* Direct Email */}
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 font-montserrat">
+                        Official Care Email
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-0.5 font-open-sans">
+                        For corporate, GST invoicing, or detailed claims
+                      </p>
+                      <span className="text-xs font-montserrat font-medium text-slate-700 mt-1 block">
+                        promec.india@gmail.com
+                      </span>
+                    </div>
+                    <a
+                      href={`mailto:promec.india@gmail.com?subject=PROMEC Care Support Request - Phone: ${customerPhone}`}
+                      className="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 font-montserrat border border-slate-200 shadow-2xs"
+                    >
+                      <Mail size={15} />
+                      <span>Send Email</span>
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
-          {activeTab === "callback" && (
+          {activeTab === "callback" && isCommercial && (
             <div>
               {submittedMessage ? (
                 <div className="text-center py-6 space-y-4">

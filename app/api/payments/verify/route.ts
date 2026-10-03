@@ -3,6 +3,7 @@ import crypto from "crypto";
 import Razorpay from "razorpay";
 import { orderStore } from "@/lib/orderStore";
 import { executeOrderFulfillment } from "@/lib/fulfillment";
+import { createAndIssueRazorpayInvoice } from "@/lib/razorpayInvoice";
 
 export async function POST(req: Request) {
   try {
@@ -161,6 +162,13 @@ export async function POST(req: Request) {
               },
             });
 
+            // Auto-generate official Razorpay GST Tax Invoice
+            try {
+              await createAndIssueRazorpayInvoice(order, paymentDetails.id);
+            } catch (invErr) {
+              console.warn("[Payment Verify] Razorpay invoice creation note:", invErr);
+            }
+
             const fulfillmentResult = await executeOrderFulfillment(order.id);
             return NextResponse.json({
               success: true,
@@ -215,7 +223,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Double-check with Razorpay API
+    // 3. Double-check with Razorpay API (Contract Requirement)
     let paymentDetails: any;
     try {
       paymentDetails = await razorpay.payments.fetch(razorpayPaymentId);
@@ -277,7 +285,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // 4. Update Promec Order State
+    // 4. Update Promec Order State (including subvention metrics if No-Cost EMI offer was applied)
+    const discountInPaise = Number(paymentDetails?.discount || 0);
+    const discountInINR = Math.round(discountInPaise / 100);
+    const grossAmountInINR = Math.round(order.payment.amountRequiredInPaise / 100);
+    const netSettlementInINR = grossAmountInINR - discountInINR;
+
     await orderStore.updateOrder(order.id, {
       orderStatus: "confirmed",
       payment: {
@@ -288,8 +301,22 @@ export async function POST(req: Request) {
         razorpaySignature,
         amountPaidInPaise: order.payment.amountRequiredInPaise,
         capturedAt: new Date().toISOString(),
+        ...(discountInINR > 0
+          ? {
+              subventionDiscountInINR: discountInINR,
+              netSettlementInINR: netSettlementInINR,
+              isNoCostEmi: true,
+            }
+          : {}),
       },
     });
+
+    // Auto-generate official Razorpay GST Tax Invoice
+    try {
+      await createAndIssueRazorpayInvoice(order, razorpayPaymentId);
+    } catch (invErr) {
+      console.warn("[Payment Verify] Razorpay invoice creation note:", invErr);
+    }
 
     // 5. Run Idempotent Fulfillment Pipeline
     const fulfillmentResult = await executeOrderFulfillment(order.id);

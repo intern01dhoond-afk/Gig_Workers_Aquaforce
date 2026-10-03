@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { orderStore } from "@/lib/orderStore";
 
 export async function POST(req: Request) {
   try {
@@ -13,12 +14,41 @@ export async function POST(req: Request) {
 
     const orderId = payload?.order_id || payload?.channel_order_id;
     const awb = payload?.awb || payload?.awb_code;
-    const currentStatus = payload?.current_status || payload?.status;
+    const currentStatus = (payload?.current_status || payload?.status || "").toString();
 
     if (orderId || awb) {
       console.log(
         `Shiprocket Webhook Event -> Order: ${orderId}, AWB: ${awb}, Status: ${currentStatus}`
       );
+
+      let targetOrder = orderId ? await orderStore.getOrderById(orderId) : null;
+      if (!targetOrder && awb) {
+        const all = await orderStore.getAllOrders();
+        targetOrder = all.find((o) => o.fulfillment?.waybill === awb) || null;
+      }
+
+      if (targetOrder) {
+        const lower = currentStatus.toLowerCase();
+        let newOrderStatus = targetOrder.orderStatus;
+        if (lower.includes("delivered")) {
+          newOrderStatus = "delivered";
+        } else if (
+          lower.includes("transit") ||
+          lower.includes("shipped") ||
+          lower.includes("out for delivery") ||
+          lower.includes("pickup")
+        ) {
+          newOrderStatus = "shipped";
+        }
+
+        await orderStore.updateOrder(targetOrder.id, {
+          orderStatus: newOrderStatus,
+          fulfillment: {
+            ...targetOrder.fulfillment,
+            status: newOrderStatus === "delivered" ? "completed" : "processing",
+          },
+        });
+      }
     }
 
     return NextResponse.json({

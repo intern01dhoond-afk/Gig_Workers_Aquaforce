@@ -26,6 +26,8 @@ export interface PromecOrder {
     pincode: string;
     altPhone?: string;
     gstNumber?: string;
+    customerType?: "retail" | "commercial";
+    companyName?: string;
   };
 
   items: Array<{
@@ -58,6 +60,8 @@ export interface PromecOrder {
     razorpayOrderId?: string;
     razorpayPaymentId?: string;
     razorpaySignature?: string;
+    razorpayInvoiceId?: string;
+    invoiceUrl?: string;
     qrCodeId?: string;
     amountRequiredInPaise: number;
     amountPaidInPaise: number;

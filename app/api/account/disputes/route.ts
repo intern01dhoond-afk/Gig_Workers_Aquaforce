@@ -69,6 +69,21 @@ export async function POST(req: Request) {
       );
     }
 
+    const unboxingVideo = (body.unboxingVideo || body.verificationProof?.unboxingVideo || "").trim();
+    const testingVideo = (body.testingVideo || body.verificationProof?.testingVideo || "").trim();
+    const customerReview = (body.customerReview || body.verificationProof?.customerReview || "").trim();
+
+    if (!unboxingVideo || !testingVideo || !customerReview) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Warranty claims & replacements strictly require all 3 proofs: 1. Unboxing video of the washer system, 2. Testing video of washer system along with vacuum, and 3. Customer review & feedback.",
+        },
+        { status: 400 }
+      );
+    }
+
     const cleanPhone = phone.replace(/\D/g, "").slice(-10);
     const order = await orderStore.getOrderById(orderId);
 
@@ -115,12 +130,17 @@ export async function POST(req: Request) {
         color: primaryItem.color,
       },
       attachmentNames: Array.isArray(attachmentNames) ? attachmentNames : [],
+      verificationProof: {
+        unboxingVideo,
+        testingVideo,
+        customerReview,
+      },
       status: "submitted",
       timeline: [
         {
           timestamp: now,
           status: "submitted",
-          note: "Your claim has been registered. AMEC Quality Engineering team will review details within 24 business hours.",
+          note: "Your claim has been registered. PROMEC Quality Engineering team will review details within 24 business hours.",
           author: "PROMEC Automated Care System",
         },
       ],

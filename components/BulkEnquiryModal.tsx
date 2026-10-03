@@ -10,12 +10,20 @@ import {
 
 interface BulkEnquiryModalProps {
   isOpen: boolean;
+  initialOptions?: {
+    category?: string;
+    notes?: string;
+  };
   onClose: () => void;
 }
 
 const QUANTITY_PRESETS = ["5-10", "11-25", "26-50", "51-100", "100+"];
 
-export default function BulkEnquiryModal({ isOpen, onClose }: BulkEnquiryModalProps) {
+export default function BulkEnquiryModal({
+  isOpen,
+  initialOptions,
+  onClose,
+}: BulkEnquiryModalProps) {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -26,6 +34,16 @@ export default function BulkEnquiryModal({ isOpen, onClose }: BulkEnquiryModalPr
     notes: "",
     agreedToTerms: true,
   });
+
+  // Pre-fill notes when opened with category or initialOptions
+  useEffect(() => {
+    if (isOpen && initialOptions?.notes) {
+      setFormData((prev) => ({
+        ...prev,
+        notes: initialOptions.notes || prev.notes,
+      }));
+    }
+  }, [isOpen, initialOptions]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -183,6 +201,14 @@ export default function BulkEnquiryModal({ isOpen, onClose }: BulkEnquiryModalPr
         isNavigatingBackRef.current = false;
       }, 100);
     }
+    if (typeof window !== "undefined") {
+      const search = window.location.search;
+      const hash = window.location.hash;
+      if (search.includes("enquiry=") || search.includes("category=") || hash.includes("bulk")) {
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, "", cleanUrl);
+      }
+    }
     setIsSubmitted(false);
     setErrorMsg("");
     setFormData({
@@ -323,10 +349,15 @@ export default function BulkEnquiryModal({ isOpen, onClose }: BulkEnquiryModalPr
             {/* Clean White Card Form (Matches Screenshot) */}
             <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
             {/* Title Bar */}
-            <div className="pb-1 border-b border-slate-100">
+            <div className="pb-1 border-b border-slate-100 flex items-center justify-between gap-2">
               <h2 className="text-base sm:text-lg font-bold font-montserrat text-slate-900 tracking-tight">
                 Bulk Quantity Enquiry
               </h2>
+              {initialOptions?.category && (
+                <span className="text-[11px] font-bold font-montserrat px-2.5 py-0.5 rounded-full bg-blue-50 text-[#005DA6] border border-blue-200 shrink-0">
+                  {initialOptions.category}
+                </span>
+              )}
             </div>
 
             {errorMsg && (
@@ -477,7 +508,7 @@ export default function BulkEnquiryModal({ isOpen, onClose }: BulkEnquiryModalPr
               </span>
             </label>
 
-            {/* Big Blue Submit Button (Matches SHOP NOW button in screenshot) */}
+            {/* Big Blue Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}

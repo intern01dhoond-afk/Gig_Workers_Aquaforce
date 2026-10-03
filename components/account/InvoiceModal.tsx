@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Printer, Download, CheckCircle2 } from "lucide-react";
+import { X, Printer, Download, CheckCircle2, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { PromecOrder } from "@/lib/orderStore";
 
@@ -48,6 +48,17 @@ export default function InvoiceModal({ order, isOpen, onClose }: InvoiceModalPro
             </span>
           </div>
           <div className="flex items-center gap-2">
+            {order.payment.invoiceUrl && (
+              <a
+                href={order.payment.invoiceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold font-montserrat rounded-lg transition-colors cursor-pointer shadow-2xs"
+              >
+                <ExternalLink size={13} />
+                <span>Razorpay GST Invoice</span>
+              </a>
+            )}
             <button
               onClick={handlePrint}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0066cc] hover:bg-[#0052b3] text-white text-xs font-bold font-montserrat rounded-lg transition-colors cursor-pointer"
@@ -93,6 +104,11 @@ export default function InvoiceModal({ order, isOpen, onClose }: InvoiceModalPro
               <p className="text-xs font-montserrat mt-0.5 text-slate-800">
                 <strong>Invoice No:</strong> {invoiceNumber}
               </p>
+              {order.payment.razorpayInvoiceId && (
+                <p className="text-[11px] font-montserrat text-emerald-700 font-semibold">
+                  <strong>Razorpay Invoice:</strong> {order.payment.razorpayInvoiceId}
+                </p>
+              )}
               <p className="text-xs text-slate-500 font-open-sans">
                 <strong>Date:</strong> {invoiceDate}
               </p>

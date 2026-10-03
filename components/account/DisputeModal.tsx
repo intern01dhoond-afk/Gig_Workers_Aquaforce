@@ -101,6 +101,9 @@ export default function DisputeModal({
   const [reason, setReason] = useState<DisputeReason>("DAMAGED_IN_TRANSIT");
   const [resolution, setResolution] = useState<PreferredResolution>("express_replacement");
   const [description, setDescription] = useState("");
+  const [unboxingVideo, setUnboxingVideo] = useState("");
+  const [testingVideo, setTestingVideo] = useState("");
+  const [customerReview, setCustomerReview] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [createdCase, setCreatedCase] = useState<any>(null);
@@ -113,6 +116,18 @@ export default function DisputeModal({
     e.preventDefault();
     if (!description.trim()) {
       setError("Please describe the issue in detail so our team can resolve it immediately.");
+      return;
+    }
+    if (!unboxingVideo.trim()) {
+      setError("Mandatory Requirement 1 missing: Please provide the Unboxing Video of the washer system.");
+      return;
+    }
+    if (!testingVideo.trim()) {
+      setError("Mandatory Requirement 2 missing: Please provide the Testing Video of the washer system along with vacuum.");
+      return;
+    }
+    if (!customerReview.trim()) {
+      setError("Mandatory Requirement 3 missing: Please provide your Customer Review & Feedback comment or video link.");
       return;
     }
     setError("");
@@ -130,6 +145,9 @@ export default function DisputeModal({
           reason,
           preferredResolution: resolution,
           description,
+          unboxingVideo: unboxingVideo.trim(),
+          testingVideo: testingVideo.trim(),
+          customerReview: customerReview.trim(),
         }),
       });
 
@@ -168,7 +186,7 @@ export default function DisputeModal({
                 File a Replacement / Dispute
               </h3>
               <p className="text-xs text-slate-500 font-open-sans">
-                AMEC 1-Year Pan-India Warranty & 7-Day Hassle-Free Replacement
+                PROMEC 1-Year Pan-India Warranty & 7-Day Hassle-Free Replacement
               </p>
             </div>
           </div>
@@ -370,10 +388,10 @@ export default function DisputeModal({
             {/* 4. Description */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 font-montserrat">
-                4. Problem Details & Notes
+                4. Problem Details &amp; Notes
               </label>
               <textarea
-                rows={3}
+                rows={2}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Explain what happened (e.g. package arrived damaged, pump won't build pressure, or missing lance). Any details help us expedite your replacement."
@@ -382,11 +400,82 @@ export default function DisputeModal({
               />
             </div>
 
+            {/* 5. Mandatory Verification Checklist (Required for Claims & Replacements) */}
+            <div className="p-3.5 sm:p-4 bg-amber-50/70 border border-amber-200/90 rounded-2xl space-y-3.5">
+              <div className="flex items-center gap-2">
+                <ShieldAlert size={17} className="text-amber-700 shrink-0" />
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-amber-950 font-montserrat">
+                    5. Mandatory Proofs for Claim &amp; Replacement
+                  </h4>
+                  <p className="text-[11px] text-amber-800 font-open-sans">
+                    All 3 proofs below are strictly required to approve warranty claims and replacements:
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 text-xs font-open-sans">
+                {/* 1. Unboxing Video */}
+                <div className="p-3 bg-white rounded-xl border border-amber-200/70 space-y-1.5 shadow-2xs">
+                  <label className="font-bold text-slate-900 font-montserrat flex items-center justify-between text-xs">
+                    <span>1. Unboxing Video of Washer System *</span>
+                    <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-bold uppercase">Mandatory</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Paste Google Drive / YouTube link, or type 'Sent via WhatsApp to 7387588963'"
+                    value={unboxingVideo}
+                    onChange={(e) => setUnboxingVideo(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#0066cc] rounded-lg p-2.5 text-xs text-slate-900 outline-none transition-all font-open-sans"
+                  />
+                  <p className="text-[10.5px] text-slate-500">
+                    Must clearly capture box unsealing and the machine + all accessories inside.
+                  </p>
+                </div>
+
+                {/* 2. Testing Video with Vacuum */}
+                <div className="p-3 bg-white rounded-xl border border-amber-200/70 space-y-1.5 shadow-2xs">
+                  <label className="font-bold text-slate-900 font-montserrat flex items-center justify-between text-xs">
+                    <span>2. Testing Video of Washer System Along with Vacuum *</span>
+                    <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-bold uppercase">Mandatory</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Paste video link showing pressure output and vacuum in operation"
+                    value={testingVideo}
+                    onChange={(e) => setTestingVideo(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#0066cc] rounded-lg p-2.5 text-xs text-slate-900 outline-none transition-all font-open-sans"
+                  />
+                  <p className="text-[10.5px] text-slate-500">
+                    Demonstrate the high pressure spray output and the vacuum suction unit running.
+                  </p>
+                </div>
+
+                {/* 3. Customer Review & Feedback */}
+                <div className="p-3 bg-white rounded-xl border border-amber-200/70 space-y-1.5 shadow-2xs">
+                  <label className="font-bold text-slate-900 font-montserrat flex items-center justify-between text-xs">
+                    <span>3. Customer Review &amp; Feedback (Comment or Video Link) *</span>
+                    <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-bold uppercase">Mandatory</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    required
+                    placeholder="Share your authentic review and feedback regarding the product performance..."
+                    value={customerReview}
+                    onChange={(e) => setCustomerReview(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#0066cc] rounded-lg p-2.5 text-xs text-slate-900 outline-none transition-all font-open-sans leading-relaxed"
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Quality Promise Note */}
             <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs text-blue-900 flex items-start gap-2.5 font-open-sans">
               <ShieldAlert size={16} className="text-[#0066cc] shrink-0 mt-0.5" />
               <span>
-                <strong>Zero Delay Policy:</strong> Under AMEC India Warranty, genuine replacement parts or replacement units are approved directly without courier return friction.
+                <strong>Zero Delay Policy:</strong> Under PROMEC India Warranty, genuine replacement parts or replacement units are approved directly without courier return friction.
               </span>
             </div>
 

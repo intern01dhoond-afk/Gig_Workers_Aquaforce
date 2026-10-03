@@ -1,0 +1,26 @@
+[
+  {
+    "id": "TCK-406661-Q6S",
+    "createdAt": "2026-10-02T06:26:46.661Z",
+    "updatedAt": "2026-10-02T06:26:46.661Z",
+    "customerPhone": "7204948579",
+    "customerName": "Hemanth",
+    "orderId": "PROMEC-ORD-1790876188846-VOY4",
+    "category": "callback_request",
+    "categoryLabel": "Direct Technician Callback",
+    "subject": "i",
+    "priority": "high",
+    "status": "open",
+    "callbackRequested": true,
+    "preferredCallbackTime": "Immediate (Within 30 mins)",
+    "messages": [
+      {
+        "id": "MSG-1790922406661",
+        "sender": "customer",
+        "senderName": "Hemanth",
+        "text": "k",
+        "timestamp": "2026-10-02T06:26:46.661Z"
+      }
+    ]
+  }
+]

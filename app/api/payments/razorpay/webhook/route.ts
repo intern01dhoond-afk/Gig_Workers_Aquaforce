@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { orderStore } from "@/lib/orderStore";
 import { executeOrderFulfillment } from "@/lib/fulfillment";
+import { createAndIssueRazorpayInvoice } from "@/lib/razorpayInvoice";
 
 export async function POST(req: Request) {
   try {
@@ -101,6 +102,12 @@ export async function POST(req: Request) {
         const payId = paymentEntity?.id || order.payment.razorpayPaymentId;
         const method = paymentEntity?.method?.toUpperCase();
 
+        // Extract subvention discount and net settlement if No-Cost EMI offer was applied
+        const discountInPaise = Number(paymentEntity?.discount || 0);
+        const discountInINR = Math.round(discountInPaise / 100);
+        const grossAmountInINR = Math.round(order.payment.amountRequiredInPaise / 100);
+        const netSettlementInINR = grossAmountInINR - discountInINR;
+
         await orderStore.updateOrder(order.id, {
           orderStatus: "confirmed",
           payment: {
@@ -110,8 +117,22 @@ export async function POST(req: Request) {
             razorpayPaymentId: payId,
             amountPaidInPaise: order.payment.amountRequiredInPaise,
             capturedAt: new Date().toISOString(),
+            ...(discountInINR > 0
+              ? {
+                  subventionDiscountInINR: discountInINR,
+                  netSettlementInINR: netSettlementInINR,
+                  isNoCostEmi: true,
+                }
+              : {}),
           },
         });
+
+        // Auto-generate official Razorpay GST Tax Invoice
+        try {
+          await createAndIssueRazorpayInvoice(order, payId);
+        } catch (invoiceErr) {
+          console.error("[Razorpay Webhook] Auto invoice generation note:", invoiceErr);
+        }
 
         // Trigger fulfillment idempotently (mutex prevents double execution if /verify already ran)
         await executeOrderFulfillment(order.id);

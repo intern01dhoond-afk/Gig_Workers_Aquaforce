@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -36,6 +36,7 @@ import {
   Lock,
   Headphones,
   CheckCircle,
+  Crown,
 } from "lucide-react";
 import { PromecOrder } from "@/lib/orderStore";
 import dynamic from "next/dynamic";
@@ -46,7 +47,6 @@ const OrderTrackingModal = dynamic(() => import("@/components/account/OrderTrack
 const DisputeModal = dynamic(() => import("@/components/account/DisputeModal"), { ssr: false });
 const InvoiceModal = dynamic(() => import("@/components/account/InvoiceModal"), { ssr: false });
 const SupportModal = dynamic(() => import("@/components/account/SupportModal"), { ssr: false });
-const WarrantyCardModal = dynamic(() => import("@/components/account/WarrantyCardModal"), { ssr: false });
 
 type TabType = "orders" | "disputes" | "support" | "profile";
 
@@ -96,7 +96,6 @@ function AccountDashboardContent() {
   const [selectedOrderForDispute, setSelectedOrderForDispute] = useState<PromecOrder | null>(null);
   const [isDisputeModalOpen, setIsDisputeModalOpen] = useState(false);
   const [selectedOrderForInvoice, setSelectedOrderForInvoice] = useState<PromecOrder | null>(null);
-  const [selectedOrderForWarranty, setSelectedOrderForWarranty] = useState<PromecOrder | null>(null);
   const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
 
   // Profile edit state
@@ -109,6 +108,8 @@ function AccountDashboardContent() {
     state: "",
     pincode: "",
     gstNumber: "",
+    customerType: "retail" as "retail" | "commercial",
+    companyName: "",
   });
   const [profileSaveSuccess, setProfileSaveSuccess] = useState(false);
 
@@ -187,6 +188,8 @@ function AccountDashboardContent() {
             state: parsedAddress.state || "",
             pincode: parsedAddress.pincode || "",
             gstNumber: parsedAddress.gstNumber || "",
+            customerType: parsedAddress.customerType || (parsedAddress.gstNumber ? "commercial" : "retail"),
+            companyName: parsedAddress.companyName || "",
           });
         }
       }
@@ -205,6 +208,8 @@ function AccountDashboardContent() {
             state: parsed.profile.state || "",
             pincode: parsed.profile.pincode || "",
             gstNumber: parsed.profile.gstNumber || "",
+            customerType: parsed.profile.customerType || (parsed.profile.gstNumber ? "commercial" : "retail"),
+            companyName: parsed.profile.companyName || "",
           });
         }
       } else {
@@ -252,6 +257,8 @@ function AccountDashboardContent() {
           state: profileData.profile.state || "",
           pincode: profileData.profile.pincode || "",
           gstNumber: profileData.profile.gstNumber || "",
+          customerType: profileData.profile.customerType || (profileData.profile.gstNumber ? "commercial" : "retail"),
+          companyName: profileData.profile.companyName || "",
         });
         try {
           localStorage.setItem(`aquaforce_saved_address_${cleanPhone}`, JSON.stringify(newProfile));
@@ -301,6 +308,21 @@ function AccountDashboardContent() {
     setProfile(null);
   };
 
+  const startEditingProfile = () => {
+    setProfileForm({
+      fullName: profile?.fullName || user?.fullName || "",
+      email: profile?.email || "",
+      shippingAddress: profile?.shippingAddress || "",
+      city: profile?.city || "",
+      state: profile?.state || "",
+      pincode: profile?.pincode || "",
+      gstNumber: isCommercial ? (profile?.gstNumber || "") : "",
+      customerType: isCommercial ? "commercial" : "retail",
+      companyName: isCommercial ? (profile?.companyName || "") : "",
+    });
+    setEditingProfile(true);
+  };
+
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user?.phone) return;
@@ -314,7 +336,9 @@ function AccountDashboardContent() {
         city: profileForm.city.trim(),
         state: profileForm.state.trim(),
         pincode: profileForm.pincode.trim(),
-        gstNumber: profileForm.gstNumber.trim(),
+        gstNumber: isCommercial ? profileForm.gstNumber.trim().toUpperCase() : "",
+        companyName: isCommercial ? profileForm.companyName.trim() : "",
+        customerType: isCommercial ? "commercial" : "retail",
         updatedAt: new Date().toISOString(),
       };
 
@@ -346,6 +370,9 @@ function AccountDashboardContent() {
         body: JSON.stringify({
           phone: cleanPhone,
           ...profileForm,
+          gstNumber: isCommercial ? profileForm.gstNumber.trim().toUpperCase() : "",
+          companyName: isCommercial ? profileForm.companyName.trim() : "",
+          customerType: isCommercial ? "commercial" : "retail",
         }),
       });
       const data = await res.json();
@@ -358,7 +385,9 @@ function AccountDashboardContent() {
           city: data.profile.city || "",
           state: data.profile.state || "",
           pincode: data.profile.pincode || "",
-          gstNumber: data.profile.gstNumber || "",
+          gstNumber: isCommercial ? (data.profile.gstNumber || "") : "",
+          customerType: isCommercial ? "commercial" : "retail",
+          companyName: isCommercial ? (data.profile.companyName || "") : "",
         });
       }
     } catch (err) {
@@ -408,6 +437,15 @@ function AccountDashboardContent() {
   const openDisputesCount = disputes.filter((d) => d.status !== "resolved" && d.status !== "rejected").length;
   const displayName = profile?.fullName || user.fullName || "Customer";
   const initials = displayName.charAt(0).toUpperCase();
+  const orderIsCommercial = orders.some(
+    (o) =>
+      o.customer.customerType === "commercial" ||
+      Boolean(o.customer.gstNumber && o.customer.gstNumber !== "N/A" && o.customer.gstNumber.trim().length > 0)
+  );
+  const isCommercial =
+    profile?.customerType === "commercial" ||
+    Boolean(profile?.gstNumber && profile.gstNumber.trim().length > 0 && profile.gstNumber !== "N/A") ||
+    (!profile?.customerType && orderIsCommercial);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-open-sans">
@@ -430,11 +468,19 @@ function AccountDashboardContent() {
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setIsSupportModalOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 text-[11px] sm:text-xs font-bold font-montserrat tracking-wider transition-all cursor-pointer"
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold font-montserrat tracking-wider transition-all cursor-pointer ${
+              isCommercial
+                ? "bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100"
+                : "bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+            }`}
           >
-            <Phone size={12} className="shrink-0" />
-            <span className="hidden sm:inline">VIP Support</span>
-            <span className="sm:hidden">Help</span>
+            {isCommercial ? (
+              <Crown size={12} className="shrink-0 text-amber-600" />
+            ) : (
+              <Phone size={12} className="shrink-0" />
+            )}
+            <span className="hidden sm:inline">{isCommercial ? "VIP Support" : "Support"}</span>
+            <span className="sm:hidden">{isCommercial ? "VIP" : "Help"}</span>
           </button>
 
           {/* Quick logout button on mobile header */}
@@ -799,7 +845,7 @@ function AccountDashboardContent() {
               <div className="space-y-3">
                 {filteredOrders.map((order) => {
                   const item = order.items[0] || {
-                    productName: "AquaforceÂ® 1400 PSI Tech",
+                    productName: "Aquaforce® 1400 PSI Tech",
                     variantName: "With Vacuum",
                     color: "Yellow",
                     totalAmountInINR: 37999,
@@ -873,14 +919,14 @@ function AccountDashboardContent() {
 
                           <div>
                             <span className="text-[10px] font-bold uppercase tracking-wider text-[#0066cc] font-montserrat">
-                              AquaforceÂ® 1400 PSI Tech
+                              Aquaforce® 1400 PSI Tech
                             </span>
                             <h4 className="text-xs sm:text-sm font-bold text-slate-900 font-montserrat leading-snug">
                               {item.productName}
                             </h4>
                             <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-600 font-open-sans mt-0.5">
                               <span>Variant: <strong className="text-slate-900 font-montserrat">{item.variantName}</strong></span>
-                              <span>â€¢</span>
+                              <span>•</span>
                               <span>Color: <strong className="text-slate-900 font-montserrat">{item.color}</strong></span>
                             </div>
 
@@ -896,17 +942,17 @@ function AccountDashboardContent() {
                           <div className="flex sm:block justify-between items-center">
                             <span className="text-slate-500 text-[11px] font-open-sans">Total Order Value</span>
                             <span className="text-base sm:text-lg font-bold font-montserrat text-slate-900 block">
-                              â‚¹{order.pricing.finalTotalInINR.toLocaleString("en-IN")}
+                              ₹{order.pricing.finalTotalInINR.toLocaleString("en-IN")}
                             </span>
                           </div>
 
                           {isCod ? (
                             <div className="mt-1 pt-1 border-t border-slate-200 text-[11px] flex sm:block justify-between">
                               <span className="text-emerald-700 font-medium">
-                                Paid: â‚¹{Math.round(order.payment.amountPaidInPaise / 100).toLocaleString("en-IN")}
+                                Paid: ₹{Math.round(order.payment.amountPaidInPaise / 100).toLocaleString("en-IN")}
                               </span>
                               <span className="text-amber-800 font-bold font-montserrat sm:block">
-                                Due: â‚¹{Math.round(order.payment.amountDueInPaise / 100).toLocaleString("en-IN")}
+                                Due: ₹{Math.round(order.payment.amountDueInPaise / 100).toLocaleString("en-IN")}
                               </span>
                             </div>
                           ) : (
@@ -974,7 +1020,7 @@ function AccountDashboardContent() {
 
                           <button
                             type="button"
-                            onClick={() => setSelectedOrderForWarranty(order)}
+                            onClick={() => setActiveTab("support")}
                             className="py-2 px-1.5 rounded-xl bg-amber-50 hover:bg-amber-100/80 text-amber-800 border border-amber-200/80 text-[11px] font-bold font-montserrat transition-colors flex items-center justify-center gap-1 cursor-pointer"
                           >
                             <Award size={12} className="shrink-0" />
@@ -1008,7 +1054,7 @@ function AccountDashboardContent() {
                   Self-Service Replacement & Claims Center
                 </h3>
                 <p className="text-xs text-slate-600 font-open-sans mt-0.5">
-                  Doorstep replacements under AMEC 1-Year Pan-India Warranty.
+                  Doorstep replacements under PROMEC 1-Year Pan-India Warranty.
                 </p>
               </div>
 
@@ -1055,7 +1101,7 @@ function AccountDashboardContent() {
                           <span className="font-montserrat font-bold text-slate-900 tracking-wide text-xs sm:text-sm">
                             {dispute.id}
                           </span>
-                          <span className="text-slate-300">â€¢</span>
+                          <span className="text-slate-300">•</span>
                           <span className="text-slate-500 font-open-sans text-[11px]">{formattedDate}</span>
                         </div>
 
@@ -1077,7 +1123,7 @@ function AccountDashboardContent() {
                           <span className="text-xs font-bold text-rose-600 font-montserrat uppercase tracking-wider">
                             {dispute.reasonLabel}
                           </span>
-                          <span className="text-slate-300">â€¢</span>
+                          <span className="text-slate-300">•</span>
                           <span className="text-xs text-slate-700 font-semibold font-open-sans">
                             Requested: {dispute.preferredResolution.replace(/_/g, " ")}
                           </span>
@@ -1093,7 +1139,7 @@ function AccountDashboardContent() {
                           type="button"
                           onClick={() => {
                             const text = encodeURIComponent(
-                              `Hello AMEC Team, I am following up on Case ID: ${dispute.id} (Order: ${dispute.orderId}). Registered phone: ${user.phone}.`
+                              `Hello PROMEC Team, I am following up on Case ID: ${dispute.id} (Order: ${dispute.orderId}). Registered phone: ${user.phone}.`
                             );
                             window.open(`https://wa.me/917387588963?text=${text}`, "_blank");
                           }}
@@ -1114,7 +1160,7 @@ function AccountDashboardContent() {
         {/* TAB 3: WARRANTY & FAST SUPPORT */}
         {activeTab === "support" && (
           <div className="space-y-4">
-            {/* Warranty Certificate Hero Card */}
+            {/* Warranty Status & Mandatory Terms Hero Card */}
             <div className="bg-gradient-to-br from-amber-50/90 via-amber-100/30 to-white border border-amber-200 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
               <div>
                 <div className="flex items-center gap-2">
@@ -1127,48 +1173,74 @@ function AccountDashboardContent() {
                   1-Year Comprehensive Warranty
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 font-open-sans max-w-xl mt-1 leading-relaxed">
-                  Your AquaforceÂ® 1400 is covered by AMEC Mobility Pvt Ltd. Full replacement coverage for high-pressure pump mechanism, motor, 25V battery cells, and circuit board.
+                  Your Aquaforce® 1400 is covered by PROMEC. Full replacement coverage for high-pressure pump mechanism, motor, 25V battery cells, and circuit board.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-2 mt-3 text-xs font-open-sans">
                   <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold font-montserrat text-[11px]">
-                    âœ“ Status: Active
+                    ✓ Status: Active
                   </span>
                   <span className="text-slate-600 font-open-sans text-[11px]">
                     Coverage: 365 Days From Dispatch
                   </span>
+                </div>
+
+                {/* 3 Mandatory Requirements Notice */}
+                <div className="mt-3.5 p-3 bg-white/90 rounded-xl border border-amber-200/90 space-y-1.5 text-xs">
+                  <span className="font-bold text-amber-950 font-montserrat uppercase text-[10.5px] tracking-wider block">
+                    3 Mandatory Terms for Warranty Registration, Claims &amp; Replacements:
+                  </span>
+                  <ul className="space-y-1 text-[11px] font-open-sans text-slate-700">
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
+                      <span><strong>1. Unboxing video</strong> of the washer system</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
+                      <span><strong>2. Testing video</strong> of washer system along with vacuum</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
+                      <span><strong>3. Customer Review &amp; Feedback</strong> video or comment</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
               {orders.length > 0 && (
                 <button
                   type="button"
-                  onClick={() => setSelectedOrderForWarranty(orders[0])}
-                  className="w-full md:w-auto px-4 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-900 text-xs font-bold font-montserrat uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                  onClick={() => {
+                    setSelectedOrderForDispute(orders[0]);
+                    setIsDisputeModalOpen(true);
+                  }}
+                  className="w-full md:w-auto px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold font-montserrat uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
                 >
-                  <Award size={16} />
-                  <span>View Warranty Certificate</span>
+                  <ShieldAlert size={16} />
+                  <span>File Claim / Replacement</span>
                 </button>
               )}
             </div>
 
             {/* Fast Support Channels */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className={`grid gap-3 ${isCommercial ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 max-w-lg"}`}>
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                   <MessageSquare size={17} />
                 </div>
                 <h4 className="text-sm font-bold text-slate-900 font-montserrat">
-                  Instant WhatsApp VIP Chat
+                  {isCommercial ? "Instant WhatsApp VIP Chat" : "Instant WhatsApp Support Desk"}
                 </h4>
                 <p className="text-xs text-slate-600 font-open-sans leading-relaxed">
-                  Fastest response channel. Directly message Senior Engineers with photos or videos.
+                  {isCommercial
+                    ? "Priority VIP channel. Directly message Senior Engineers with machine photos or diagnostics."
+                    : "Fastest response channel. Directly message PROMEC customer care on WhatsApp with photos or questions."}
                 </p>
                 <button
                   type="button"
                   onClick={() => {
                     const text = encodeURIComponent(
-                      `Hello AMEC Team, I am customer ${displayName} (${user.phone}). Need technical help with Aquaforce 1400.`
+                      `Hello PROMEC Team, I am customer ${displayName} (${user.phone}). Need technical help with Aquaforce 1400.`
                     );
                     window.open(`https://wa.me/917387588963?text=${text}`, "_blank");
                   }}
@@ -1178,42 +1250,46 @@ function AccountDashboardContent() {
                 </button>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
-                <div className="w-9 h-9 rounded-xl bg-sky-50 text-[#0066cc] flex items-center justify-center">
-                  <Phone size={17} />
-                </div>
-                <h4 className="text-sm font-bold text-slate-900 font-montserrat">
-                  Direct Phone Support
-                </h4>
-                <p className="text-xs text-slate-600 font-open-sans leading-relaxed">
-                  Speak directly to our Nagpur customer care desk. Available 9:30 AM to 7:30 PM IST.
-                </p>
-                <a
-                  href="tel:+917387588963"
-                  className="block w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-center text-xs font-bold uppercase tracking-wider font-montserrat transition-all cursor-pointer border border-slate-200"
-                >
-                  Call +91 7387588963
-                </a>
-              </div>
+              {isCommercial && (
+                <>
+                  <div className="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
+                    <div className="w-9 h-9 rounded-xl bg-sky-50 text-[#0066cc] flex items-center justify-center">
+                      <Phone size={17} />
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 font-montserrat">
+                      Direct Phone Support
+                    </h4>
+                    <p className="text-xs text-slate-600 font-open-sans leading-relaxed">
+                      Speak directly to our Nagpur customer care desk. Available 9:30 AM to 7:30 PM IST.
+                    </p>
+                    <a
+                      href="tel:+917387588963"
+                      className="block w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-center text-xs font-bold uppercase tracking-wider font-montserrat transition-all cursor-pointer border border-slate-200"
+                    >
+                      Call +91 7387588963
+                    </a>
+                  </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
-                <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                  <Clock size={17} />
-                </div>
-                <h4 className="text-sm font-bold text-slate-900 font-montserrat">
-                  Request 30-Min Callback
-                </h4>
-                <p className="text-xs text-slate-600 font-open-sans leading-relaxed">
-                  Busy right now? Schedule a call and our specialist will dial your number at your chosen time.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setIsSupportModalOpen(true)}
-                  className="w-full py-2.5 rounded-xl bg-[#0066cc] hover:bg-[#0052b3] text-white text-xs font-bold uppercase tracking-wider font-montserrat transition-all cursor-pointer shadow-xs"
-                >
-                  Schedule Callback
-                </button>
-              </div>
+                  <div className="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                      <Clock size={17} />
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 font-montserrat">
+                      Request 30-Min Callback
+                    </h4>
+                    <p className="text-xs text-slate-600 font-open-sans leading-relaxed">
+                      Busy right now? Schedule a call and our specialist will dial your number at your chosen time.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsSupportModalOpen(true)}
+                      className="w-full py-2.5 rounded-xl bg-[#0066cc] hover:bg-[#0052b3] text-white text-xs font-bold uppercase tracking-wider font-montserrat transition-all cursor-pointer shadow-xs"
+                    >
+                      Schedule Callback
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -1248,12 +1324,14 @@ function AccountDashboardContent() {
                         <Phone size={11} className="text-[#0066cc] shrink-0" />
                         <span className="font-montserrat font-bold text-slate-900 whitespace-nowrap">+91 {user.phone}</span>
                       </div>
-                      <span className="text-slate-300 hidden xs:inline">â€¢</span>
+                      <span className="text-slate-300 hidden xs:inline">•</span>
                       <span className="text-emerald-700 font-medium text-[11px] whitespace-nowrap">Verified</span>
                     </div>
 
                     <span className="block mt-0.5 text-[10px] sm:text-[11px] font-montserrat font-medium text-slate-500 truncate">
-                      AMEC Aquaforce Owner
+                      {isCommercial
+                        ? (profile?.companyName ? `${profile.companyName} • Commercial Partner` : "PROMEC Commercial Partner")
+                        : "PROMEC Aquaforce Owner (Personal Use)"}
                     </span>
                   </div>
                 </div>
@@ -1261,7 +1339,7 @@ function AccountDashboardContent() {
                 {!editingProfile && (
                   <button
                     type="button"
-                    onClick={() => setEditingProfile(true)}
+                    onClick={startEditingProfile}
                     className="flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-[#0066cc] hover:text-white text-slate-700 text-[11px] sm:text-xs font-bold font-montserrat transition-all cursor-pointer shrink-0 shadow-2xs"
                   >
                     <Edit3 size={12} />
@@ -1290,12 +1368,33 @@ function AccountDashboardContent() {
                   </span>
                 </div>
 
-                <div className="bg-slate-50/80 rounded-xl p-2 border border-slate-200/60">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 font-montserrat block">
+                <div
+                  className={`rounded-xl p-2 border ${
+                    isCommercial
+                      ? "bg-amber-50/80 border-amber-200/70"
+                      : "bg-slate-50/80 border-slate-200/60"
+                  }`}
+                >
+                  <span
+                    className={`text-[10px] font-bold uppercase font-montserrat block ${
+                      isCommercial ? "text-amber-700" : "text-slate-400"
+                    }`}
+                  >
                     Care Level
                   </span>
-                  <span className="text-xs sm:text-sm font-bold font-montserrat text-[#0066cc] mt-0.5 block">
-                    VIP Priority
+                  <span
+                    className={`text-xs sm:text-sm font-bold font-montserrat mt-0.5 block flex items-center justify-center gap-1 ${
+                      isCommercial ? "text-amber-800 font-extrabold" : "text-slate-700"
+                    }`}
+                  >
+                    {isCommercial ? (
+                      <>
+                        <Crown size={12} className="text-amber-600 shrink-0" />
+                        <span>VIP Priority</span>
+                      </>
+                    ) : (
+                      <span>Standard Care</span>
+                    )}
                   </span>
                 </div>
               </div>
@@ -1313,10 +1412,17 @@ function AccountDashboardContent() {
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
                 <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold font-montserrat text-slate-900">
-                      Edit Profile & Delivery Address
+                    <h3 className="text-sm sm:text-base font-bold font-montserrat text-slate-900 flex items-center gap-2">
+                      <span>{isCommercial ? "Edit Commercial Profile & Delivery Address" : "Edit Profile & Delivery Address"}</span>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full font-montserrat ${
+                        isCommercial
+                          ? "bg-amber-100 text-amber-800 border border-amber-200"
+                          : "bg-slate-100 text-slate-600 border border-slate-200"
+                      }`}>
+                        {isCommercial ? "Commercial (VIP)" : "Personal"}
+                      </span>
                     </h3>
-                    <p className="text-[11px] text-slate-500 font-open-sans">
+                    <p className="text-[11px] text-slate-500 font-open-sans mt-0.5">
                       Updates are linked to your registered mobile number (+91 {user.phone})
                     </p>
                   </div>
@@ -1371,7 +1477,7 @@ function AccountDashboardContent() {
                   {/* Email */}
                   <div>
                     <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
-                      Email Address (For Tax Invoices & Order Updates)
+                      Email Address
                     </label>
                     <div className="relative">
                       <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -1446,23 +1552,50 @@ function AccountDashboardContent() {
                     </div>
                   </div>
 
-                  {/* Company GSTIN */}
-                  <div>
-                    <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
-                      Company GSTIN (Optional - Claim 18% Input Tax Credit)
-                    </label>
-                    <div className="relative">
-                      <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        type="text"
-                        placeholder="e.g. 27AAMCA1234F1Z8"
-                        maxLength={15}
-                        value={profileForm.gstNumber}
-                        onChange={(e) => setProfileForm({ ...profileForm, gstNumber: e.target.value.toUpperCase() })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-slate-900 text-xs font-montserrat uppercase tracking-wider focus:outline-none focus:border-[#0066cc] focus:bg-white"
-                      />
+                  {/* Company GSTIN & Company Name: ONLY if Commercial */}
+                  {isCommercial && (
+                    <div className="p-3.5 bg-indigo-50/70 border border-indigo-100 rounded-xl space-y-3 animate-in fade-in duration-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-indigo-950 font-montserrat uppercase tracking-wider flex items-center gap-1.5">
+                          <Building2 size={13} className="text-indigo-700" />
+                          <span>Business Invoicing Details</span>
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full font-montserrat">
+                          18% GST Input Credit
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                          Company / Workshop Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Apex Auto Detailing Studio"
+                          value={profileForm.companyName}
+                          onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
+                          className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs font-open-sans focus:outline-none focus:border-[#0066cc]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase font-bold text-slate-500 font-montserrat mb-1 text-[10px]">
+                          Company GSTIN (Goods &amp; Services Tax ID)
+                        </label>
+                        <div className="relative">
+                          <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input
+                            type="text"
+                            placeholder="e.g. 27AAMCA1234F1Z8"
+                            maxLength={15}
+                            value={profileForm.gstNumber}
+                            onChange={(e) => setProfileForm({ ...profileForm, gstNumber: e.target.value.toUpperCase() })}
+                            className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-slate-900 text-xs font-montserrat uppercase tracking-wider focus:outline-none focus:border-[#0066cc]"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Form Action Buttons */}
                   <div className="grid grid-cols-2 gap-2 pt-2">
@@ -1485,6 +1618,57 @@ function AccountDashboardContent() {
               </div>
             ) : (
               <div className="space-y-3.5">
+                {/* DEDICATED COMMERCIAL VIP SUPPORT CARD - STRICTLY ONLY FOR COMMERCIAL PARTNERS */}
+                {isCommercial && (
+                  <div className="bg-gradient-to-br from-amber-500/10 via-amber-50/50 to-white border border-amber-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3 animate-in fade-in duration-200">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center shadow-xs shrink-0">
+                          <Crown size={20} />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-xs sm:text-sm font-bold font-montserrat text-amber-950">
+                              Commercial VIP Support Desk
+                            </h3>
+                            <span className="text-[9px] uppercase tracking-wider font-extrabold bg-amber-200/80 text-amber-900 px-1.5 py-0.5 rounded font-montserrat">
+                              VIP Active
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-600 font-open-sans mt-0.5 leading-relaxed">
+                            Direct priority channel with Senior PROMEC Engineers for fleet equipment, high-volume orders &amp; express 24h parts replacement.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const text = encodeURIComponent(
+                            `Hello PROMEC VIP Support Desk, I am commercial partner ${profile?.companyName || displayName} (GSTIN: ${profile?.gstNumber || "Commercial"}, Phone: ${user.phone}). Need technical assistance.`
+                          );
+                          window.open(`https://wa.me/917387588963?text=${text}`, "_blank");
+                        }}
+                        className="w-full py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1caa51] text-white text-xs font-bold font-montserrat flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                      >
+                        <MessageSquare size={14} />
+                        <span>Instant WhatsApp VIP Desk</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsSupportModalOpen(true)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold font-montserrat flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                      >
+                        <Phone size={14} />
+                        <span>Request VIP Priority Call</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* CONTACT & PERSONAL INFO CARD */}
                 <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
@@ -1493,7 +1677,7 @@ function AccountDashboardContent() {
                       Primary Account Details
                     </span>
                     <button
-                      onClick={() => setEditingProfile(true)}
+                      onClick={startEditingProfile}
                       className="text-[11px] font-bold font-montserrat text-[#0066cc] hover:underline cursor-pointer"
                     >
                       Edit
@@ -1527,30 +1711,42 @@ function AccountDashboardContent() {
                         <span className="font-open-sans text-slate-800">{profile.email}</span>
                       ) : (
                         <button
-                          onClick={() => setEditingProfile(true)}
+                          onClick={startEditingProfile}
                           className="text-[11px] font-montserrat font-medium text-[#0066cc] hover:underline cursor-pointer"
                         >
-                          + Add for GST invoice
+                          {isCommercial ? "+ Add Business Email" : "+ Add Email"}
                         </button>
                       )}
                     </div>
 
-                    {/* GSTIN Row */}
-                    <div className="flex items-center justify-between py-1.5 text-xs">
-                      <span className="text-slate-500 font-open-sans">Business GSTIN</span>
-                      {profile?.gstNumber ? (
-                        <span className="font-montserrat font-bold text-[#0066cc] bg-sky-50 px-2 py-0.5 rounded border border-sky-100">
-                          {profile.gstNumber}
+                    {/* Company Name: ONLY if Commercial */}
+                    {isCommercial && profile?.companyName && (
+                      <div className="flex items-center justify-between py-1.5 border-b border-slate-50 text-xs">
+                        <span className="text-slate-500 font-open-sans">Company Name</span>
+                        <span className="font-montserrat font-bold text-slate-900">
+                          {profile.companyName}
                         </span>
-                      ) : (
-                        <button
-                          onClick={() => setEditingProfile(true)}
-                          className="text-[11px] font-montserrat font-medium text-slate-500 hover:text-[#0066cc] cursor-pointer"
-                        >
-                          + Add for 18% Input Credit
-                        </button>
-                      )}
-                    </div>
+                      </div>
+                    )}
+
+                    {/* GSTIN Row: ONLY if Commercial */}
+                    {isCommercial && (
+                      <div className="flex items-center justify-between py-1.5 text-xs">
+                        <span className="text-slate-500 font-open-sans">Business GSTIN</span>
+                        {profile?.gstNumber ? (
+                          <span className="font-montserrat font-bold text-[#0066cc] bg-sky-50 px-2 py-0.5 rounded border border-sky-100">
+                            {profile.gstNumber}
+                          </span>
+                        ) : (
+                          <button
+                            onClick={startEditingProfile}
+                            className="text-[11px] font-montserrat font-medium text-slate-500 hover:text-[#0066cc] cursor-pointer"
+                          >
+                            + Add Business GSTIN
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1562,7 +1758,7 @@ function AccountDashboardContent() {
                       Saved Delivery Address
                     </span>
                     <button
-                      onClick={() => setEditingProfile(true)}
+                      onClick={startEditingProfile}
                       className="text-[11px] font-bold font-montserrat text-[#0066cc] hover:underline cursor-pointer"
                     >
                       {profile?.shippingAddress ? "Change" : "+ Add"}
@@ -1599,149 +1795,13 @@ function AccountDashboardContent() {
                       </p>
                       <button
                         type="button"
-                        onClick={() => setEditingProfile(true)}
+                        onClick={startEditingProfile}
                         className="mt-2 text-xs font-bold font-montserrat text-[#0066cc] hover:underline cursor-pointer"
                       >
                         + Add Doorstep Delivery Address
                       </button>
                     </div>
                   )}
-                </div>
-
-                {/* SERVICES & FAST ACTIONS HUB */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-montserrat block border-b border-slate-100 pb-2">
-                    Customer Services & Ownership Hub
-                  </span>
-
-                  <div className="space-y-1.5">
-                    {/* 1-Year Warranty Certificate Shortcut */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (orders.length > 0) {
-                          setSelectedOrderForWarranty(orders[0]);
-                        } else {
-                          setActiveTab("support");
-                        }
-                      }}
-                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 border border-slate-100 transition-colors text-left cursor-pointer group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-                          <Award size={16} />
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold font-montserrat text-slate-900 block group-hover:text-[#0066cc]">
-                            Official 1-Year Warranty Certificate
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-open-sans block">
-                            Full AMEC coverage for motor, pump & 25V battery
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronRight size={14} className="text-slate-400 group-hover:text-[#0066cc] group-hover:translate-x-0.5 transition-all" />
-                    </button>
-
-                    {/* Tax Invoices Shortcut */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (orders.length > 0) {
-                          setSelectedOrderForInvoice(orders[0]);
-                        } else {
-                          setActiveTab("orders");
-                        }
-                      }}
-                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 border border-slate-100 transition-colors text-left cursor-pointer group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-sky-50 text-[#0066cc] flex items-center justify-center shrink-0">
-                          <FileText size={16} />
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold font-montserrat text-slate-900 block group-hover:text-[#0066cc]">
-                            GST Tax Invoices
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-open-sans block">
-                            Download official billing invoices with 18% GST credit
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronRight size={14} className="text-slate-400 group-hover:text-[#0066cc] group-hover:translate-x-0.5 transition-all" />
-                    </button>
-
-                    {/* File Replacement Claim Shortcut */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedOrderForDispute(orders[0] || null);
-                        setIsDisputeModalOpen(true);
-                      }}
-                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-rose-50/50 border border-slate-100 transition-colors text-left cursor-pointer group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                          <ShieldAlert size={16} />
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold font-montserrat text-slate-900 block group-hover:text-rose-600">
-                            Doorstep Claim / Replacement
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-open-sans block">
-                            Fast 24-hour dispatch for damaged or missing parts
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronRight size={14} className="text-slate-400 group-hover:text-rose-600 group-hover:translate-x-0.5 transition-all" />
-                    </button>
-
-                    {/* WhatsApp VIP Desk Shortcut */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const text = encodeURIComponent(
-                          `Hello AMEC Team, I am customer ${displayName} (+91 ${user.phone}). Need technical assistance with my Aquaforce 1400.`
-                        );
-                        window.open(`https://wa.me/917387588963?text=${text}`, "_blank");
-                      }}
-                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-emerald-50/50 border border-slate-100 transition-colors text-left cursor-pointer group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                          <MessageSquare size={16} />
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold font-montserrat text-slate-900 block group-hover:text-emerald-700">
-                            WhatsApp VIP Concierge
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-open-sans block">
-                            Direct technical support with senior engineers
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronRight size={14} className="text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-0.5 transition-all" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* ACCOUNT ACTIONS & LOGOUT CARD */}
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between text-xs text-slate-500 font-open-sans">
-                    <span>Current Session</span>
-                    <span className="font-montserrat font-medium text-slate-700">
-                      +91 {user.phone}
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="w-full py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold font-montserrat uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-2xs"
-                  >
-                    <LogOut size={14} />
-                    <span>Log Out of My Account</span>
-                  </button>
                 </div>
               </div>
             )}
@@ -1753,7 +1813,7 @@ function AccountDashboardContent() {
 
       {/* Footer */}
       <footer className="py-4 border-t border-slate-200 bg-white text-center text-[11px] text-slate-500 font-open-sans mt-6 px-4">
-        &copy; 2026 PROMEC INDIA â€¢ AMEC MOBILITY PRIVATE LIMITED â€¢ Nagpur, Maharashtra, India
+        &copy; 2026 PROMEC INDIA • AMEC MOBILITY PRIVATE LIMITED • Nagpur, Maharashtra, India
       </footer>
 
       {/* Modals */}
@@ -1786,16 +1846,11 @@ function AccountDashboardContent() {
         onClose={() => setSelectedOrderForInvoice(null)}
       />
 
-      <WarrantyCardModal
-        order={selectedOrderForWarranty}
-        isOpen={Boolean(selectedOrderForWarranty)}
-        onClose={() => setSelectedOrderForWarranty(null)}
-      />
-
       <SupportModal
         orders={orders}
         customerPhone={user.phone}
         customerName={user.fullName || "Customer"}
+        isCommercial={isCommercial}
         isOpen={isSupportModalOpen}
         onClose={() => setIsSupportModalOpen(false)}
       />

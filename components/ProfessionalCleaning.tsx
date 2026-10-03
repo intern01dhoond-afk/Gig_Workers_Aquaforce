@@ -26,8 +26,8 @@ const SERVICE_CARDS = [
     image: "/aquaforceforgigworkers/images/use-cases/4.1.webp",
   },
   {
-    title: "Society Cleaning",
-    subtitle: "Paved driveways & shared spaces",
+    title: "Industrial Cleaning",
+    subtitle: "Solar panels, machinery & factory floors",
     image: "/aquaforceforgigworkers/images/use-cases/5.webp",
   },
   {
@@ -71,7 +71,7 @@ export default function ProfessionalCleaning() {
               Why AquaForce for Your Business? Lower initial equipment investment, multiple cleaning services, less equipment to carry, faster setup at customer locations, portable doorstep operation, and the opportunity to serve more customer categories.
             </p>
             <p>
-              Your Equipment. Your Services. Your Business. One AquaForce setup helps you serve car, bike, home, office, and society cleaning customers from one versatile system.
+              Your Equipment. Your Services. Your Business. One AquaForce setup helps you serve car, bike, home, office, and industrial cleaning customers from one versatile system.
             </p>
           </ScrollReveal>
         </div>

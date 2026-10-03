@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { calculateOrderPricing } from "@/lib/pricing";
 import { orderStore, PromecOrder } from "@/lib/orderStore";
+import { profileStore } from "@/lib/profileStore";
+import { getPromecPayLaterOfferIds } from "@/lib/razorpayOffers";
 
 export async function POST(req: Request) {
   try {
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
       resolvedMethod = "EMI";
     }
 
-    // Server-side authoritative price calculation
+    // Server-side authoritative price calculation (completely ignores any client price overrides)
     const pricingResult = calculateOrderPricing({
       productId: "aquaforce-1400",
       variantId: variantId || "with-vacuum",
@@ -99,8 +101,37 @@ export async function POST(req: Request) {
       key_secret,
     });
 
-    // Create order with Razorpay Orders API
-    const rzpOrder = await razorpay.orders.create({
+    // Razorpay No-Cost EMI Subvention Offers ('Promec India PayLater')
+    const configuredOffers = getPromecPayLaterOfferIds();
+    const applicableOffers: string[] = [];
+
+    // 1. Explicit offers passed in request body
+    if (Array.isArray(body.offers) && body.offers.length > 0) {
+      applicableOffers.push(...body.offers.map((o: any) => String(o)).filter(Boolean));
+    } else if (body.offerId || body.offer_id) {
+      applicableOffers.push(String(body.offerId || body.offer_id));
+    }
+
+    // 2. Global / Environment 'Promec India PayLater' offers (applied for EMI or when configured)
+    if (resolvedMethod === "EMI" || configuredOffers.length > 0) {
+      for (const offId of configuredOffers) {
+        if (!applicableOffers.includes(offId)) {
+          applicableOffers.push(offId);
+        }
+      }
+    }
+
+    // 3. Fallback to specific tenure env vars if present
+    if (resolvedMethod === "EMI" && emiDetails) {
+      if (emiDetails.tenure === 3 && process.env.RZP_OFFER_NO_COST_3M && !applicableOffers.includes(process.env.RZP_OFFER_NO_COST_3M)) {
+        applicableOffers.push(process.env.RZP_OFFER_NO_COST_3M);
+      } else if (emiDetails.tenure === 6 && process.env.RZP_OFFER_NO_COST_6M && !applicableOffers.includes(process.env.RZP_OFFER_NO_COST_6M)) {
+        applicableOffers.push(process.env.RZP_OFFER_NO_COST_6M);
+      }
+    }
+
+    // Create order with Razorpay Orders API (passes offers array into payload)
+    const orderOptions: any = {
       amount: pricing.amountRequiredInPaise, // in paise
       currency: "INR",
       receipt: promecOrderId.substring(0, 40),
@@ -111,6 +142,7 @@ export async function POST(req: Request) {
         variantName: pricing.variant.name,
         color: pricing.color.name,
         paymentMethod: resolvedMethod,
+        ...(applicableOffers.length > 0 ? { offersAttached: applicableOffers.join(", ") } : {}),
         ...(emiDetails?.bank
           ? {
               emiBank: String(emiDetails.bank),
@@ -119,35 +151,40 @@ export async function POST(req: Request) {
             }
           : {}),
       },
-    });
+      ...(applicableOffers.length > 0 ? { offers: applicableOffers } : {}),
+    };
 
-    // Generate dynamic UPI QR Code and Intent URL via Razorpay QR Code API
-    let qrCodeUrl = "";
-    let upiIntentUrl = "";
-    let qrCodeId = "";
-
+    let rzpOrder: any;
     try {
-      const qrResponse: any = await (razorpay as any).qrCode.create({
-        type: "upi_qr",
-        name: "AMEC Aquaforce",
-        usage: "single_use",
-        fixed_amount: true,
-        payment_amount: pricing.amountRequiredInPaise,
-        description: `Order ${promecOrderId}`,
-        notes: {
-          promecOrderId,
-          razorpayOrderId: rzpOrder.id,
-        },
-      });
-
-      if (qrResponse) {
-        qrCodeId = qrResponse.id || "";
-        qrCodeUrl = qrResponse.image_url || "";
-        upiIntentUrl = qrResponse.image_content || "";
+      rzpOrder = await razorpay.orders.create(orderOptions);
+    } catch (orderCreateErr: any) {
+      // If Razorpay returns an offer validation error, log descriptive warning and retry gracefully without offers
+      if (
+        applicableOffers.length > 0 &&
+        (orderCreateErr?.message?.toLowerCase().includes("offer") ||
+          orderCreateErr?.error?.description?.toLowerCase().includes("offer") ||
+          orderCreateErr?.statusCode === 400)
+      ) {
+        console.warn(
+          "[Razorpay Orders API] Failed to apply offer_id payload, retrying order without offers:",
+          orderCreateErr?.message || orderCreateErr?.error?.description
+        );
+        const fallbackOptions = { ...orderOptions };
+        delete fallbackOptions.offers;
+        rzpOrder = await razorpay.orders.create(fallbackOptions);
+      } else {
+        throw orderCreateErr;
       }
-    } catch (qrErr: any) {
-      console.warn("[Orders Create] Razorpay QR Code creation note:", qrErr?.message || qrErr);
     }
+
+    // Generate instant, non-blocking standard merchant UPI Intent URL
+    const upiAmount = Math.round(pricing.amountRequiredInPaise / 100);
+    const upiIntentUrl = `upi://pay?pa=amectechnology.rzp@rxairtel&pn=AMECTECHNOLOGY&mc=5013&tr=${promecOrderId}&am=${upiAmount}&cu=INR&tn=AMEC%20Aquaforce%20${promecOrderId}`;
+    const qrCodeUrl = "";
+    const qrCodeId = "";
+
+    const resolvedCustomerType = customer.customerType || (customer.gstNumber?.trim() ? "commercial" : "retail");
+    const cleanCustomerPhone = customer.phone.replace(/\D/g, "").slice(-10);
 
     // Construct persistent Promec Order record
     const newOrder: PromecOrder = {
@@ -166,6 +203,8 @@ export async function POST(req: Request) {
         pincode: customer.pincode.trim(),
         altPhone: customer.altPhone?.trim() || undefined,
         gstNumber: customer.gstNumber?.trim() || undefined,
+        customerType: resolvedCustomerType,
+        companyName: customer.companyName?.trim() || undefined,
       },
       items: [
         {
@@ -208,6 +247,24 @@ export async function POST(req: Request) {
 
     await orderStore.createOrder(newOrder);
 
+    // Save or update customer profile with selected customerType
+    try {
+      await profileStore.saveProfile(cleanCustomerPhone, {
+        fullName: customer.fullName.trim(),
+        email: customer.email?.trim() || "",
+        shippingAddress: customer.deliveryAddress.trim(),
+        city: customer.city.trim(),
+        state: customer.state.trim(),
+        pincode: customer.pincode.trim(),
+        altPhone: customer.altPhone?.trim() || "",
+        gstNumber: customer.gstNumber?.trim() || "",
+        customerType: resolvedCustomerType,
+        companyName: customer.companyName?.trim() || "",
+      });
+    } catch (profileErr) {
+      console.warn("Could not auto-save profile on order create:", profileErr);
+    }
+
     return NextResponse.json({
       id: rzpOrder.id,
       orderId: promecOrderId,
@@ -215,6 +272,7 @@ export async function POST(req: Request) {
       amount: pricing.amountRequiredInPaise,
       currency: "INR",
       keyId: key_id,
+      offers: applicableOffers,
       advanceAmount: pricing.advanceAmountInINR,
       codBalance: pricing.codBalanceInINR,
       emiDetails: emiDetails || null,

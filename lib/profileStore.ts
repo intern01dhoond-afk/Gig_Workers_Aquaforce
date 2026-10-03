@@ -11,6 +11,8 @@ export interface CustomerProfile {
   pincode: string;
   altPhone?: string;
   gstNumber?: string;
+  customerType?: "retail" | "commercial";
+  companyName?: string;
   updatedAt: string;
 }
 
@@ -99,6 +101,8 @@ class LocalFileProfileStore {
       pincode: (profileData.pincode !== undefined ? profileData.pincode : existing?.pincode) || "",
       altPhone: profileData.altPhone !== undefined ? profileData.altPhone : existing?.altPhone || "",
       gstNumber: profileData.gstNumber !== undefined ? profileData.gstNumber : existing?.gstNumber || "",
+      customerType: profileData.customerType !== undefined ? profileData.customerType : existing?.customerType || "retail",
+      companyName: profileData.companyName !== undefined ? profileData.companyName : existing?.companyName || "",
       updatedAt: new Date().toISOString(),
     };
 

@@ -63,6 +63,11 @@ export interface PromecDispute {
     color?: string;
   };
   attachmentNames?: string[];
+  verificationProof?: {
+    unboxingVideo: string;
+    testingVideo: string;
+    customerReview: string;
+  };
   status: DisputeStatus;
   timeline: DisputeStatusUpdate[];
   resolutionDetails?: {

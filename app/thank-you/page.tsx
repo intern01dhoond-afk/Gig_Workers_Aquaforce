@@ -176,13 +176,22 @@ function ThankYouContent() {
             </div>
           </div>
 
-          {/* Bottom Action Button */}
-          <Link
-            href="/"
-            className="mt-6 sm:mt-8 w-full block bg-[#0077c8] hover:bg-[#0066b3] active:bg-[#005599] text-white font-bold font-montserrat uppercase tracking-wider py-3.5 sm:py-4 rounded-[12px] shadow-sm hover:shadow-md transition-all cursor-pointer text-xs sm:text-sm text-center"
-          >
-            CONTINUE BROWSING
-          </Link>
+          {/* Bottom Action Buttons */}
+          <div className="mt-6 sm:mt-8 space-y-2.5">
+            <Link
+              href={orderId ? `/account?orderId=${orderId}` : "/account"}
+              className="w-full block bg-[#0077c8] hover:bg-[#0066b3] active:bg-[#005599] text-white font-bold font-montserrat uppercase tracking-wider py-3.5 sm:py-4 rounded-[12px] shadow-sm hover:shadow-md transition-all cursor-pointer text-xs sm:text-sm text-center"
+            >
+              TRACK ORDER IN MY ACCOUNT
+            </Link>
+
+            <Link
+              href="/"
+              className="w-full block bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold font-montserrat uppercase tracking-wider py-3 sm:py-3.5 rounded-[12px] transition-all cursor-pointer text-xs sm:text-xs text-center"
+            >
+              CONTINUE BROWSING
+            </Link>
+          </div>
         </div>
       </main>
 

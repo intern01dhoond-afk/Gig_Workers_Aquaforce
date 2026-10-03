@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
 const BOX_ITEMS = [
@@ -40,7 +40,6 @@ const BOX_ITEMS = [
 export default function WhatsInTheBox() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const [userPaused, setUserPaused] = useState(false);
 
   // Autoplay video on mount and when scrolled into view
@@ -99,14 +98,6 @@ export default function WhatsInTheBox() {
     }
   };
 
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
-  };
-
   return (
     <section id="whats-in-the-box" className="w-full bg-white py-12 sm:py-16 lg:py-20 overflow-hidden">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8 lg:px-12">
@@ -126,7 +117,7 @@ export default function WhatsInTheBox() {
                 playsInline
                 preload="auto"
                 loop
-                muted={isMuted}
+                muted
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 className="w-full h-full object-cover object-center"
@@ -157,16 +148,6 @@ export default function WhatsInTheBox() {
                   )}
                 </div>
               </div>
-
-              {/* Bottom Mute / Audio Toggle */}
-              <button
-                type="button"
-                onClick={toggleMute}
-                aria-label={isMuted ? "Unmute audio" : "Mute audio"}
-                className="absolute bottom-3.5 right-3.5 p-2 rounded-full bg-black/60 hover:bg-black/85 text-white backdrop-blur-xs transition-all hover:scale-110 active:scale-95 z-20 cursor-pointer"
-              >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              </button>
             </div>
           </ScrollReveal>
 

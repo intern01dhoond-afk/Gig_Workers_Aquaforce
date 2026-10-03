@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
+import { getPromecPayLaterOfferIds } from "@/lib/razorpayOffers";
 
 export async function POST(req: Request) {
   try {
@@ -9,10 +10,10 @@ export async function POST(req: Request) {
     } catch {
       return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
-    const { amount, receipt, notes } = body;
+    const { amount, receipt, notes, offers, offer_id, offerId } = body;
 
-    const key_id = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "";
-    const key_secret = process.env.RAZORPAY_KEY_SECRET || "";
+    const key_id = (process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "").trim();
+    const key_secret = (process.env.RAZORPAY_KEY_SECRET || "").trim();
 
     if (!key_id || !key_secret) {
       return NextResponse.json(
@@ -33,16 +34,56 @@ export async function POST(req: Request) {
       key_secret,
     });
 
-    const options = {
+    // Resolve No-Cost EMI Subvention Offers ('Promec India PayLater')
+    const configuredOffers = getPromecPayLaterOfferIds();
+    const applicableOffers: string[] = [];
+
+    if (Array.isArray(offers) && offers.length > 0) {
+      applicableOffers.push(...offers.map((o: any) => String(o)).filter(Boolean));
+    } else if (offer_id || offerId) {
+      applicableOffers.push(String(offer_id || offerId));
+    }
+
+    for (const off of configuredOffers) {
+      if (!applicableOffers.includes(off)) {
+        applicableOffers.push(off);
+      }
+    }
+
+    const options: any = {
       amount: Math.round(Number(amount) * 100), // amount in paise
       currency: "INR",
       receipt: receipt || `receipt_${Date.now()}`,
       notes: notes || {},
+      ...(applicableOffers.length > 0 ? { offers: applicableOffers } : {}),
     };
 
-    const order = await razorpay.orders.create(options);
+    let order: any;
+    try {
+      order = await razorpay.orders.create(options);
+    } catch (orderCreateErr: any) {
+      if (
+        applicableOffers.length > 0 &&
+        (orderCreateErr?.message?.toLowerCase().includes("offer") ||
+          orderCreateErr?.error?.description?.toLowerCase().includes("offer") ||
+          orderCreateErr?.statusCode === 400)
+      ) {
+        console.warn(
+          "[Razorpay Orders API] Failed to apply offer_id payload in /api/razorpay/order, retrying without offers:",
+          orderCreateErr?.message || orderCreateErr?.error?.description
+        );
+        const fallbackOptions = { ...options };
+        delete fallbackOptions.offers;
+        order = await razorpay.orders.create(fallbackOptions);
+      } else {
+        throw orderCreateErr;
+      }
+    }
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      ...order,
+      offers: applicableOffers,
+    });
   } catch (error: any) {
     console.error("Razorpay order creation failed:", error);
     return NextResponse.json(

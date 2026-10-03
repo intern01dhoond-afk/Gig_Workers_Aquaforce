@@ -26,8 +26,8 @@ const USE_CASES = [
   },
   {
     image: "/aquaforceforgigworkers/images/use-cases/5.webp",
-    title: "Society Cleaning",
-    desc: "Parking bays, paved driveways, clubhouses & shared amenities",
+    title: "Industrial Cleaning",
+    desc: "Solar panels, machinery, warehouse floors & industrial facilities",
   },
 ];
 

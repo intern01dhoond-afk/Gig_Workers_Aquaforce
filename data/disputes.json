@@ -1,0 +1,40 @@
+[
+  {
+    "id": "AMEC-CARE-727013-DOA",
+    "createdAt": "2026-10-01T08:35:27.013Z",
+    "updatedAt": "2026-10-01T08:35:27.013Z",
+    "orderId": "PROMEC-ORD-1790843565218-IERQ",
+    "customer": {
+      "fullName": "Hemanth",
+      "phone": "7204948579",
+      "email": "hemanthk.cse.rymec@gmail.com",
+      "shippingAddress": "1163, 8th cross, 13th Main Rd, BTM 1st Stage, Bengaluru, Karnataka 560029",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "pincode": "560029"
+    },
+    "type": "replacement",
+    "reason": "DAMAGED_IN_TRANSIT",
+    "reasonLabel": "Damaged / Broken in Transit",
+    "description": ".",
+    "preferredResolution": "express_replacement",
+    "itemDetails": {
+      "productName": "Cordless AquaForce® 1400 High-pressure Washer System",
+      "variantName": "With Vacuum",
+      "color": "Yellow"
+    },
+    "attachmentNames": [],
+    "status": "submitted",
+    "timeline": [
+      {
+        "timestamp": "2026-10-01T08:35:27.013Z",
+        "status": "submitted",
+        "note": "Your claim has been registered. AMEC Quality Engineering team will review details within 24 business hours.",
+        "author": "PROMEC Automated Care System"
+      }
+    ],
+    "resolutionDetails": {
+      "notes": "Pending initial technical review."
+    }
+  }
+]

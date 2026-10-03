@@ -36,6 +36,8 @@ export async function GET(req: Request) {
         pincode: savedProfile?.pincode || latest.pincode || "",
         altPhone: savedProfile?.altPhone || latest.altPhone || "",
         gstNumber: savedProfile?.gstNumber || latest.gstNumber || "",
+        customerType: savedProfile?.customerType || (latest as any).customerType || (savedProfile?.gstNumber || latest.gstNumber ? "commercial" : "retail"),
+        companyName: savedProfile?.companyName || (latest as any).companyName || "",
         updatedAt: new Date().toISOString(),
       };
 
@@ -61,6 +63,8 @@ export async function GET(req: Request) {
         pincode: "",
         altPhone: "",
         gstNumber: "",
+        customerType: "retail",
+        companyName: "",
         updatedAt: new Date().toISOString(),
       },
     });
@@ -76,7 +80,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { phone, fullName, email, shippingAddress, city, state, pincode, altPhone, gstNumber } = body;
+    const { phone, fullName, email, shippingAddress, city, state, pincode, altPhone, gstNumber, customerType, companyName } = body;
 
     if (!phone) {
       return NextResponse.json({ success: false, error: "Phone number required" }, { status: 400 });
@@ -94,6 +98,8 @@ export async function POST(req: Request) {
       pincode: pincode ? pincode.trim() : "",
       altPhone: altPhone !== undefined ? altPhone.trim() : "",
       gstNumber: gstNumber !== undefined ? gstNumber.trim() : "",
+      customerType: customerType || (gstNumber && gstNumber.trim() ? "commercial" : "retail"),
+      companyName: companyName !== undefined ? companyName.trim() : "",
     });
 
     // 2. Update customer details across recent pending/processing orders if any
