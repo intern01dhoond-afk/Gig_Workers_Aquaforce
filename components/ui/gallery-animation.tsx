@@ -28,7 +28,11 @@ export const ExpandableGallery: React.FC<ExpandableGalleryProps> = ({
     return item;
   };
 
+  // Only open fullscreen modal on desktop view (>= 768px)
   const openImage = (index: number) => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      return;
+    }
     setSelectedIndex(index);
   };
 
@@ -57,23 +61,75 @@ export const ExpandableGallery: React.FC<ExpandableGalleryProps> = ({
     return hoveredIndex === index ? 3 : 0.6;
   };
 
-  const handleItemClick = (index: number) => {
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      if (hoveredIndex !== index) {
-        setHoveredIndex(index);
-        return;
-      }
-    }
-    openImage(index);
-  };
-
   const selectedItem =
     selectedIndex !== null ? getItemData(images[selectedIndex]) : null;
 
   return (
     <div className={className}>
-      {/* Horizontal Expandable Gallery */}
-      <div className="flex gap-2 sm:gap-3.5 h-[340px] xs:h-[380px] sm:h-[420px] md:h-[460px] lg:h-[500px] w-full">
+      {/* ========================================================= */}
+      {/* MOBILE VIEW (< md): Horizontal Touch-Snap Scroll Slider  */}
+      {/* ========================================================= */}
+      <div className="block md:hidden w-full">
+        {/* Horizontal Scroll Track */}
+        <div
+          className="flex gap-3 xs:gap-3.5 overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-4 px-4 py-2 pb-3 scroll-pl-4 scroll-pr-4 no-scrollbar items-stretch select-none"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          {images.map((rawItem, index) => {
+            const item = getItemData(rawItem);
+
+            return (
+              <div
+                key={index}
+                className="relative shrink-0 w-[84vw] xs:w-[80vw] sm:w-[65vw] max-w-[340px] h-[390px] xs:h-[420px] rounded-2xl overflow-hidden shadow-lg border border-slate-200/90 bg-slate-950 snap-start flex flex-col justify-end select-none"
+              >
+                {/* Background Image - tap does not open modal */}
+                <img
+                  src={item.image}
+                  alt={item.title || `Service ${index + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+
+                {/* Dark Vignette Overlay for Text Legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 via-40% to-transparent pointer-events-none" />
+
+                {/* Bottom Content Area */}
+                {item.title && (
+                  <div className="relative z-10 p-4 xs:p-5 flex flex-col justify-end pointer-events-none">
+                    <div className="flex items-center justify-between gap-1">
+                      <h3 className="text-white font-montserrat font-bold text-lg xs:text-xl tracking-tight leading-snug drop-shadow-sm">
+                        {item.title}
+                      </h3>
+                      <span className="text-white/60 text-xs font-mono shrink-0">
+                        0{index + 1}
+                      </span>
+                    </div>
+
+                    {item.desc && (
+                      <p className="text-slate-200 font-open-sans text-xs xs:text-[13px] leading-relaxed mt-1.5 line-clamp-2 drop-shadow-xs">
+                        {item.desc}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Spacer to preserve right margin on touch devices */}
+          <div className="shrink-0 w-2 pointer-events-none" aria-hidden="true" />
+        </div>
+      </div>
+
+      {/* ========================================================= */}
+      {/* DESKTOP VIEW (>= md): Horizontal Expandable Gallery       */}
+      {/* ========================================================= */}
+      <div className="hidden md:flex gap-2 sm:gap-3.5 h-[420px] md:h-[460px] lg:h-[500px] w-full">
         {images.map((rawItem, index) => {
           const item = getItemData(rawItem);
           const isHovered = hoveredIndex === index;
@@ -87,7 +143,7 @@ export const ExpandableGallery: React.FC<ExpandableGalleryProps> = ({
               transition={{ duration: 0.5, ease: "easeInOut" }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => handleItemClick(index)}
+              onClick={() => openImage(index)}
             >
               <img
                 src={item.image}
@@ -130,14 +186,14 @@ export const ExpandableGallery: React.FC<ExpandableGalleryProps> = ({
         })}
       </div>
 
-      {/* Expanded View Modal */}
+      {/* Expanded View Modal (Desktop only) */}
       <AnimatePresence>
         {selectedIndex !== null && selectedItem && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-6 backdrop-blur-sm"
+            className="fixed inset-0 z-50 hidden md:flex items-center justify-center bg-black/90 p-4 sm:p-6 backdrop-blur-sm"
             onClick={closeImage}
           >
             {/* Close Button */}
@@ -250,21 +306,5 @@ export const ExpandableGallery: React.FC<ExpandableGalleryProps> = ({
     </div>
   );
 };
-
-// Example Usage
-export function Component() {
-  const images = [
-    "https://cdn.21st.dev/assets/mirror/e8/e8173f9d3fc39d6c562c45ac058e5e57f43b4f6a0aa3783cd5cd5830d204160a.jpg",
-    "https://cdn.21st.dev/assets/mirror/8e/8e6e1f07c0ab5d1ffceb6a04288a42eb918705f04e0aa7666bbc5bb662481ca0.jpg",
-    "https://cdn.21st.dev/assets/mirror/3b/3b4d01c73cc20413c853be42695bc140acb4d2a32f6215f2e2bf61b60ebf440c.jpg",
-    "https://cdn.21st.dev/assets/mirror/78/78b3e6f117be95793fb3d561ab909fbdecbbfcbfb9da026abaaa95c4cdf65a2f.jpg",
-  ];
-
-  return (
-    <div className="min-h-screen dark:bg-black bg-white flex items-center justify-center p-8">
-      <ExpandableGallery images={images} className="w-3/4 max-w-7xl" />
-    </div>
-  );
-}
 
 export default ExpandableGallery;

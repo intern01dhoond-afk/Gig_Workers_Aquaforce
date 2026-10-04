@@ -35,7 +35,7 @@ export default function UseCase() {
   return (
     <section
       id="use-cases"
-      className="relative w-full py-12 xs:py-14 sm:py-16 lg:py-20 bg-white bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:3rem_3rem]"
+      className="relative w-full py-12 xs:py-14 sm:py-16 lg:py-20 bg-white bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:3rem_3rem] overflow-hidden"
     >
       <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-8 lg:px-[80px]">
         {/* Section Header */}
