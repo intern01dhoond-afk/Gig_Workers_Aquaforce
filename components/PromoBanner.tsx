@@ -57,7 +57,7 @@ export default function PromoBanner() {
               onClick={openModal}
               className="inline-flex items-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] text-white font-montserrat text-xs sm:text-sm font-black tracking-wider uppercase px-7 py-3.5 rounded-[4px] shadow-xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
-              <span>SHOP NOW</span>
+              <span>BUY NOW</span>
               <ArrowRight className="w-4 h-4 shrink-0" />
             </button>
           </div>

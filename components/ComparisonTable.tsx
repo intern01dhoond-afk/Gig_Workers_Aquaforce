@@ -60,7 +60,7 @@ const COMPARISON_ROWS: RowItem[] = [
   {
     feature: "Price incl. GST",
     retail: "₹37,999",
-    commercial: "₹45,334",
+    commercial: "₹44,991",
     isPrice: true,
   },
 ];
@@ -172,10 +172,10 @@ export default function ComparisonTable() {
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-5 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-sky-50/80 via-blue-50/40 to-slate-50 border border-sky-200/80 text-slate-800 shadow-2xs">
           <div className="space-y-1 text-center sm:text-left">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold font-montserrat uppercase tracking-wider text-[#0066cc]">
-              <span>JUST ₹7,335 MORE THAN RETAIL (₹45,334)</span>
+              <span>JUST ₹6,992 MORE THAN RETAIL (₹44,991)</span>
             </div>
             <p className="text-xs sm:text-sm text-slate-700 font-open-sans leading-relaxed max-w-xl">
-              For an additional ₹7,335, the business receives a more complete professional package designed around commercial operations, accessories, mobility and after-sales support.
+              For an additional ₹6,992, the business receives a more complete professional package designed around commercial operations, accessories, mobility and after-sales support.
             </p>
           </div>
           <button

@@ -317,7 +317,7 @@ export default function Header() {
           </div>
         </nav>
 
-        {/* Shop Now & My Account Action Buttons */}
+        {/* Buy Now & My Account Action Buttons */}
         <div className="hidden md:flex items-center gap-3 lg:gap-4">
           <button
             onClick={handleAccountClick}
@@ -330,9 +330,10 @@ export default function Header() {
 
           <button
             onClick={openModal}
-            className="bg-white hover:bg-slate-100 text-[#0f172a] text-xs font-bold tracking-wider uppercase px-5 lg:px-6 py-2 sm:py-2.5 rounded-[6px] shadow-sm transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer font-montserrat"
+            className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-[#0f172a] text-xs font-bold tracking-wider uppercase px-5 lg:px-6 py-2 sm:py-2.5 rounded-[6px] shadow-sm transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer font-montserrat"
           >
-            SHOP NOW
+            <span>BUY NOW</span>
+            <ArrowRight size={13} className="text-[#0f172a] stroke-[2.5]" />
           </button>
         </div>
 
@@ -516,7 +517,7 @@ export default function Header() {
                 }}
                 className="mt-2 w-full inline-flex items-center justify-center gap-2 bg-[#0066cc] hover:bg-[#0052b3] active:bg-[#004799] text-white text-xs font-bold tracking-wider uppercase px-5 py-3.5 rounded-[8px] shadow-lg shadow-blue-600/30 cursor-pointer active:scale-98 transition-all font-montserrat"
               >
-                <span>SHOP NOW</span>
+                <span>BUY NOW</span>
                 <ArrowRight className="w-4 h-4 text-white shrink-0" />
               </button>
             </nav>

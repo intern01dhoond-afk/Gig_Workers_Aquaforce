@@ -56,7 +56,7 @@ export default function CTABanner() {
             onClick={openModal}
             className="w-full sm:w-auto mt-6 sm:mt-8 inline-flex items-center justify-center gap-2.5 bg-white hover:bg-slate-100 active:bg-slate-200 text-[#0066cc] font-montserrat text-xs sm:text-[13px] font-bold tracking-wider uppercase px-7 sm:px-8 py-3.5 rounded-[6px] shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer group"
           >
-            <span>SHOP NOW</span>
+            <span>BUY NOW</span>
             <ArrowRight className="w-4 h-4 text-[#0066cc] stroke-[2.5] transition-transform duration-200 group-hover:translate-x-1" />
           </button>
         </ScrollReveal>

@@ -62,7 +62,7 @@ export default function MobileStickyBuyBar() {
           onClick={openModal}
           className="bg-[#0066CC] hover:bg-[#0055b3] active:bg-[#004799] text-white font-montserrat text-xs xs:text-sm font-bold px-4 xs:px-5 py-2.5 xs:py-3 rounded-[10px] shadow-md shadow-blue-600/25 inline-flex items-center gap-1.5 uppercase tracking-wide shrink-0 transition-all active:scale-95 cursor-pointer"
         >
-          <span>SHOP NOW</span>
+          <span>BUY NOW</span>
           <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
         </button>
       </div>
