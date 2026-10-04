@@ -108,7 +108,7 @@ function AccountDashboardContent() {
     state: "",
     pincode: "",
     gstNumber: "",
-    customerType: "retail" as "retail" | "commercial",
+    customerType: "commercial" as const,
     companyName: "",
   });
   const [profileSaveSuccess, setProfileSaveSuccess] = useState(false);
@@ -188,7 +188,7 @@ function AccountDashboardContent() {
             state: parsedAddress.state || "",
             pincode: parsedAddress.pincode || "",
             gstNumber: parsedAddress.gstNumber || "",
-            customerType: parsedAddress.customerType || (parsedAddress.gstNumber ? "commercial" : "retail"),
+            customerType: "commercial",
             companyName: parsedAddress.companyName || "",
           });
         }
@@ -208,7 +208,7 @@ function AccountDashboardContent() {
             state: parsed.profile.state || "",
             pincode: parsed.profile.pincode || "",
             gstNumber: parsed.profile.gstNumber || "",
-            customerType: parsed.profile.customerType || (parsed.profile.gstNumber ? "commercial" : "retail"),
+            customerType: "commercial",
             companyName: parsed.profile.companyName || "",
           });
         }
@@ -257,7 +257,7 @@ function AccountDashboardContent() {
           state: profileData.profile.state || "",
           pincode: profileData.profile.pincode || "",
           gstNumber: profileData.profile.gstNumber || "",
-          customerType: profileData.profile.customerType || (profileData.profile.gstNumber ? "commercial" : "retail"),
+          customerType: "commercial",
           companyName: profileData.profile.companyName || "",
         });
         try {
@@ -316,9 +316,9 @@ function AccountDashboardContent() {
       city: profile?.city || "",
       state: profile?.state || "",
       pincode: profile?.pincode || "",
-      gstNumber: isCommercial ? (profile?.gstNumber || "") : "",
-      customerType: isCommercial ? "commercial" : "retail",
-      companyName: isCommercial ? (profile?.companyName || "") : "",
+      gstNumber: profile?.gstNumber || "",
+      customerType: "commercial",
+      companyName: profile?.companyName || "",
     });
     setEditingProfile(true);
   };
@@ -336,9 +336,9 @@ function AccountDashboardContent() {
         city: profileForm.city.trim(),
         state: profileForm.state.trim(),
         pincode: profileForm.pincode.trim(),
-        gstNumber: isCommercial ? profileForm.gstNumber.trim().toUpperCase() : "",
-        companyName: isCommercial ? profileForm.companyName.trim() : "",
-        customerType: isCommercial ? "commercial" : "retail",
+        gstNumber: profileForm.gstNumber.trim().toUpperCase(),
+        companyName: profileForm.companyName.trim(),
+        customerType: "commercial" as const,
         updatedAt: new Date().toISOString(),
       };
 
@@ -370,9 +370,9 @@ function AccountDashboardContent() {
         body: JSON.stringify({
           phone: cleanPhone,
           ...profileForm,
-          gstNumber: isCommercial ? profileForm.gstNumber.trim().toUpperCase() : "",
-          companyName: isCommercial ? profileForm.companyName.trim() : "",
-          customerType: isCommercial ? "commercial" : "retail",
+          gstNumber: profileForm.gstNumber.trim().toUpperCase(),
+          companyName: profileForm.companyName.trim(),
+          customerType: "commercial",
         }),
       });
       const data = await res.json();
@@ -385,9 +385,9 @@ function AccountDashboardContent() {
           city: data.profile.city || "",
           state: data.profile.state || "",
           pincode: data.profile.pincode || "",
-          gstNumber: isCommercial ? (data.profile.gstNumber || "") : "",
-          customerType: isCommercial ? "commercial" : "retail",
-          companyName: isCommercial ? (data.profile.companyName || "") : "",
+          gstNumber: data.profile.gstNumber || "",
+          customerType: "commercial",
+          companyName: data.profile.companyName || "",
         });
       }
     } catch (err) {
@@ -437,15 +437,7 @@ function AccountDashboardContent() {
   const openDisputesCount = disputes.filter((d) => d.status !== "resolved" && d.status !== "rejected").length;
   const displayName = profile?.fullName || user.fullName || "Customer";
   const initials = displayName.charAt(0).toUpperCase();
-  const orderIsCommercial = orders.some(
-    (o) =>
-      o.customer.customerType === "commercial" ||
-      Boolean(o.customer.gstNumber && o.customer.gstNumber !== "N/A" && o.customer.gstNumber.trim().length > 0)
-  );
-  const isCommercial =
-    profile?.customerType === "commercial" ||
-    Boolean(profile?.gstNumber && profile.gstNumber.trim().length > 0 && profile.gstNumber !== "N/A") ||
-    (!profile?.customerType && orderIsCommercial);
+  const isCommercial = true;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-open-sans">

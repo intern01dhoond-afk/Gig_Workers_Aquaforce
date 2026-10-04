@@ -183,7 +183,7 @@ export async function POST(req: Request) {
     const qrCodeUrl = "";
     const qrCodeId = "";
 
-    const resolvedCustomerType = customer.customerType || (customer.gstNumber?.trim() ? "commercial" : "retail");
+    const resolvedCustomerType = "commercial";
     const cleanCustomerPhone = customer.phone.replace(/\D/g, "").slice(-10);
 
     // Construct persistent Promec Order record

@@ -36,7 +36,7 @@ export async function GET(req: Request) {
         pincode: savedProfile?.pincode || latest.pincode || "",
         altPhone: savedProfile?.altPhone || latest.altPhone || "",
         gstNumber: savedProfile?.gstNumber || latest.gstNumber || "",
-        customerType: savedProfile?.customerType || (latest as any).customerType || (savedProfile?.gstNumber || latest.gstNumber ? "commercial" : "retail"),
+        customerType: "commercial" as const,
         companyName: savedProfile?.companyName || (latest as any).companyName || "",
         updatedAt: new Date().toISOString(),
       };
@@ -63,7 +63,7 @@ export async function GET(req: Request) {
         pincode: "",
         altPhone: "",
         gstNumber: "",
-        customerType: "retail",
+        customerType: "commercial",
         companyName: "",
         updatedAt: new Date().toISOString(),
       },
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       pincode: pincode ? pincode.trim() : "",
       altPhone: altPhone !== undefined ? altPhone.trim() : "",
       gstNumber: gstNumber !== undefined ? gstNumber.trim() : "",
-      customerType: customerType || (gstNumber && gstNumber.trim() ? "commercial" : "retail"),
+      customerType: "commercial" as const,
       companyName: companyName !== undefined ? companyName.trim() : "",
     });
 

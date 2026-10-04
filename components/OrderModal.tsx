@@ -1573,7 +1573,7 @@ interface CheckoutFormData {
   state: string;
   pincode: string;
   gstNumber: string;
-  customerType: "retail" | "commercial";
+  customerType: "commercial";
   companyName: string;
   agreedToTerms: boolean;
 }
@@ -1589,7 +1589,7 @@ interface CheckoutFormData {
       state: "",
       pincode: "",
       gstNumber: "",
-      customerType: "retail",
+      customerType: "commercial",
       companyName: "",
       agreedToTerms: true,
     };
@@ -1598,7 +1598,7 @@ interface CheckoutFormData {
         const saved = localStorage.getItem("promec_checkout_form_data");
         if (saved) {
           const parsed = JSON.parse(saved);
-          return { ...defaults, ...parsed };
+          return { ...defaults, ...parsed, customerType: "commercial" };
         }
       } catch (err) {
         console.warn("Failed to load checkout form data from localStorage:", err);
@@ -2268,9 +2268,9 @@ interface CheckoutSubmitOptions {
             city: formData.city || "Mumbai",
             state: formData.state || "Maharashtra",
             pincode: formData.pincode || "400001",
-            gstNumber: formData.customerType === "commercial" ? (formData.gstNumber || "N/A") : "N/A",
-            customerType: formData.customerType,
-            companyName: formData.customerType === "commercial" ? formData.companyName : undefined,
+            gstNumber: formData.gstNumber || "N/A",
+            customerType: "commercial",
+            companyName: formData.companyName || undefined,
           },
           variantId: selectedVacuumOption === "without" ? "without-vacuum" : "with-vacuum",
           colorName: currentColor.name,
@@ -2742,9 +2742,9 @@ interface CheckoutSubmitOptions {
             city: formData.city,
             state: formData.state,
             pincode: formData.pincode,
-            gstNumber: formData.customerType === "commercial" ? (formData.gstNumber || "N/A") : "N/A",
-            customerType: formData.customerType,
-            companyName: formData.customerType === "commercial" ? formData.companyName : undefined,
+            gstNumber: formData.gstNumber || "N/A",
+            customerType: "commercial",
+            companyName: formData.companyName || undefined,
           },
           variantId: selectedVacuumOption === "without" ? "without-vacuum" : "with-vacuum",
           colorName: currentColor.name,
@@ -2985,9 +2985,9 @@ interface CheckoutSubmitOptions {
             city: formData.city,
             state: formData.state,
             pincode: formData.pincode,
-            gstNumber: formData.customerType === "commercial" ? (formData.gstNumber || "N/A") : "N/A",
-            customerType: formData.customerType,
-            companyName: formData.customerType === "commercial" ? formData.companyName : undefined,
+            gstNumber: formData.gstNumber || "N/A",
+            customerType: "commercial",
+            companyName: formData.companyName || undefined,
           },
           variantId: selectedVacuumOption === "without" ? "without-vacuum" : "with-vacuum",
           colorName: currentColor.name,
@@ -5357,33 +5357,6 @@ interface CheckoutSubmitOptions {
                     CUSTOMER &amp; DELIVERY DETAILS
                   </div>
 
-                  {/* Customer Type Selector: Retail vs Commercial */}
-                  <div className="mb-3.5 p-1 bg-slate-100 rounded-xl border border-slate-200">
-                    <div className="grid grid-cols-2 gap-1">
-                      <button
-                        type="button"
-                        onClick={() => setFormData((prev) => ({ ...prev, customerType: "retail" }))}
-                        className={`py-2 px-3 rounded-lg text-xs font-bold font-montserrat transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          formData.customerType === "retail"
-                            ? "bg-white text-[#005a9c] shadow-xs border border-slate-200"
-                            : "text-slate-600 hover:text-slate-900"
-                        }`}
-                      >
-                        <span>👤 Personal / Retail</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setFormData((prev) => ({ ...prev, customerType: "commercial" }))}
-                        className={`py-2 px-3 rounded-lg text-xs font-bold font-montserrat transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          formData.customerType === "commercial"
-                            ? "bg-white text-indigo-950 shadow-xs border border-slate-200"
-                            : "text-slate-600 hover:text-slate-900"
-                        }`}
-                      >
-                        <span>🏢 Business / Commercial</span>
-                      </button>
-                    </div>
-                  </div>
 
                   <div className="space-y-3 sm:space-y-3.5">
                     {/* Row 1: Full Name & Mobile Number */}

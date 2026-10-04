@@ -67,7 +67,7 @@ export async function createAndIssueRazorpayInvoice(
       line_items: [
         {
           name: `PROMEC Purchase - Order ID ${order.id}`,
-          description: `AquaForce 1400 High-Pressure Washer - ${order.customer.customerType === "commercial" ? "Commercial B2B Package" : "Retail Unit"}`,
+          description: `AquaForce 1400 High-Pressure Washer - Commercial B2B Package`,
           amount: amountInPaise,
           currency: "INR",
           quantity: 1,
@@ -78,7 +78,7 @@ export async function createAndIssueRazorpayInvoice(
       sms_notify: 0,
       notes: {
         orderId: order.id,
-        customerType: order.customer.customerType || "retail",
+        customerType: "commercial",
         ...(order.customer.gstNumber ? { gstNumber: order.customer.gstNumber } : {}),
       },
     });
