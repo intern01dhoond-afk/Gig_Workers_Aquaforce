@@ -32,7 +32,7 @@ const CATEGORY_ITEMS = [
     iconBg: "bg-blue-500/20 border-blue-500/30",
   },
   {
-    name: "GigWorker",
+    name: "Service Partners",
     desc: "Delivery & rider partners",
     href: "/aquaforceforgigworkers",
     icon: Bike,
@@ -43,7 +43,8 @@ const CATEGORY_ITEMS = [
   {
     name: "Home Care",
     desc: "Driveway & domestic cleaning",
-    href: "#",
+    action: "bulk_modal",
+    category: "Home Care",
     icon: Home,
     iconColor: "text-emerald-400",
     iconBg: "bg-emerald-500/20 border-emerald-500/30",
@@ -52,6 +53,7 @@ const CATEGORY_ITEMS = [
     name: "Corporate & Facility Care",
     desc: "Industrial & commercial fleets",
     action: "bulk_modal",
+    category: "Corporate & Facility Care",
     icon: Building2,
     iconColor: "text-purple-400",
     iconBg: "bg-purple-500/20 border-purple-500/30",
@@ -226,7 +228,14 @@ export default function Header() {
                           type="button"
                           onClick={() => {
                             setCategoriesOpen(false);
-                            openBulkModal();
+                            openBulkModal(
+                              item.category
+                                ? {
+                                    category: item.category,
+                                    notes: `Requirement for ${item.name} solutions`,
+                                  }
+                                : undefined
+                            );
                           }}
                           className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 active:bg-white/15 transition-all text-left cursor-pointer group/item"
                         >
@@ -428,7 +437,14 @@ export default function Header() {
                             type="button"
                             onClick={() => {
                               setOpen(false);
-                              openBulkModal();
+                              openBulkModal(
+                                item.category
+                                  ? {
+                                      category: item.category,
+                                      notes: `Requirement for ${item.name} solutions`,
+                                    }
+                                  : undefined
+                              );
                             }}
                             className="w-full flex items-center gap-2.5 py-2 px-3 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/10 text-left cursor-pointer"
                           >

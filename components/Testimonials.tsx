@@ -35,7 +35,7 @@ const testimonials: Testimonial[] = [
     role: "Freelance Doorstep Detailing Partner, Delhi NCR",
   },
   {
-    text: "Motorcycle ke peeche carrier pe pura setup fix ho jata hai. Subah se shaam tak 6 cars aur 4 bikes easily wash kar leta hoon. 1400 PSI se wheel arches aur chassis ka hard mud turant nikalta hai. Hum auto care gig workers ke liye ye best investment hai.",
+    text: "Motorcycle ke peeche carrier pe pura setup fix ho jata hai. Subah se shaam tak 6 cars aur 4 bikes easily wash kar leta hoon. 1400 PSI se wheel arches aur chassis ka hard mud turant nikalta hai. Hum auto care service partners ke liye ye best investment hai.",
     image: "/aquaforceforgigworkers/images/testimonials/manoj-kumar1.webp",
     name: "Manoj Kumar",
     role: "Freelance Car & Bike Washer, Chandigarh",
@@ -64,8 +64,8 @@ export default function Testimonials() {
   return (
     <TestimonialsSection
       testimonials={testimonials}
-      badge="GIG WORKER TESTIMONIALS"
-      title="Trusted by Doorstep Auto Care Gig Workers"
+      badge="SERVICE PARTNER TESTIMONIALS"
+      title="Trusted by Doorstep Auto Care Service Partners"
       subtitle={
         <span className="inline-block max-w-[840px] text-center">
           <span className="sm:block">
