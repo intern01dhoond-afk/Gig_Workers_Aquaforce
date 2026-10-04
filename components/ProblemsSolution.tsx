@@ -235,93 +235,114 @@ export default function ProblemsSolution() {
     <section id="problems-solution" className="py-12 sm:py-16 lg:py-20 bg-white w-full overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <ScrollReveal direction="up" className="flex flex-col items-center justify-center text-center mb-8 sm:mb-12">
+        <ScrollReveal direction="up" className="max-w-[1320px] mx-auto mb-6 sm:mb-8 lg:mb-10">
           {/* Eyebrow Pill Badge */}
-          <div className="inline-flex items-center px-4 py-1 rounded-full border border-sky-600/40 font-montserrat text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-800 bg-white shadow-2xs mb-3 select-none">
-            ADDRESSING CHALLENGES WITH
+          <div className="flex justify-center mb-2.5 sm:mb-3">
+            <div className="inline-flex items-center px-4 py-1 rounded-full border border-sky-600/40 font-montserrat text-[10px] sm:text-[11px] font-bold tracking-[0.16em] uppercase text-slate-800 bg-white shadow-2xs select-none">
+              ADDRESSING CHALLENGES WITH
+            </div>
           </div>
 
-          {/* Main Title */}
-          <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-[#0F1729] tracking-tight">
-            Problems &amp; Solution
-          </h2>
+          {/* Header Row: Problem on Left, Subtitle in Center, Solution on Right */}
+          <div className="relative flex flex-col xl:flex-row items-center xl:items-end justify-between gap-3 xl:gap-0">
+            {/* Desktop Problem Heading (Left) */}
+            <div className="hidden xl:block w-[300px] shrink-0 text-left">
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-[#0F1729] tracking-tight leading-none">
+                Problem
+              </h2>
+            </div>
 
-          {/* Subtitle */}
-          <div className="font-open-sans text-slate-600 text-[13.5px] sm:text-[15px] leading-relaxed max-w-2xl mx-auto mt-2.5">
-            <p>From bulky setups to a compact, all-in-one cleaning solution.</p>
-            <p>See how Aquaforce makes doorstep cleaning faster, easier and more efficient.</p>
+            {/* Subtitle (Center) */}
+            <div className="font-open-sans text-slate-600 text-[13.5px] sm:text-[15px] leading-relaxed max-w-2xl text-center px-2">
+              <p>From bulky setups to a compact, all-in-one cleaning solution.</p>
+              <p>See how Aquaforce makes doorstep cleaning faster, easier and more efficient.</p>
+            </div>
+
+            {/* Desktop Solution Heading (Right) */}
+            <div className="hidden xl:block w-[300px] shrink-0 text-right">
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-[#0F1729] tracking-tight leading-none">
+                Solution
+              </h2>
+            </div>
           </div>
         </ScrollReveal>
 
         {/* 2-Column Comparison Layout with Center Gradient Block Arrow */}
         <div className="relative grid grid-cols-1 xl:grid-cols-2 gap-5 lg:gap-7 items-stretch max-w-[1320px] mx-auto">
           {/* ========================================================= */}
-          {/* LEFT CARD: TRADITIONAL WASHING SETUP (PROBLEM)            */}
+          {/* LEFT COLUMN: TRADITIONAL WASHING SETUP (PROBLEM)          */}
           {/* ========================================================= */}
-          <ScrollReveal
-            direction="up"
-            delay={0.05}
-            className="bg-[#FFF6F6] border border-[#FECDD3]/70 rounded-[24px] sm:rounded-[28px] p-4.5 sm:p-5.5 lg:p-6 flex flex-col justify-between shadow-[0_8px_30px_rgba(239,68,68,0.03)]"
-          >
-            {/* Header with Red Cross Circle */}
-            <div className="flex items-start gap-3 mb-4 sm:mb-4.5">
-              <ProblemXIcon className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 shadow-xs mt-0.5" />
-              <div>
-                <h3 className="font-montserrat font-extrabold text-base sm:text-lg text-[#0F1729] tracking-tight">
-                  Traditional Washing Setup
-                </h3>
-                <p className="font-open-sans text-xs text-slate-500 mt-0.5">
-                  Multiple machines, heavy bags and more effort at every customer location.
-                </p>
-              </div>
-            </div>
+          <div className="flex flex-col h-full">
+            {/* Mobile Problem Heading */}
+            <h2 className="xl:hidden text-2xl sm:text-3xl font-bold font-montserrat text-[#0F1729] tracking-tight mb-2.5 px-1">
+              Problem
+            </h2>
 
-            {/* Inner Content: Image on Left + 4 Items on Right */}
-            <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-3 sm:gap-3.5 items-center flex-1">
-              {/* Left Column: Traditional Equipment Image */}
-              <div className="relative w-full aspect-[1389/1132] rounded-2xl overflow-hidden border border-rose-200/50 shadow-xs bg-slate-900">
-                <Image
-                  src="/aquaforceforgigworkers/images/professional-cleaning-equipment-van-setup.webp"
-                  alt="Traditional Washing Setup with Multiple Machines and Heavy Bags"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 420px"
-                  className="object-cover object-center"
-                />
+            <ScrollReveal
+              direction="up"
+              delay={0.05}
+              className="bg-[#FFF6F6] border border-[#FECDD3]/70 rounded-[24px] sm:rounded-[28px] p-4.5 sm:p-5.5 lg:p-6 flex-1 flex flex-col justify-between shadow-[0_8px_30px_rgba(239,68,68,0.03)]"
+            >
+              {/* Header with Red Cross Circle */}
+              <div className="flex items-start gap-3 mb-4 sm:mb-4.5">
+                <ProblemXIcon className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 shadow-xs mt-0.5" />
+                <div>
+                  <h3 className="font-montserrat font-extrabold text-base sm:text-lg text-[#0F1729] tracking-tight">
+                    Traditional Washing Setup
+                  </h3>
+                  <p className="font-open-sans text-xs text-slate-500 mt-0.5">
+                    Multiple machines, heavy bags and more effort at every customer location.
+                  </p>
+                </div>
               </div>
 
-              {/* Right Column: 4 Problem Points */}
-              <div className="flex flex-col justify-between gap-1.5 sm:gap-2">
-                {PROBLEM_POINTS.map((item, idx) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <div
-                      key={idx}
-                      className="p-2 sm:p-2.5 rounded-xl bg-[#FFEAEA]/60 border border-[#FECDD3]/40 flex items-start gap-2.5 transition-colors hover:bg-[#FFEAEA]/85"
-                    >
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-rose-100 shadow-2xs flex items-center justify-center text-[#E53E3E] shrink-0 mt-0.5">
-                        <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              {/* Inner Content: Image on Left + 4 Items on Right */}
+              <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-3 sm:gap-3.5 items-center flex-1">
+                {/* Left Column: Traditional Equipment Image */}
+                <div className="relative w-full aspect-[1389/1132] rounded-2xl overflow-hidden border border-rose-200/50 shadow-xs bg-slate-900">
+                  <Image
+                    src="/aquaforceforgigworkers/images/professional-cleaning-equipment-van-setup.webp"
+                    alt="Traditional Washing Setup with Multiple Machines and Heavy Bags"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 420px"
+                    className="object-cover object-center"
+                  />
+                </div>
+
+                {/* Right Column: 4 Problem Points */}
+                <div className="flex flex-col justify-between gap-1.5 sm:gap-2">
+                  {PROBLEM_POINTS.map((item, idx) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <div
+                        key={idx}
+                        className="p-2 sm:p-2.5 rounded-xl bg-[#FFEAEA]/60 border border-[#FECDD3]/40 flex items-start gap-2.5 transition-colors hover:bg-[#FFEAEA]/85"
+                      >
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-rose-100 shadow-2xs flex items-center justify-center text-[#E53E3E] shrink-0 mt-0.5">
+                          <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-montserrat font-bold text-[11.5px] sm:text-[12px] text-[#0F1729] leading-tight">
+                            {item.title}
+                          </h4>
+                          <p className="font-open-sans text-[10px] sm:text-[10.5px] text-slate-600 mt-0.5 leading-snug">
+                            {item.desc}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <h4 className="font-montserrat font-bold text-[11.5px] sm:text-[12px] text-[#0F1729] leading-tight">
-                          {item.title}
-                        </h4>
-                        <p className="font-open-sans text-[10px] sm:text-[10.5px] text-slate-600 mt-0.5 leading-snug">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
 
           {/* ========================================================= */}
           {/* CENTER GRADIENT TRANSITION ARROW (DESKTOP ONLY)          */}
           {/* Exact block arrow from reference mockup                   */}
           {/* ========================================================= */}
-          <div className="hidden xl:flex absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none items-center justify-center">
+          <div className="hidden xl:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none items-center justify-center">
             <svg
               viewBox="0 0 52 32"
               className="w-10 h-6 sm:w-12 sm:h-7.5 drop-shadow-xs"
@@ -342,90 +363,97 @@ export default function ProblemsSolution() {
           </div>
 
           {/* ========================================================= */}
-          {/* RIGHT CARD: AQUAFORCE 1400 - ALL IN ONE (SOLUTION)        */}
+          {/* RIGHT COLUMN: AQUAFORCE 1400 - ALL IN ONE (SOLUTION)      */}
           {/* ========================================================= */}
-          <ScrollReveal
-            direction="up"
-            delay={0.1}
-            className="bg-[#F1FAF5] border border-[#BBF7D0]/70 rounded-[24px] sm:rounded-[28px] p-4.5 sm:p-5.5 lg:p-6 flex flex-col justify-between shadow-[0_8px_30px_rgba(34,197,94,0.03)]"
-          >
-            <div>
-              {/* Header with Green Checkmark Circle */}
-              <div className="flex items-start gap-3 mb-4 sm:mb-4.5">
-                <SolutionCheckIcon className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 shadow-xs mt-0.5" />
-                <div>
-                  <h3 className="font-montserrat font-extrabold text-base sm:text-lg text-[#0F1729] tracking-tight">
-                    Aquaforce 1400 – All in One
-                  </h3>
-                  <p className="font-open-sans text-xs text-slate-500 mt-0.5">
-                    A compact, portable system that combines everything you need for doorstep cleaning.
-                  </p>
-                </div>
-              </div>
+          <div className="flex flex-col h-full mt-4 xl:mt-0">
+            {/* Mobile Solution Heading */}
+            <h2 className="xl:hidden text-2xl sm:text-3xl font-bold font-montserrat text-[#0F1729] tracking-tight mb-2.5 px-1">
+              Solution
+            </h2>
 
-              {/* Inner Content: Image on Left + 4 Items on Right */}
-              <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-3 sm:gap-3.5 items-center">
-                {/* Left Column: Aquaforce Kit Image */}
-                <div className="relative w-full aspect-[1536/1024] rounded-2xl overflow-hidden border border-emerald-200/50 shadow-xs bg-white flex items-center justify-center p-2">
-                  <Image
-                    src="/aquaforceforgigworkers/images/promec-aquaforce-1400-psi-kit.webp"
-                    alt="PROMEC AquaForce 1400 PSI Kit All-in-One Setup"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, 420px"
-                    className="object-contain object-center"
-                  />
-                </div>
-
-                {/* Right Column: 4 Solution Points */}
-                <div className="flex flex-col justify-between gap-1.5 sm:gap-2">
-                  {SOLUTION_POINTS.map((item, idx) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <div
-                        key={idx}
-                        className="p-2 sm:p-2.5 rounded-xl bg-[#E6F8EE]/60 border border-[#BBF7D0]/40 flex items-start gap-2.5 transition-colors hover:bg-[#E6F8EE]/85"
-                      >
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-emerald-100 shadow-2xs flex items-center justify-center text-[#16A34A] shrink-0 mt-0.5">
-                          <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-montserrat font-bold text-[11.5px] sm:text-[12px] text-[#0F1729] leading-tight">
-                            {item.title}
-                          </h4>
-                          <p className="font-open-sans text-[10px] sm:text-[10.5px] text-slate-600 mt-0.5 leading-snug">
-                            {item.desc}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom 5 Feature Pills Row */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 sm:gap-2 mt-3 pt-0.5">
-              {BOTTOM_PILLS.map((pill, idx) => {
-                const PillIcon = pill.icon;
-                return (
-                  <div
-                    key={idx}
-                    className="bg-white rounded-xl p-1.5 sm:p-2 border border-slate-200/60 shadow-2xs flex items-center gap-1.5 select-none"
-                  >
-                    <div
-                      className={`w-5 h-5 sm:w-6 sm:h-6 rounded-md ${pill.iconBg} ${pill.iconColor} flex items-center justify-center shrink-0 border border-slate-100`}
-                    >
-                      <PillIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    </div>
-                    <span className="font-open-sans text-[9.5px] sm:text-[10px] font-bold text-slate-800 leading-tight">
-                      {pill.label}
-                    </span>
+            <ScrollReveal
+              direction="up"
+              delay={0.1}
+              className="bg-[#F1FAF5] border border-[#BBF7D0]/70 rounded-[24px] sm:rounded-[28px] p-4.5 sm:p-5.5 lg:p-6 flex-1 flex flex-col justify-between shadow-[0_8px_30px_rgba(34,197,94,0.03)]"
+            >
+              <div>
+                {/* Header with Green Checkmark Circle */}
+                <div className="flex items-start gap-3 mb-4 sm:mb-4.5">
+                  <SolutionCheckIcon className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 shadow-xs mt-0.5" />
+                  <div>
+                    <h3 className="font-montserrat font-extrabold text-base sm:text-lg text-[#0F1729] tracking-tight">
+                      Aquaforce 1400 – All in One
+                    </h3>
+                    <p className="font-open-sans text-xs text-slate-500 mt-0.5">
+                      A compact, portable system that combines everything you need for doorstep cleaning.
+                    </p>
                   </div>
-                );
-              })}
-            </div>
-          </ScrollReveal>
+                </div>
+
+                {/* Inner Content: Image on Left + 4 Items on Right */}
+                <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-3 sm:gap-3.5 items-center">
+                  {/* Left Column: Aquaforce Kit Image */}
+                  <div className="relative w-full aspect-[1536/1024] rounded-2xl overflow-hidden border border-emerald-200/50 shadow-xs bg-white flex items-center justify-center p-2">
+                    <Image
+                      src="/aquaforceforgigworkers/images/promec-aquaforce-1400-psi-kit.webp"
+                      alt="PROMEC AquaForce 1400 PSI Kit All-in-One Setup"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 420px"
+                      className="object-contain object-center"
+                    />
+                  </div>
+
+                  {/* Right Column: 4 Solution Points */}
+                  <div className="flex flex-col justify-between gap-1.5 sm:gap-2">
+                    {SOLUTION_POINTS.map((item, idx) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div
+                          key={idx}
+                          className="p-2 sm:p-2.5 rounded-xl bg-[#E6F8EE]/60 border border-[#BBF7D0]/40 flex items-start gap-2.5 transition-colors hover:bg-[#E6F8EE]/85"
+                        >
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-emerald-100 shadow-2xs flex items-center justify-center text-[#16A34A] shrink-0 mt-0.5">
+                            <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-montserrat font-bold text-[11.5px] sm:text-[12px] text-[#0F1729] leading-tight">
+                              {item.title}
+                            </h4>
+                            <p className="font-open-sans text-[10px] sm:text-[10.5px] text-slate-600 mt-0.5 leading-snug">
+                              {item.desc}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom 5 Feature Pills Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 sm:gap-2 mt-3 pt-0.5">
+                {BOTTOM_PILLS.map((pill, idx) => {
+                  const PillIcon = pill.icon;
+                  return (
+                    <div
+                      key={idx}
+                      className="bg-white rounded-xl p-1.5 sm:p-2 border border-slate-200/60 shadow-2xs flex items-center gap-1.5 select-none"
+                    >
+                      <div
+                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-md ${pill.iconBg} ${pill.iconColor} flex items-center justify-center shrink-0 border border-slate-100`}
+                      >
+                        <PillIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      </div>
+                      <span className="font-open-sans text-[9.5px] sm:text-[10px] font-bold text-slate-800 leading-tight">
+                        {pill.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>
