@@ -247,7 +247,7 @@ export default function ProblemsSolution() {
           <div className="relative flex flex-col xl:flex-row items-center xl:items-end justify-between gap-3 xl:gap-0">
             {/* Desktop Problem Heading (Left) */}
             <div className="hidden xl:block w-[300px] shrink-0 text-left">
-              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-[#0F1729] tracking-tight leading-none">
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-red-600 tracking-tight leading-none">
                 Problem
               </h2>
             </div>
@@ -260,7 +260,7 @@ export default function ProblemsSolution() {
 
             {/* Desktop Solution Heading (Right) */}
             <div className="hidden xl:block w-[300px] shrink-0 text-right">
-              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-[#0F1729] tracking-tight leading-none">
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold font-montserrat text-green-600 tracking-tight leading-none">
                 Solution
               </h2>
             </div>
@@ -274,7 +274,7 @@ export default function ProblemsSolution() {
           {/* ========================================================= */}
           <div className="flex flex-col h-full">
             {/* Mobile Problem Heading */}
-            <h2 className="xl:hidden text-2xl sm:text-3xl font-bold font-montserrat text-[#0F1729] tracking-tight mb-2.5 px-1">
+            <h2 className="xl:hidden text-2xl sm:text-3xl font-bold font-montserrat text-red-600 tracking-tight mb-2.5 px-1">
               Problem
             </h2>
 
@@ -367,7 +367,7 @@ export default function ProblemsSolution() {
           {/* ========================================================= */}
           <div className="flex flex-col h-full mt-4 xl:mt-0">
             {/* Mobile Solution Heading */}
-            <h2 className="xl:hidden text-2xl sm:text-3xl font-bold font-montserrat text-[#0F1729] tracking-tight mb-2.5 px-1">
+            <h2 className="xl:hidden text-2xl sm:text-3xl font-bold font-montserrat text-green-600 tracking-tight mb-2.5 px-1">
               Solution
             </h2>
 
