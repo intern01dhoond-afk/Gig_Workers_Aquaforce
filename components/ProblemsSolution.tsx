@@ -231,6 +231,13 @@ const BOTTOM_PILLS = [
 ];
 
 export default function ProblemsSolution() {
+  const [kitImageSrc, setKitImageSrc] = React.useState(
+    "/aquaforceforgigworkers/images/promec-aquaforce-1400-psi-kit.webp"
+  );
+  const [problemImageSrc, setProblemImageSrc] = React.useState(
+    "/aquaforceforgigworkers/images/professional-cleaning-equipment-van-setup.webp"
+  );
+
   return (
     <section id="problems-solution" className="py-12 sm:py-16 lg:py-20 bg-white w-full overflow-hidden">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -301,12 +308,17 @@ export default function ProblemsSolution() {
                 {/* Left Column: Traditional Equipment Image */}
                 <div className="relative w-full aspect-[1389/1132] rounded-2xl overflow-hidden border border-rose-200/50 shadow-xs bg-slate-900">
                   <Image
-                    src="/aquaforceforgigworkers/images/professional-cleaning-equipment-van-setup.webp"
+                    src={problemImageSrc}
                     alt="Traditional Washing Setup with Multiple Machines and Heavy Bags"
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, 420px"
                     className="object-cover object-center"
+                    onError={() => {
+                      if (problemImageSrc.startsWith("/aquaforceforgigworkers")) {
+                        setProblemImageSrc(problemImageSrc.replace("/aquaforceforgigworkers", ""));
+                      }
+                    }}
                   />
                 </div>
 
@@ -395,12 +407,21 @@ export default function ProblemsSolution() {
                   {/* Left Column: Aquaforce Kit Image */}
                   <div className="relative w-full aspect-[1536/1024] rounded-2xl overflow-hidden border border-emerald-200/50 shadow-xs bg-white flex items-center justify-center p-2">
                     <Image
-                      src="/aquaforceforgigworkers/images/promec-aquaforce-1400-psi-kit.webp"
+                      src={kitImageSrc}
                       alt="PROMEC AquaForce 1400 PSI Kit All-in-One Setup"
                       fill
                       priority
                       sizes="(max-width: 768px) 100vw, 420px"
                       className="object-contain object-center"
+                      onError={() => {
+                        if (kitImageSrc.startsWith("/aquaforceforgigworkers/images/promec-aquaforce")) {
+                          setKitImageSrc("/images/promec-aquaforce-1400-psi-kit.webp");
+                        } else if (kitImageSrc.includes("promec-aquaforce-1400-psi-kit")) {
+                          setKitImageSrc("/aquaforceforgigworkers/images/PROMEC%20AquaForce%201400%20PSI%20Kit.webp");
+                        } else {
+                          setKitImageSrc("/aquaforceforgigworkers/images/Remainig%20images/Product%20mockup%204Y.webp");
+                        }
+                      }}
                     />
                   </div>
 
