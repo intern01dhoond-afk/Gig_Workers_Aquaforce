@@ -880,7 +880,7 @@ const DEFAULT_NETBANKING_BANKS: NetbankingBankItem[] = [
 ];
 
 const PRODUCT_DATA = {
-  name: "Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
+  name: "Cordless AquaForce® 1400 High-pressure Washer System",
   description:
     "The Aquaforce® 1400 is a powerful, battery-powered portable pressure washer. No cables, no power sockets, no fixed setup needed.",
   rating: 4.8,
@@ -6438,10 +6438,20 @@ interface CheckoutSubmitOptions {
                     ref={scrollContainerRef}
                     className="lg:flex-1 lg:overflow-y-auto pr-0 lg:pr-2 no-scrollbar space-y-3"
                   >
-                    {/* Product Title */}
-                    <h2 className="text-xl sm:text-2xl lg:text-[25px] font-bold font-montserrat text-[#0F1729] leading-[1.2] tracking-tight mt-1 sm:mt-0">
-                      {PRODUCT_DATA.name}
-                    </h2>
+                    {/* Pill Badge & Product Title */}
+                    <div>
+                      <div className="mb-2">
+                        <span className="bg-gradient-to-br from-[#0070e0] via-[#005bb5] to-[#003d8a] text-white text-[10.5px] sm:text-[11px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider shadow-[0_2px_8px_rgba(0,102,204,0.32)] border border-white/25 inline-flex items-center">
+                          COMMERCIAL PRO KIT
+                        </span>
+                      </div>
+
+                      {/* Product Title */}
+                      <h2 className="text-xl sm:text-2xl lg:text-[25px] font-bold font-montserrat text-[#0F1729] leading-[1.2] tracking-tight">
+                        Cordless AquaForce® 1400<br />
+                        High-pressure Washer System
+                      </h2>
+                    </div>
 
                     {/* Description */}
                     <p className="text-slate-500 font-open-sans sm:text-slate-600 text-[12.5px] sm:text-sm leading-relaxed">
