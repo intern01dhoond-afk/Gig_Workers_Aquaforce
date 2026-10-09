@@ -85,7 +85,7 @@ export async function createDelhiveryShipment(
         return_city: "Nagpur",
         return_state: "Maharashtra",
         return_country: "India",
-        products_desc: product || "Commercial Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
+        products_desc: product || "Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
         hsn_code: "84243000",
         cod_amount: resolvedCodAmount,
         order_date: new Date().toISOString(),

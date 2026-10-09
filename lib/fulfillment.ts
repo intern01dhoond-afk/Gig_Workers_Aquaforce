@@ -36,7 +36,7 @@ export async function executeOrderFulfillment(
 
   const isCod = order.payment.method === "COD_ADVANCE";
   const primaryItem = order.items[0] || {
-    productName: "Commercial Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
+    productName: "Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
     color: "Yellow",
     quantity: 1,
   };

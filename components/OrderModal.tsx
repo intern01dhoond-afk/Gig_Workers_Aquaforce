@@ -880,7 +880,7 @@ const DEFAULT_NETBANKING_BANKS: NetbankingBankItem[] = [
 ];
 
 const PRODUCT_DATA = {
-  name: "Commercial Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
+  name: "Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
   description:
     "The Aquaforce® 1400 is a powerful, battery-powered portable pressure washer. No cables, no power sockets, no fixed setup needed.",
   rating: 4.8,

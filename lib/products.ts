@@ -31,7 +31,7 @@ export const CATALOG: Record<string, Product> = {
   "aquaforce-1400": {
     id: "aquaforce-1400",
     sku: "AMEC-AQUAFORCE-1400",
-    name: "Commercial Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
+    name: "Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
     description:
       "The Aquaforce® 1400 is a powerful, battery-powered portable pressure washer. No cables, no power sockets, no fixed setup needed.",
     variants: {
