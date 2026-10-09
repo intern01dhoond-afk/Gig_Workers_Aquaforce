@@ -80,7 +80,7 @@ export async function POST(req: Request) {
           city,
           state,
           pincode,
-          product: product || "Cordless AquaForce 1400 High-pressure Washer System",
+          product: product || "Commercial Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
           quantity: quantity || 1,
           amount: amount || 44991,
           paymentMode: isCodOrder ? "COD" : "Pre-paid",

@@ -131,7 +131,7 @@ export async function createShiprocketShipment(
       shipping_is_billing: true,
       order_items: [
         {
-          name: product || "Cordless AquaForce 1400 High-pressure Washer System",
+          name: product || "Commercial Cordless AquaForce® 1400 High-pressure Washer System (COMMERCIAL PRO KIT)",
           sku: "AMEC-AQUAFORCE-1400",
           units: Math.max(1, Number(quantity) || 1),
           selling_price: Math.round(Number(amount) || 37999),
