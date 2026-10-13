@@ -35,7 +35,6 @@ var HEADERS = {
     "Quantity",
     "Purchase Timeline",
     "Customer Type",
-    "Notes / Requirements",
     "Status"
   ],
   PURCHASES: [
@@ -161,7 +160,6 @@ function doPost(e) {
         data.quantity || "N/A",
         data.purchaseTimeline || data.timeline || "Not specified",
         data.customerType || data.segment || "Not specified",
-        data.notes || data.notesSummary || "N/A",
         data.status || "New Enquiry"
       ]);
       resultMessage = "Enquiry recorded successfully";

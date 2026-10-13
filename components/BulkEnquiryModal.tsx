@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   X,
   ArrowRight,
@@ -377,8 +378,8 @@ export default function BulkEnquiryModal({
                 ← Back to Product Details
               </button>
               <div className="flex items-center gap-2">
-                <a
-                  href="/aquaforceforgigworkers/inquiryform"
+                <Link
+                  href="/inquiryform"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-[#005DA6] hover:underline font-open-sans"
@@ -386,7 +387,7 @@ export default function BulkEnquiryModal({
                 >
                   <span>Open Full Link</span>
                   <ExternalLink size={12} />
-                </a>
+                </Link>
                 <button
                   type="button"
                   onClick={handleClose}
