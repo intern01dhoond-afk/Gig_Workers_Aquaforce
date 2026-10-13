@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       // Legacy compatibility keys
       type: "ENQUIRY",
       inquiryType: "ENQUIRY",
-      status: "New Enquiry",
+      status: "New Inquiry",
       notes: notesSummary,
       requirements: notesSummary,
       notesSummary,
@@ -93,7 +93,7 @@ export async function POST(req: Request) {
     // 1. Forward to Google Sheets Webhook
     const webhookUrl =
       process.env.GOOGLE_SHEET_ENQUIRY_URL ||
-      "https://script.google.com/macros/s/AKfycbwqSxRQx9i_hjH3FK1I7fsfTkP-3KDV6ER-qVTrOJWfOi5O8woxard3Cw5A6yh4Qt4a/exec";
+      "https://script.google.com/macros/s/AKfycbzDBUKCkZtvZXek5qWcPeh9wLB-1MRC-JdYVnBKSJpp6fdhYiWU36iQE0A4-Q1Nb7sZ/exec";
 
     if (webhookUrl) {
       try {

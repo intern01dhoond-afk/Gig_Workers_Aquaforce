@@ -146,8 +146,13 @@ function doPost(e) {
       resultMessage = "Purchase recorded successfully";
     }
 
-    // 2. Process Enquiries
-    else if (targetType === "ENQUIRY" || targetType === "ENQUIRIES") {
+    // 2. Process Inquiries / Enquiries
+    else if (
+      targetType === "INQUIRY" ||
+      targetType === "INQUIRIES" ||
+      targetType === "ENQUIRY" ||
+      targetType === "ENQUIRIES"
+    ) {
       var enquirySheet = getSheetById(SHEET_IDS.ENQUIRIES);
       setupHeaders(enquirySheet, HEADERS.ENQUIRIES);
 
@@ -160,9 +165,9 @@ function doPost(e) {
         data.quantity || "N/A",
         data.purchaseTimeline || data.timeline || "Not specified",
         data.customerType || data.segment || "Not specified",
-        data.status || "New Enquiry"
+        data.status || "New Inquiry"
       ]);
-      resultMessage = "Enquiry recorded successfully";
+      resultMessage = "Inquiry recorded successfully";
     }
 
     // 3. Process Signups / Leads / Newsletter

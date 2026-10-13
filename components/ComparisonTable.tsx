@@ -183,7 +183,7 @@ export default function ComparisonTable() {
             onClick={openBulkModal}
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#0066cc] hover:bg-[#0052b3] text-white text-xs sm:text-sm font-bold font-montserrat tracking-wide uppercase shadow-md shadow-blue-600/20 transition-all active:scale-[0.98] cursor-pointer shrink-0"
           >
-            <span>Enquire Bulk Quantity</span>
+            <span>INQUIRE BULK QUANTITY</span>
             <ArrowRight size={15} />
           </button>
         </div>

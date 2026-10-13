@@ -49,14 +49,16 @@ export function BulkEnquiryProvider({ children }: { children: React.ReactNode })
         const hash = window.location.hash;
 
         const isBulk =
+          search.get("inquiry") === "bulk" ||
           search.get("enquiry") === "bulk" ||
           search.get("bulk") === "true" ||
           search.get("form") === "bulk" ||
+          hash === "#bulk-inquiry" ||
           hash === "#bulk-enquiry" ||
           hash === "#bulk-modal" ||
           hash === "#bulk";
 
-        const catParam = (search.get("category") || search.get("cat") || search.get("enquiry") || "").toLowerCase();
+        const catParam = (search.get("category") || search.get("cat") || search.get("inquiry") || search.get("enquiry") || "").toLowerCase();
         const isHomeCare = catParam === "homecare" || catParam === "home" || hash === "#homecare" || hash === "#home-care";
         const isCorporate = catParam === "corporate" || catParam === "facility" || catParam === "corporatecare" || hash === "#corporate" || hash === "#corporate-care";
 

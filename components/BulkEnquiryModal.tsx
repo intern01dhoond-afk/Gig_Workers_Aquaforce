@@ -195,13 +195,13 @@ export default function BulkEnquiryModal({
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || "Failed to submit enquiry");
+        throw new Error(errData.error || "Failed to submit inquiry");
       }
 
       setIsSubmitting(false);
       setIsSubmitted(true);
     } catch (err: any) {
-      console.error("Bulk enquiry submission error:", err);
+      console.error("Bulk inquiry submission error:", err);
       // Provide friendly completion even on network error
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -220,7 +220,7 @@ export default function BulkEnquiryModal({
     if (typeof window !== "undefined") {
       const search = window.location.search;
       const hash = window.location.hash;
-      if (search.includes("enquiry=") || search.includes("category=") || hash.includes("bulk")) {
+      if (search.includes("inquiry=") || search.includes("enquiry=") || search.includes("category=") || hash.includes("bulk")) {
         const cleanUrl = window.location.pathname;
         window.history.replaceState({}, "", cleanUrl);
       }
