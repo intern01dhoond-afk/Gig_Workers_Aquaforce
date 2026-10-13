@@ -1,4 +1,4 @@
-﻿/**
+/**
  * =========================================================================
  * PROMEC / AMEC AQUAFORCE - UNIFIED GOOGLE APPS SCRIPT WEBHOOK
  * =========================================================================
@@ -33,6 +33,8 @@ var HEADERS = {
     "Company Name",
     "Email",
     "Quantity",
+    "Purchase Timeline",
+    "Customer Type",
     "Notes / Requirements",
     "Status"
   ],
@@ -156,8 +158,10 @@ function doPost(e) {
         data.phone ? "'" + String(data.phone) : "N/A",
         data.companyName || "N/A",
         data.email || "N/A",
-        Number(data.quantity) || 1,
-        data.notes || "N/A",
+        data.quantity || "N/A",
+        data.purchaseTimeline || data.timeline || "Not specified",
+        data.customerType || data.segment || "Not specified",
+        data.notes || data.notesSummary || "N/A",
         data.status || "New Enquiry"
       ]);
       resultMessage = "Enquiry recorded successfully";
