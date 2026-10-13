@@ -1322,7 +1322,7 @@ function AccountDashboardContent() {
 
                     <span className="block mt-0.5 text-[10px] sm:text-[11px] font-montserrat font-medium text-slate-500 truncate">
                       {isCommercial
-                        ? (profile?.companyName ? `${profile.companyName} • Commercial Partner` : "PROMEC Commercial Partner")
+                        ? (profile?.companyName ? `${profile.companyName} • Commercial Pro Kit` : "PROMEC Commercial Pro Kit")
                         : "PROMEC Aquaforce Owner (Personal Use)"}
                     </span>
                   </div>

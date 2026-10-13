@@ -34,7 +34,7 @@ const CATEGORY_ITEMS = [
   {
     name: "Service Partners",
     desc: "Delivery & rider partners",
-    href: "/aquaforceforgigworkers",
+    href: "https://promectools.in/aquaforceforgigworkers",
     icon: Bike,
     iconColor: "text-amber-400",
     iconBg: "bg-amber-500/20 border-amber-500/30",
