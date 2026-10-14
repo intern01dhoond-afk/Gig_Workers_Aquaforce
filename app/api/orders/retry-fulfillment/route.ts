@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createDelhiveryShipment } from "@/lib/delhivery";
 import { createShiprocketShipment } from "@/lib/shiprocket";
 
 export async function POST(req: Request) {
@@ -22,27 +23,74 @@ export async function POST(req: Request) {
       advanceAmount = 44991,
     } = body;
 
-    const shipmentResult = await createShiprocketShipment({
-      orderId,
-      fullName,
-      email,
-      phone,
-      altPhone,
-      deliveryAddress,
-      city,
-      state,
-      pincode,
-      product,
-      quantity,
-      amount,
-      paymentMode: paymentMode === "COD" ? "COD" : "Pre-paid",
-      codAmount,
-    });
+    let courier = "Delhivery";
+    let waybill = "";
+    let error = "";
 
-    const waybill = String(shipmentResult.awbCode || shipmentResult.shipmentId || "");
+    // 1. Primary: Delhivery
+    try {
+      const delhiveryRes = await createDelhiveryShipment({
+        orderId,
+        fullName,
+        email,
+        phone,
+        altPhone,
+        deliveryAddress,
+        city,
+        state,
+        pincode,
+        product,
+        quantity,
+        amount,
+        paymentMode: paymentMode === "COD" ? "COD" : "Pre-paid",
+        codAmount,
+        advanceAmount,
+      });
+
+      if (delhiveryRes.success && delhiveryRes.waybill) {
+        waybill = String(delhiveryRes.waybill);
+        courier = "Delhivery";
+      } else {
+        error = delhiveryRes.error || "Delhivery shipment creation failed";
+      }
+    } catch (delhiveryErr: any) {
+      error = delhiveryErr.message || "Delhivery API call failed";
+    }
+
+    // 2. Fallback: Shiprocket
+    if (!waybill) {
+      try {
+        const shipmentResult = await createShiprocketShipment({
+          orderId,
+          fullName,
+          email,
+          phone,
+          altPhone,
+          deliveryAddress,
+          city,
+          state,
+          pincode,
+          product,
+          quantity,
+          amount,
+          paymentMode: paymentMode === "COD" ? "COD" : "Pre-paid",
+          codAmount,
+        });
+
+        if (shipmentResult.success && (shipmentResult.awbCode || shipmentResult.shipmentId)) {
+          waybill = String(shipmentResult.awbCode || shipmentResult.shipmentId);
+          courier = shipmentResult.courierName || "Shiprocket";
+          error = "";
+        } else {
+          error = `Delhivery: ${error}; Shiprocket: ${shipmentResult.error}`;
+        }
+      } catch (shipErr: any) {
+        error = `Delhivery: ${error}; Shiprocket fallback error: ${shipErr.message}`;
+      }
+    }
 
     // Update Google Sheet with Waybill if generated
-    if (shipmentResult.success && waybill) {
+    if (waybill) {
       try {
         const sheetUrl =
           process.env.GOOGLE_SHEET_PURCHASE_URL ||
@@ -54,7 +102,7 @@ export async function POST(req: Request) {
             type: "UPDATE_WAYBILL",
             orderId,
             waybill,
-            courier: "Shiprocket",
+            courier,
             timestamp: new Date().toISOString(),
           }),
         });
@@ -64,10 +112,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
-      success: shipmentResult.success,
-      courier: "Shiprocket",
+      success: Boolean(waybill),
+      courier,
       waybill,
-      error: shipmentResult.error,
+      error: error || undefined,
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

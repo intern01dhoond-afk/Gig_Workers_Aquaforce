@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 export interface PromecOrder {
-  id: string; // e.g. "PROMEC-ORD-1727000000000-AB12"
+  id: string; // e.g. "AQUA-C/INV-2" (Gig Workers sequential series) or legacy "PROMEC-ORD-..."
   createdAt: string;
   updatedAt: string;
   idempotencyKey?: string;
@@ -82,6 +82,7 @@ export interface PromecOrder {
     fulfillmentCompletedAt?: string;
     waybill?: string;
     shipmentId?: string;
+    courier?: string;
     error?: string;
     googleSheetSynced?: boolean;
     emailSent?: boolean;

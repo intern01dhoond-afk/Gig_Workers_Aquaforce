@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createDelhiveryShipment } from "@/lib/delhivery";
 import { createShiprocketShipment } from "@/lib/shiprocket";
 
 const processedOrdersCache = new Map<string, number>();
@@ -64,13 +65,15 @@ export async function POST(req: Request) {
     const isCodOrder = paymentMethod === "10_PERCENT_COD" || Number(codBalance) > 0;
     const resolvedStatus = status || (isCodOrder ? "10% Advance Paid - COD Balance Pending" : "Paid & Confirmed");
 
-    // Auto-create Shiprocket shipment if waybill was not already created by client
+    // Auto-create Delhivery shipment (Primary) with Shiprocket fallback
     let resolvedWaybill = (waybill && waybill !== "AUTO_GENERATED") ? waybill : "";
+    let courierUsed = "Delhivery";
 
     if (!resolvedWaybill) {
+      // 1. Primary: Delhivery
       try {
-        console.log(`Auto-creating Shiprocket shipment for order ${orderId || "new"}...`);
-        const shipResult = await createShiprocketShipment({
+        console.log(`Auto-creating Delhivery shipment for order ${orderId || "new"}...`);
+        const delhiveryResult = await createDelhiveryShipment({
           orderId: orderId || `ORD_${Date.now()}`,
           fullName,
           email,
@@ -87,14 +90,48 @@ export async function POST(req: Request) {
           codAmount: isCodOrder ? (Number(codBalance) || (Number(amount) - Math.floor(Number(amount) * 0.1) + 149)) : 0,
         });
 
-        if (shipResult.success && (shipResult.awbCode || shipResult.shipmentId)) {
-          resolvedWaybill = String(shipResult.awbCode || shipResult.shipmentId);
-          console.log(`Auto-created Shiprocket shipment successfully! Waybill/ShipmentId: ${resolvedWaybill}`);
+        if (delhiveryResult.success && delhiveryResult.waybill) {
+          resolvedWaybill = String(delhiveryResult.waybill);
+          courierUsed = "Delhivery";
+          console.log(`Auto-created Delhivery shipment successfully! Waybill: ${resolvedWaybill}`);
         } else {
-          console.warn("Auto-creation of Shiprocket shipment failed:", shipResult.error);
+          console.warn("Auto-creation of Delhivery shipment failed:", delhiveryResult.error);
         }
-      } catch (shipErr) {
-        console.error("Error auto-creating Shiprocket shipment in /api/purchase:", shipErr);
+      } catch (delhiveryErr: any) {
+        console.error("Error auto-creating Delhivery shipment in /api/purchase:", delhiveryErr.message);
+      }
+
+      // 2. Fallback: Shiprocket
+      if (!resolvedWaybill) {
+        try {
+          console.log(`Falling back to Shiprocket shipment for order ${orderId || "new"}...`);
+          const shipResult = await createShiprocketShipment({
+            orderId: orderId || `ORD_${Date.now()}`,
+            fullName,
+            email,
+            phone,
+            altPhone,
+            deliveryAddress,
+            city,
+            state,
+            pincode,
+            product: product || "Cordless AquaForce® 1400 High-pressure Washer System",
+            quantity: quantity || 1,
+            amount: amount || 44991,
+            paymentMode: isCodOrder ? "COD" : "Pre-paid",
+            codAmount: isCodOrder ? (Number(codBalance) || (Number(amount) - Math.floor(Number(amount) * 0.1) + 149)) : 0,
+          });
+
+          if (shipResult.success && (shipResult.awbCode || shipResult.shipmentId)) {
+            resolvedWaybill = String(shipResult.awbCode || shipResult.shipmentId);
+            courierUsed = shipResult.courierName || "Shiprocket";
+            console.log(`Auto-created Shiprocket fallback shipment successfully! Waybill: ${resolvedWaybill}`);
+          } else {
+            console.warn("Auto-creation of Shiprocket fallback shipment failed:", shipResult.error);
+          }
+        } catch (shipErr: any) {
+          console.error("Error in fallback Shiprocket creation in /api/purchase:", shipErr.message);
+        }
       }
     }
 
@@ -107,7 +144,9 @@ export async function POST(req: Request) {
       advanceAmount: Number(advanceAmount) || (isCodOrder ? Math.floor(Number(amount) * 0.1) : Number(amount)),
       codBalance: isCodOrder ? (Number(codBalance) || (Number(amount) - Math.floor(Number(amount) * 0.1) + 149)) : 0,
       waybill: resolvedWaybill || "AUTO_GENERATED",
-      shiprocketWaybill: resolvedWaybill || "AUTO_GENERATED",
+      delhiveryWaybill: courierUsed === "Delhivery" ? (resolvedWaybill || "AUTO_GENERATED") : "",
+      shiprocketWaybill: courierUsed !== "Delhivery" ? (resolvedWaybill || "AUTO_GENERATED") : "",
+      courier: courierUsed,
       fullName,
       email: email || "N/A",
       phone,

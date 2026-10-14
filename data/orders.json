@@ -1,5 +1,64 @@
 [
   {
+    "id": "PROMEC-ORD-1791958704699-MGZ7",
+    "createdAt": "2026-10-14T06:18:25.000Z",
+    "updatedAt": "2026-10-14T08:24:07.311Z",
+    "orderStatus": "shipped",
+    "customer": {
+      "fullName": "Bhavani Balakrishnan",
+      "phone": "8089011625",
+      "email": "bhavanibalakrishnan36@gmail.com",
+      "shippingAddress": "Main Address, Hingna MIDC",
+      "city": "Nagpur",
+      "state": "Maharashtra",
+      "pincode": "440016",
+      "customerType": "commercial"
+    },
+    "items": [
+      {
+        "productId": "aquaforce-1400",
+        "productName": "Cordless AquaForce® 1400 High-pressure Washer System",
+        "variantId": "with-vacuum",
+        "variantName": "With Vacuum",
+        "color": "Yellow",
+        "quantity": 1,
+        "unitPriceInINR": 37999,
+        "unitMrpInINR": 51350,
+        "totalAmountInINR": 37999
+      }
+    ],
+    "pricing": {
+      "subtotalInINR": 37999,
+      "discountInINR": 13351,
+      "shippingFeeInINR": 0,
+      "handlingFeeInINR": 0,
+      "codFeeInINR": 0,
+      "finalTotalInINR": 37999,
+      "currency": "INR"
+    },
+    "payment": {
+      "method": "FULL_ONLINE",
+      "provider": "RAZORPAY",
+      "mode": "CARD",
+      "status": "captured",
+      "razorpayOrderId": "order_Tngd7t7Ba1LZxQ",
+      "razorpayPaymentId": "pay_TngdDSss1WVqJQ",
+      "amountRequiredInPaise": 3799900,
+      "amountPaidInPaise": 3799900,
+      "amountDueInPaise": 0,
+      "capturedAt": "2026-10-14T06:18:30.000Z"
+    },
+    "fulfillment": {
+      "status": "completed",
+      "courier": "Delhivery",
+      "waybill": "64729710000383",
+      "shipmentId": "64729710000383",
+      "fulfillmentStartedAt": "2026-10-14T08:24:07.312Z",
+      "fulfillmentCompletedAt": "2026-10-14T08:24:07.312Z",
+      "googleSheetSynced": true
+    }
+  },
+  {
     "id": "PROMEC-ORD-1790577856515-95ZI",
     "createdAt": "2026-09-28T06:44:17.930Z",
     "updatedAt": "2026-09-28T06:44:17.930Z",

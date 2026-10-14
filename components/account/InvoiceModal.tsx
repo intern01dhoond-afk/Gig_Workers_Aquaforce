@@ -17,7 +17,9 @@ export default function InvoiceModal({ order, isOpen, onClose }: InvoiceModalPro
     window.print();
   };
 
-  const invoiceNumber = `INV-${order.id.replace("PROMEC-ORD-", "")}`;
+  const invoiceNumber = order.id.startsWith("AQUA-")
+    ? order.id
+    : `INV-${order.id.replace("PROMEC-ORD-", "")}`;
   const invoiceDate = new Date(order.createdAt).toLocaleDateString("en-IN", {
     day: "numeric",
     month: "long",

@@ -1704,9 +1704,27 @@ interface CheckoutFormData {
         }
 
         // Live Delhivery Serviceability Check
-        const shipRes = await fetch(getApiPath(`/api/shiprocket/serviceability?pincode=${cleanVal}`));
-        const shipData = await shipRes.json();
-        if (shipData.success && shipData.serviceable) {
+        let shipData: any = null;
+        try {
+          const delhiveryRes = await fetch(getApiPath(`/api/delhivery/serviceability?pincode=${cleanVal}`));
+          const dData = await delhiveryRes.json();
+          if (dData.success) {
+            shipData = dData;
+          }
+        } catch (dErr) {
+          console.warn("Delhivery serviceability lookup note:", dErr);
+        }
+
+        if (!shipData) {
+          try {
+            const shipRes = await fetch(getApiPath(`/api/shiprocket/serviceability?pincode=${cleanVal}`));
+            shipData = await shipRes.json();
+          } catch (sErr) {
+            console.warn("Shiprocket fallback serviceability note:", sErr);
+          }
+        }
+
+        if (shipData?.success && shipData?.serviceable) {
           const codOk = shipData.cod === true;
           setDelhiveryCodAvailable(codOk);
           setDelhiveryStatus({
@@ -1716,7 +1734,7 @@ interface CheckoutFormData {
               ? "✓ Delhivery Express: Prepaid & Cash on Delivery Available"
               : "✓ Delhivery Express: Prepaid Delivery Available (COD Not Serviceable)",
           });
-        } else if (shipData.remarks) {
+        } else if (shipData?.remarks) {
           setDelhiveryCodAvailable(false);
           setDelhiveryStatus({
             serviceable: false,

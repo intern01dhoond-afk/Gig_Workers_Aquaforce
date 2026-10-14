@@ -4,6 +4,7 @@ import { calculateOrderPricing } from "@/lib/pricing";
 import { orderStore, PromecOrder } from "@/lib/orderStore";
 import { profileStore } from "@/lib/profileStore";
 import { getPromecPayLaterOfferIds } from "@/lib/razorpayOffers";
+import { getNextGigWorkerOrderId } from "@/lib/orderSequence";
 
 export async function POST(req: Request) {
   try {
@@ -92,8 +93,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Unique internal Promec Order ID
-    const promecOrderId = `PROMEC-ORD-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    // Sequential Gig Worker Order ID (AQUA-C/INV-1, AQUA-C/INV-2, etc.)
+    const promecOrderId = await getNextGigWorkerOrderId();
 
     // Initialize Razorpay SDK
     const razorpay = new Razorpay({
@@ -137,6 +138,7 @@ export async function POST(req: Request) {
       receipt: promecOrderId.substring(0, 40),
       notes: {
         promecOrderId,
+        orderId: promecOrderId,
         customerName: customer.fullName,
         customerPhone: customer.phone,
         variantName: pricing.variant.name,
@@ -179,7 +181,7 @@ export async function POST(req: Request) {
 
     // Generate instant, non-blocking standard merchant UPI Intent URL
     const upiAmount = Math.round(pricing.amountRequiredInPaise / 100);
-    const upiIntentUrl = `upi://pay?pa=amectechnology.rzp@rxairtel&pn=AMECTECHNOLOGY&mc=5013&tr=${promecOrderId}&am=${upiAmount}&cu=INR&tn=AMEC%20Aquaforce%20${promecOrderId}`;
+    const upiIntentUrl = `upi://pay?pa=amectechnology.rzp@rxairtel&pn=AMECTECHNOLOGY&mc=5013&tr=${promecOrderId.replace(/[^a-zA-Z0-9_-]/g, "-")}&am=${upiAmount}&cu=INR&tn=AMEC%20Aquaforce%20${encodeURIComponent(promecOrderId)}`;
     const qrCodeUrl = "";
     const qrCodeId = "";
 

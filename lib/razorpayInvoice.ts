@@ -57,12 +57,14 @@ export async function createAndIssueRazorpayInvoice(
 
     console.log(`[Razorpay Invoice] Creating invoice for order ${order.id}, payment ${payId}...`);
 
-    // 1. Create a "Paid" invoice by binding the transaction ID
-    const invoice: any = await (razorpay.invoices as any).create({
+    // 1. Create a "Paid" invoice by binding the transaction ID and exact order ID
+    const invoicePayload: any = {
       type: "invoice",
       description: "PROMEC Aquaforce® 1400 PSI Cordless High-Pressure Washer",
       payment_id: payId,
       currency: "INR",
+      receipt: order.id,
+      invoice_number: order.id,
       customer: customer,
       line_items: [
         {
@@ -78,10 +80,23 @@ export async function createAndIssueRazorpayInvoice(
       sms_notify: 0,
       notes: {
         orderId: order.id,
+        invoiceNumber: order.id,
         customerType: "commercial",
         ...(order.customer.gstNumber ? { gstNumber: order.customer.gstNumber } : {}),
       },
-    });
+    };
+
+    let invoice: any;
+    try {
+      invoice = await (razorpay.invoices as any).create(invoicePayload);
+    } catch (createErr: any) {
+      console.warn(
+        `[Razorpay Invoice] Custom invoice_number creation warning (${createErr?.message}), retrying without explicit invoice_number...`
+      );
+      const fallbackPayload = { ...invoicePayload };
+      delete fallbackPayload.invoice_number;
+      invoice = await (razorpay.invoices as any).create(fallbackPayload);
+    }
 
     let invoiceId = invoice?.id;
     let invoiceUrl = invoice?.short_url;

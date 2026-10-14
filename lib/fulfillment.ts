@@ -1,4 +1,5 @@
 import { PromecOrder, orderStore } from "./orderStore";
+import { createDelhiveryShipment } from "./delhivery";
 import { createShiprocketShipment } from "./shiprocket";
 import nodemailer from "nodemailer";
 
@@ -7,6 +8,7 @@ export interface FulfillmentResult {
   skipped?: boolean;
   waybill?: string;
   shipmentId?: string;
+  courier?: string;
   error?: string;
 }
 
@@ -29,6 +31,7 @@ export async function executeOrderFulfillment(
       skipped: true,
       waybill: order.fulfillment.waybill,
       shipmentId: order.fulfillment.shipmentId,
+      courier: order.fulfillment.courier || "Delhivery",
     };
   }
 
@@ -41,15 +44,18 @@ export async function executeOrderFulfillment(
     quantity: 1,
   };
 
+  let courierName = "Delhivery";
   let resolvedWaybill = "";
   let resolvedShipmentId = "";
+  let fulfillmentError = "";
   let googleSheetSuccess = false;
   let emailSuccess = false;
   let smsSuccess = false;
 
-  // 1. Shiprocket Shipment
+  // 1. Primary Courier: Delhivery Logistics
   try {
-    const shipResult = await createShiprocketShipment({
+    console.log(`[Fulfillment] Creating Delhivery shipment for order ${order.id}...`);
+    const delhiveryResult = await createDelhiveryShipment({
       orderId: order.id,
       fullName: order.customer.fullName,
       email: order.customer.email,
@@ -67,15 +73,55 @@ export async function executeOrderFulfillment(
       advanceAmount: Math.round(order.payment.amountPaidInPaise / 100),
     });
 
-    if (shipResult.success) {
-      resolvedWaybill = String(shipResult.awbCode || shipResult.shipmentId || "");
-      resolvedShipmentId = String(shipResult.shipmentId || "");
-      console.log(`[Fulfillment] Shiprocket shipment created. Waybill: ${resolvedWaybill}`);
+    if (delhiveryResult.success && delhiveryResult.waybill) {
+      resolvedWaybill = String(delhiveryResult.waybill);
+      resolvedShipmentId = String(delhiveryResult.waybill);
+      courierName = "Delhivery";
+      console.log(`[Fulfillment] Delhivery shipment created successfully! Waybill: ${resolvedWaybill}`);
     } else {
-      console.warn(`[Fulfillment] Shiprocket shipment creation returned error:`, shipResult.error);
+      fulfillmentError = delhiveryResult.error || "Delhivery shipment creation failed";
+      console.warn(`[Fulfillment] Delhivery shipment creation returned error:`, fulfillmentError);
     }
-  } catch (shipErr: any) {
-    console.error("[Fulfillment] Shiprocket creation exception:", shipErr.message);
+  } catch (delhiveryErr: any) {
+    fulfillmentError = delhiveryErr.message || "Delhivery API call failed";
+    console.error("[Fulfillment] Delhivery exception:", fulfillmentError);
+  }
+
+  // 2. Fallback Courier: Shiprocket (if Delhivery shipment could not be created)
+  if (!resolvedWaybill) {
+    console.log(`[Fulfillment] Falling back to Shiprocket courier for order ${order.id}...`);
+    try {
+      const shipResult = await createShiprocketShipment({
+        orderId: order.id,
+        fullName: order.customer.fullName,
+        email: order.customer.email,
+        phone: order.customer.phone,
+        altPhone: order.customer.altPhone,
+        deliveryAddress: order.customer.shippingAddress,
+        city: order.customer.city,
+        state: order.customer.state,
+        pincode: order.customer.pincode,
+        product: `${primaryItem.productName} (${primaryItem.color})`,
+        quantity: primaryItem.quantity,
+        amount: order.pricing.finalTotalInINR,
+        paymentMode: isCod ? "COD" : "Pre-paid",
+        codAmount: isCod ? Math.round(order.payment.amountDueInPaise / 100) : 0,
+        advanceAmount: Math.round(order.payment.amountPaidInPaise / 100),
+      });
+
+      if (shipResult.success) {
+        resolvedWaybill = String(shipResult.awbCode || shipResult.shipmentId || "");
+        resolvedShipmentId = String(shipResult.shipmentId || "");
+        courierName = shipResult.courierName || "Shiprocket";
+        fulfillmentError = "";
+        console.log(`[Fulfillment] Shiprocket fallback shipment created. Waybill: ${resolvedWaybill}`);
+      } else {
+        console.warn(`[Fulfillment] Shiprocket fallback shipment creation returned error:`, shipResult.error);
+        fulfillmentError = `Delhivery: ${fulfillmentError}; Shiprocket: ${shipResult.error}`;
+      }
+    } catch (shipErr: any) {
+      console.error("[Fulfillment] Shiprocket fallback exception:", shipErr.message);
+    }
   }
 
   // 2. Google Sheets Webhook Log
@@ -101,10 +147,10 @@ export async function executeOrderFulfillment(
           : order.payment.method === "EMI"
           ? "No Cost EMI"
           : "Full Online Payment",
-      advanceAmount: Math.round(order.payment.amountPaidInPaise / 100),
-      codBalance: Math.round(order.payment.amountDueInPaise / 100),
       waybill: resolvedWaybill || "PENDING",
-      shiprocketWaybill: resolvedWaybill || "PENDING",
+      delhiveryWaybill: courierName === "Delhivery" ? (resolvedWaybill || "PENDING") : "",
+      shiprocketWaybill: courierName !== "Delhivery" ? (resolvedWaybill || "PENDING") : "",
+      courier: courierName,
       fullName: order.customer.fullName,
       email: order.customer.email || "N/A",
       phone: order.customer.phone,
@@ -243,16 +289,20 @@ export async function executeOrderFulfillment(
   await orderStore.completeFulfillment(orderId, {
     waybill: resolvedWaybill,
     shipmentId: resolvedShipmentId,
+    courier: courierName,
     googleSheetSynced: googleSheetSuccess,
     emailSent: emailSuccess,
     smsSent: smsSuccess,
+    error: fulfillmentError || undefined,
   });
 
-  console.log(`[Fulfillment] Fulfillment pipeline completed for order ${orderId}.`);
+  console.log(`[Fulfillment] Fulfillment pipeline completed for order ${orderId} (Courier: ${courierName}, Waybill: ${resolvedWaybill || "None"}).`);
 
   return {
     success: true,
     waybill: resolvedWaybill,
     shipmentId: resolvedShipmentId,
+    courier: courierName,
+    error: fulfillmentError || undefined,
   };
 }
